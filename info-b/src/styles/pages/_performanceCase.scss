@@ -1,0 +1,134 @@
+@import "../variables";
+
+.performance-case {
+  padding: 120px 0;
+  background: $white;
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 80px;
+
+    h2 {
+      font-size: $font-size-h1;
+      color: $primary-color;
+      margin-bottom: 20px;
+      font-weight: bold;
+      position: relative;
+      display: inline-block;
+
+      &:after {
+        content: "";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: $accent-color;
+      }
+    }
+
+    p {
+      font-size: $font-size-large;
+      color: $gray;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+  }
+
+  .cases-container {
+    max-width: $container-width;
+    margin: 0 auto;
+    padding: 0 $container-padding;
+
+    .year-section {
+      background: $white;
+      border-radius: 15px;
+      padding: 40px;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      h3 {
+        color: $accent-color;
+        font-size: $font-size-h2;
+        margin-bottom: 30px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid $border-color;
+        font-weight: bold;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 25px;
+          padding: 20px;
+          background: $secondary-color;
+          border-radius: 10px;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background: darken($secondary-color, 3%);
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .client {
+            flex: 0 0 200px;
+            font-weight: bold;
+            color: $primary-color;
+            font-size: $font-size-large;
+            padding-right: 20px;
+          }
+
+          .project {
+            flex: 1;
+            color: $gray;
+            font-size: $font-size-base;
+            line-height: 1.6;
+          }
+
+          @include mobile {
+            flex-direction: column;
+            padding: 15px;
+
+            .client {
+              flex: none;
+              margin-bottom: 10px;
+              padding-right: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @include mobile {
+    padding: 60px 0;
+
+    .page-title {
+      margin-bottom: 40px;
+      padding: 0 20px;
+
+      h2 {
+        font-size: $font-size-h2;
+      }
+
+      p {
+        font-size: $font-size-base;
+      }
+    }
+  }
+}

@@ -1,25 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  AppBar,
-  Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  Container,
-  Button,
-  MenuItem,
-  Fade,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 import logo from "../resources/images/main/logo_t.png";
 import "../styles/components/_navbar.scss";
 
 function NavBar() {
-  const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = useState(null);
-  const [menuAnchors, setMenuAnchors] = useState({});
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
     {
@@ -54,142 +40,69 @@ function NavBar() {
     },
   ];
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
+  const handleMenuEnter = (index) => {
+    setActiveMenu(index);
   };
 
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
+  const handleMenuLeave = () => {
+    setActiveMenu(null);
   };
 
-  const handleMenuOpen = (event, index) => {
-    setMenuAnchors({ ...menuAnchors, [index]: event.currentTarget });
-  };
-
-  const handleMenuClose = (index) => {
-    setMenuAnchors({ ...menuAnchors, [index]: null });
-  };
-
-  const handleNavigate = (path) => {
-    navigate(path);
-    handleCloseNavMenu();
-    setMenuAnchors({});
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
-    <AppBar position="fixed" className="navbar" elevation={0}>
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          {/* Desktop Logo */}
-          <Box
-            sx={{
-              display: { xs: "none", md: "flex" },
-              mr: 4,
-              cursor: "pointer",
-            }}
-            onClick={() => handleNavigate("/")}
-          >
-            <img src={logo} alt="INFOB" className="navbar__logo" />
-          </Box>
+    <nav className="navbar">
+      <div className="navbar__container">
+        <Link to="/" className="navbar__logo-link">
+          <img src={logo} alt="INFOB" className="navbar__logo" />
+        </Link>
 
-          {/* Mobile Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="menu"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+        {/* Mobile Menu Button */}
+        <button
+          className={`navbar__mobile-toggle ${
+            isMobileMenuOpen ? "active" : ""
+          }`}
+          onClick={toggleMobileMenu}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        {/* Desktop & Mobile Menu */}
+        <div className={`navbar__menu ${isMobileMenuOpen ? "active" : ""}`}>
+          {menuItems.map((item, index) => (
+            <div
+              key={item.title}
+              className={`navbar__menu-item ${
+                activeMenu === index ? "active" : ""
+              }`}
+              onMouseEnter={() => handleMenuEnter(index)}
+              onMouseLeave={handleMenuLeave}
             >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {menuItems.map((item, index) => (
-                <MenuItem
-                  key={item.title}
-                  onClick={() => handleNavigate(item.path)}
-                >
-                  <Typography textAlign="center">{item.title}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-
-          {/* Mobile Logo */}
-          <Box
-            sx={{
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              cursor: "pointer",
-            }}
-            onClick={() => handleNavigate("/")}
-          >
-            <img src={logo} alt="INFOB" className="navbar__logo" />
-          </Box>
-
-          {/* Desktop Menu */}
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {menuItems.map((item, index) => (
-              <div key={item.title}>
-                <Button
-                  onClick={(e) => handleMenuOpen(e, index)}
-                  sx={{
-                    my: 2,
-                    mx: 1,
-                    color: "inherit",
-                    display: "block",
-                    fontSize: "1rem",
-                    fontFamily: "paybooc Medium",
-                  }}
-                >
-                  {item.title}
-                </Button>
-                <Menu
-                  anchorEl={menuAnchors[index]}
-                  open={Boolean(menuAnchors[index])}
-                  onClose={() => handleMenuClose(index)}
-                  TransitionComponent={Fade}
-                  MenuListProps={{
-                    onMouseLeave: () => handleMenuClose(index),
-                  }}
-                >
+              <Link to={item.path} className="navbar__menu-link">
+                {item.title}
+              </Link>
+              {item.submenu && (
+                <div className="navbar__submenu">
                   {item.submenu.map((subItem) => (
-                    <MenuItem
+                    <Link
                       key={subItem.title}
-                      onClick={() => handleNavigate(subItem.path)}
-                      sx={{
-                        fontFamily: "paybooc Medium",
-                        minWidth: "150px",
-                      }}
+                      to={subItem.path}
+                      className="navbar__submenu-link"
                     >
                       {subItem.title}
-                    </MenuItem>
+                    </Link>
                   ))}
-                </Menu>
-              </div>
-            ))}
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </nav>
   );
 }
 

@@ -116,21 +116,21 @@ function Company() {
           <SwiperSlide className="pro_box1">
             <div>
               <p>
-                <b>타이틀</b>내용
+                <b>타이틀1</b>내용1
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="pro_box2">
             <div>
               <p>
-                <b>타이틀</b>내용
+                <b>타이틀2</b>내용2
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="pro_box3">
             <div>
               <p>
-                <b>타이틀</b>내용
+                <b>타이틀3</b>내용3
               </p>
             </div>
           </SwiperSlide>

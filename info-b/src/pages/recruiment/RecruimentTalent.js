@@ -1,8 +1,8 @@
 import React from "react";
 
-function Recruitment() {
+function RecruimentTalent() {
   return (
-    <div className="recruitment-page">
+    <div>
       <h1>채용</h1>
       <div className="recruitment-content">
         <h2>인재상</h2>
@@ -24,4 +24,4 @@ function Recruitment() {
   );
 }
 
-export default Recruitment;
+export default RecruimentTalent;

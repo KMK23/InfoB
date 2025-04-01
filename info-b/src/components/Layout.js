@@ -4,11 +4,9 @@ import Footer from "./Footer";
 
 function Layout() {
   return (
-    <div
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-    >
+    <div className="layout">
       <NavBar />
-      <main style={{ flex: 1, padding: "20px" }}>
+      <main className="layout__main">
         <Outlet />
       </main>
       <Footer />
