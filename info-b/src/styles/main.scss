@@ -1,9 +1,25 @@
 @import "variables";
+
+// Global styles
+body {
+  margin: 0;
+  padding: 0;
+  font-family: $base-font;
+  font-size: $font-size-base;
+  line-height: 1.5;
+  color: $text-color;
+  background-color: $background-color;
+}
+
+// Import component styles
 @import "components/navbar";
 @import "components/footer";
 @import "components/layout";
+
+// Import page styles
 @import "pages/company";
-@import "pages/performanceCase";
+@import "pages/certification";
+@import "pages/history";
 
 // Font Face Declarations
 @font-face {
@@ -45,19 +61,6 @@
     url("../resources/fonts/paybooc-Medium.woff") format("woff");
   font-weight: normal;
   font-style: normal;
-}
-
-// Global Styles
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: $font-family-base;
-  line-height: 1.5;
-  color: $text-color;
 }
 
 img {
