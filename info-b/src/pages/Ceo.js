@@ -1,6 +1,7 @@
 import React from "react";
+import "../styles/pages/_ceo.scss";
 
-function CeoMessage() {
+function Ceo() {
   return (
     <div className="ceo-page">
       <div className="page-header">
@@ -47,4 +48,4 @@ function CeoMessage() {
   );
 }
 
-export default CeoMessage;
+export default Ceo;

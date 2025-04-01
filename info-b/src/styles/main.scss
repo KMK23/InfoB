@@ -1,0 +1,93 @@
+@import "variables";
+@import "components/navbar";
+@import "components/footer";
+@import "pages/company";
+
+// Font Face Declarations
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  src: url("../resources/fonts/NotoSansCJKkr-Regular.woff2") format("woff2"),
+    url("../resources/fonts/NotoSansCJKkr-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto Sans CJK KR";
+  src: url("../resources/fonts/NotoSansCJKkr-Bold.woff2") format("woff2"),
+    url("../resources/fonts/NotoSansCJKkr-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../resources/fonts/NanumSquareR.woff2") format("woff2"),
+    url("../resources/fonts/NanumSquareR.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "NanumSquare";
+  src: url("../resources/fonts/NanumSquareB.woff2") format("woff2"),
+    url("../resources/fonts/NanumSquareB.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "paybooc Medium";
+  src: url("../resources/fonts/paybooc Medium.ttf") format("truetype"),
+    url("../resources/fonts/paybooc Medium.woff2") format("woff2"),
+    url("../resources/fonts/paybooc-Medium.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+// Global Styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family-base;
+  line-height: 1.5;
+  color: $text-color;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+// Utility Classes
+.container {
+  @include container;
+}
+
+// Animation Classes
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in;
+}

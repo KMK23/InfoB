@@ -1,0 +1,71 @@
+@import "../variables";
+
+.footer {
+  background-color: #f8f8f8;
+  padding: $spacing-large 0;
+  font-family: "paybooc Medium", sans-serif;
+
+  &__container {
+    @include container;
+    text-align: center;
+  }
+
+  &__logo {
+    margin-bottom: $spacing-base;
+
+    img {
+      height: 40px;
+    }
+  }
+
+  &__info {
+    color: $gray;
+    font-size: 0.9rem;
+    line-height: 1.8;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    @include mobile {
+      align-items: center;
+    }
+
+    &-list {
+      list-style: none;
+      display: flex;
+      gap: $spacing-base;
+      margin-bottom: $spacing-base;
+
+      @include mobile {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      a {
+        color: $light-gray;
+        font-size: $font-size-small;
+        transition: color 0.3s;
+
+        &:hover {
+          color: $white;
+        }
+      }
+    }
+  }
+
+  &__copyright {
+    text-align: center;
+    margin-top: $spacing-large;
+    padding-top: $spacing-base;
+    border-top: 1px solid rgba($white, 0.1);
+    color: $light-gray;
+    font-size: $font-size-small;
+  }
+}
