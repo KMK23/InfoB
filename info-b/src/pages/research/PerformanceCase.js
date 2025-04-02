@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/pages/performanceCase.scss";
+import "../../styles/pages/_performanceCase.scss";
 
 function PerformanceCase() {
   return (

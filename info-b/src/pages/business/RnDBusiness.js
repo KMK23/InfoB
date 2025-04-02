@@ -1,6 +1,6 @@
 import React from "react";
 
-function RnBusiness() {
+function RnDBusiness() {
   return (
     <div className="rn-business">
       <h1>제품</h1>
@@ -172,4 +172,4 @@ function RnBusiness() {
   );
 }
 
-export default RnBusiness;
+export default RnDBusiness;

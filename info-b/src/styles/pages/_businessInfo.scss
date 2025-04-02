@@ -1,0 +1,362 @@
+.business-info {
+  padding: 4rem 2rem;
+  background: #fff;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  &__title {
+    font-size: 2.2rem;
+    color: #333;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+
+  &__content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // 원형 레이아웃 컨테이너
+  &__circle-container {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    margin: 0 auto;
+  }
+
+  // 중앙 원
+  &__center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px;
+    height: 150px;
+    background: #333;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 0 20px rgba(233, 173, 28, 0.15);
+    border: 2px solid #e9ad1c;
+
+    h2 {
+      color: #e9ad1c;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+
+  // 연결선
+  &__connections {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 450px;
+    height: 450px;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 15px solid #e6e6e6;
+      border-radius: 50%;
+    }
+  }
+
+  // 주변 원들
+  &__circle {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    background: #e9ad1c;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    z-index: 3;
+    box-shadow: 0 4px 8px rgba(233, 173, 28, 0.1);
+
+    &:hover {
+      box-shadow: 0 10px 20px rgba(233, 173, 28, 0.2);
+    }
+
+    // 위치 지정
+    &--top {
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      &:hover {
+        transform: translateX(-50%) scale(1.05);
+      }
+
+      .business-info__circle-details {
+        top: 50%;
+        left: 100%;
+        transform: translateY(-50%);
+        text-align: left;
+        margin-left: 20px;
+      }
+    }
+
+    &--left {
+      bottom: 20%;
+      left: -30px;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      .business-info__circle-details {
+        left: -220px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: right;
+      }
+    }
+
+    &--right {
+      bottom: 20%;
+      right: -30px;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      .business-info__circle-details {
+        right: -220px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: left;
+      }
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+  }
+
+  &__circle-details {
+    position: absolute;
+    width: 200px;
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+
+    span {
+      display: block;
+      margin-bottom: 0.3rem;
+      position: relative;
+      padding-left: 12px;
+
+      &:before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #e9ad1c;
+      }
+    }
+  }
+
+  // SI 영역 (하단 그리드)
+  &__si-section {
+    margin-top: 4rem;
+
+    &-header {
+      text-align: center;
+      margin-bottom: 3rem;
+
+      h2 {
+        font-size: 2.5rem;
+        color: #1a3c7c;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 1.2rem;
+        color: #666;
+        font-weight: 500;
+      }
+    }
+
+    &-content {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      padding: 0 2rem;
+    }
+
+    .business-info__area {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 12px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border-color: #e9ad1c;
+      }
+
+      h3 {
+        font-size: 1.3rem;
+        color: #1a3c7c;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        svg {
+          color: #e9ad1c;
+        }
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+          font-size: 0.95rem;
+          color: #666;
+          margin: 0.5rem 0;
+          padding-left: 1.2rem;
+          position: relative;
+
+          &:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #e9ad1c;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 992px) {
+    &__circle-container {
+      width: 100%;
+      height: auto;
+      padding: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    &__center-circle {
+      position: static;
+      transform: none;
+      margin-bottom: 2rem;
+    }
+
+    &__connections {
+      display: none;
+    }
+
+    &__circle {
+      position: static;
+      transform: none;
+      width: 160px;
+      height: 160px;
+      margin-bottom: 2rem;
+
+      &--top,
+      &--left,
+      &--right {
+        transform: none;
+
+        .business-info__circle-details {
+          position: static;
+          transform: none;
+          width: auto;
+          max-width: 300px;
+          margin: 1rem auto;
+          text-align: center;
+        }
+      }
+    }
+
+    &__si-section {
+      &-header {
+        margin-bottom: 2rem;
+
+        h2 {
+          font-size: 2rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+        }
+      }
+
+      &-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  @media (max-width: 576px) {
+    padding: 2rem 1rem;
+
+    &__circle {
+      width: 140px;
+      height: 140px;
+      padding: 1rem;
+
+      h3 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+      }
+    }
+
+    &__si-section {
+      &-header {
+        h2 {
+          font-size: 1.8rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+      }
+
+      .business-info__area {
+        padding: 1.5rem;
+
+        h3 {
+          font-size: 1.2rem;
+        }
+
+        ul li {
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}

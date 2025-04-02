@@ -10,7 +10,7 @@ function NavBar() {
   const menuItems = [
     {
       title: "회사소개",
-      path: "/company",
+      path: "/company/ceo",
       submenu: [
         { title: "CEO 인사말", path: "/company/ceo" },
         { title: "연혁 및 조직도", path: "/company/history" },
@@ -19,20 +19,20 @@ function NavBar() {
     },
     {
       title: "사업소개",
-      path: "/business",
+      path: "/business/info",
       submenu: [
         { title: "사업정보", path: "/business/info" },
-        { title: "R&D 연구사업", path: "/business/research" },
+        { title: "R&D 연구사업", path: "/business/rn-d" },
       ],
     },
     {
       title: "수행실적",
-      path: "/performance",
+      path: "/performance/cases",
       submenu: [{ title: "구축사례", path: "/performance/cases" }],
     },
     {
       title: "채용",
-      path: "/recruitment",
+      path: "/recruitment/talent",
       submenu: [
         { title: "인재상", path: "/recruitment/talent" },
         { title: "복리후생", path: "/recruitment/benefits" },
@@ -40,12 +40,9 @@ function NavBar() {
     },
   ];
 
-  const handleMenuEnter = (index) => {
-    setActiveMenu(index);
-  };
-
-  const handleMenuLeave = () => {
-    setActiveMenu(null);
+  const handleMenuClick = (index, e) => {
+    e.preventDefault();
+    setActiveMenu(activeMenu === index ? null : index);
   };
 
   const toggleMobileMenu = () => {
@@ -79,19 +76,26 @@ function NavBar() {
               className={`navbar__menu-item ${
                 activeMenu === index ? "active" : ""
               }`}
-              onMouseEnter={() => handleMenuEnter(index)}
-              onMouseLeave={handleMenuLeave}
             >
-              <Link to={item.path} className="navbar__menu-link">
+              <a
+                href={item.path}
+                className="navbar__menu-link"
+                onClick={(e) => handleMenuClick(index, e)}
+              >
                 {item.title}
-              </Link>
+              </a>
               {item.submenu && (
-                <div className="navbar__submenu">
+                <div
+                  className={`navbar__submenu ${
+                    activeMenu === index ? "active" : ""
+                  }`}
+                >
                   {item.submenu.map((subItem) => (
                     <Link
                       key={subItem.title}
                       to={subItem.path}
                       className="navbar__submenu-link"
+                      onClick={() => setActiveMenu(null)}
                     >
                       {subItem.title}
                     </Link>
