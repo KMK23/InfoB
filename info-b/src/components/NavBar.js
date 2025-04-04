@@ -35,8 +35,13 @@ function NavBar() {
       path: "/recruitment/talent",
       submenu: [
         { title: "인재상", path: "/recruitment/talent" },
-        { title: "복리후생", path: "/recruitment/benefits" },
+        // { title: "복리후생", path: "/recruitment/benefits" },
       ],
+    },
+    {
+      title: "커뮤니티",
+      path: "/community/post",
+      submenu: [{ title: "게시판", path: "/community/post" }],
     },
   ];
 
@@ -77,13 +82,25 @@ function NavBar() {
                 activeMenu === index ? "active" : ""
               }`}
             >
-              <a
-                href={item.path}
-                className="navbar__menu-link"
-                onClick={(e) => handleMenuClick(index, e)}
-              >
-                {item.title}
-              </a>
+              {/* 채용 메뉴는 바로 Link로 연결 */}
+              {item.title === "채용" ? (
+                <Link
+                  to={item.path}
+                  className="navbar__menu-link"
+                  onClick={() => setActiveMenu(null)} // 메뉴 닫기
+                >
+                  {item.title}
+                </Link>
+              ) : (
+                <a
+                  href={item.path}
+                  className="navbar__menu-link"
+                  onClick={(e) => handleMenuClick(index, e)}
+                >
+                  {item.title}
+                </a>
+              )}
+              {/* Submenu 표시 */}
               {item.submenu && (
                 <div
                   className={`navbar__submenu ${
@@ -95,7 +112,7 @@ function NavBar() {
                       key={subItem.title}
                       to={subItem.path}
                       className="navbar__submenu-link"
-                      onClick={() => setActiveMenu(null)}
+                      onClick={() => setActiveMenu(null)} // 메뉴 닫기
                     >
                       {subItem.title}
                     </Link>

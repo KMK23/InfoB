@@ -12,58 +12,38 @@
       color: $primary-color;
       margin-bottom: $spacing-base;
     }
-
+    margin: 0;
     p {
       font-size: $font-size-large;
       color: $text-light;
+      margin-bottom: 100px;
     }
   }
 
   .talent-content {
     @include container;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    display: flex;
+    // grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: $spacing-xl;
-    padding: 0 $spacing-base;
-  }
+    // padding: 0 $spacing-base;
 
-  .talent-item {
-    background: $white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-    }
-
-    .talent-image {
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .talent-text {
-      padding: $spacing-base;
-
-      h2 {
-        font-size: $font-size-h3;
-        color: $primary-color;
-        margin-bottom: $spacing-small;
-      }
-
+    .talent-title {
       p {
-        font-size: $font-size-base;
-        color: $text-color;
-        line-height: 1.6;
-        margin-bottom: $spacing-small;
+        font-size: $font-size-large;
+        color: $gray;
+        margin: 0;
+        padding: 5px 0;
+        text-align: start;
+      }
+    }
+    .talent-button {
+      button {
+        padding: 8px;
+      }
+    }
+    .talent-img {
+      img {
+        width: 500px;
       }
     }
   }

@@ -15,6 +15,7 @@
     "axios": "^1.7.4",
     "bootstrap": "^5.3.3",
     "firebase": "^10.6.0",
+    "info-b": "file:",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.9",
     "react-dom": "^18.3.1",

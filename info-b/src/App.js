@@ -10,7 +10,7 @@ import BusinessInfo from "./pages/business/BusinessInfo";
 import RnDBusiness from "./pages/business/RnDBusiness";
 import PerformanceCase from "./pages/research/PerformanceCase";
 import Talent from "./pages/recruitment/Talent";
-import Benefits from "./pages/recruitment/Benefits";
+import Post from "./pages/community/Post";
 
 function App() {
   return (
@@ -27,7 +27,8 @@ function App() {
             <Route path="business/rn-d" element={<RnDBusiness />} />
             <Route path="performance/cases" element={<PerformanceCase />} />
             <Route path="recruitment/talent" element={<Talent />} />
-            <Route path="recruitment/benefits" element={<Benefits />} />
+            {/* <Route path="recruitment/benefits" element={<Benefits />} /> */}
+            <Route path="community/post" element={<Post />} />
           </Route>
         </Routes>
       </BrowserRouter>
