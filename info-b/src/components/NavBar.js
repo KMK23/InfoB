@@ -56,10 +56,12 @@ function NavBar() {
 
   return (
     <nav className="navbar">
-      <div className="navbar__container">
-        <Link to="/" className="navbar__logo-link">
-          <img src={logo} alt="INFOB" className="navbar__logo" />
-        </Link>
+      <div className="navbar__inner">
+        <div className="navbar__logo">
+          <Link to="/">
+            <img src={logo} alt="INFOB" />
+          </Link>
+        </div>
 
         {/* Mobile Menu Button */}
         <button
