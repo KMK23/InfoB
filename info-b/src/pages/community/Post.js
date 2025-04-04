@@ -1,61 +1,34 @@
 import React from "react";
 import "../../styles/pages/_post.scss";
+import { FaSearch } from "react-icons/fa";
+import Community from "../../components/Community";
+import Search from "../../components/Search";
+import Pagination from "../../components/Pagination";
 
-const Post = () => {
-  const postDetail = [
-    { number: 1, title: "제목1", name: "홍**", date: "2025.04.04", check: 5 },
-    {
-      number: 2,
-      title: "제목2",
-      name: "홍**",
-      date: "2025.04.03",
-      check: 48,
-    },
-    { number: 3, title: "제목3", name: "홍**", date: "2025.04.05", check: 5 },
-    { number: 4, title: "제목4", name: "홍**", date: "2025.04.01", check: 7 },
-    { number: 5, title: "제목5", name: "홍**", date: "2025.04.00", check: 5 },
-  ];
-
+function Post() {
   return (
     <div className="recruitment-post">
-      <h1>게시판</h1>
-      <div className="post-main">
-        {/*전체 */}
-        <div className="post-head">
-          <div className="number">
-            <p>번호</p>
-          </div>
-          <div className="title">
-            <p>제목</p>
-          </div>
-          <div className="name">
-            <p>등록자명</p>
-          </div>
-          <div className="date">
-            <p>등록일</p>
-          </div>
-          <div className="check">
-            <p>조회수</p>
-          </div>
-        </div>
-        {/* <div> */}
-        {postDetail.map((item, index) => (
-          <div key={index} className="post-center">
-            <div className="post-number">{item.number}</div>
-            <div className="post-title">{item.title}</div>
-            <div className="post-name">{item.name}</div>
-            <div className="post-date">{item.date}</div>
-            <div className="post-check">{item.check}</div>
-          </div>
-        ))}
-
-        {/* </div> */}
+      <div>
+        <h1>게시판</h1>
       </div>
       <div>
-        <div>페이지네이션 자리</div>
+        <Search />
+        {/* <div className="post-search">
+          <input placeholder="검색어를 입력해주세요." />
+          <button>{<FaSearch />}</button>
+        </div> */}
+      </div>
+      <div>
+        <Community />
+      </div>
+
+      <div>
+        <div>
+          <Pagination />
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default Post;

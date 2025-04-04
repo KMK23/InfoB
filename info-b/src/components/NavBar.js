@@ -41,7 +41,12 @@ function NavBar() {
     {
       title: "커뮤니티",
       path: "/community/post",
-      submenu: [{ title: "게시판", path: "/community/post" }],
+      submenu: [
+        { title: "공지사항", path: "/community/announcement" },
+        { title: "Q&A", path: "/community/qna" },
+        { title: "1:1문의", path: "/community/inquiry" },
+        { title: "게시판", path: "/community/post" },
+      ],
     },
   ];
 

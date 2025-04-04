@@ -2,7 +2,6 @@
 
 .recruitment-talent {
   padding: $spacing-xl 0;
-
   .talent-header {
     text-align: center;
     margin-bottom: $spacing-xl;
@@ -37,13 +36,79 @@
       }
     }
     .talent-button {
+      display: flex;
+      justify-content: start;
+      margin-top: 0.75rem;
       button {
-        padding: 8px;
+        padding: 8px 24px;
+        border-radius: 12px;
+        border: 1px solid black;
+        background-color: $background-color;
+        font-size: $font-size-base;
+      }
+      button:hover {
+        background-color: $accent-color;
+        color: $white;
+        transition: 0.1s;
       }
     }
     .talent-img {
       img {
         width: 500px;
+      }
+    }
+  }
+
+  // 복리후생 부분
+  .recruitment-benefits {
+    margin-top: 100px;
+    height: 650px;
+    background-image: url("../../resources/images/main/sub_bg.png");
+    padding: $spacing-xl 0;
+    color: $white;
+    .benefits-header {
+      text-align: center;
+      margin-bottom: $spacing-xl;
+
+      h1 {
+        font-size: $font-size-h1;
+        color: $white;
+        margin-bottom: $spacing-base;
+      }
+
+      p {
+        font-size: $font-size-large;
+        color: $text-light;
+      }
+    }
+    .benefits-icon {
+      text-align: start;
+      // display: grid;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      column-gap: 180px;
+      align-items: center;
+      // grid-template-columns: repeat(3, 1fr);
+      img {
+        filter: brightness(0) invert(1);
+        margin-right: 30px;
+      }
+      ul > li {
+        list-style-type: disc;
+      }
+      .icon-main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin: 30px 0;
+        h2 {
+          margin: 0;
+        }
+        p {
+          margin: 0;
+        }
       }
     }
   }

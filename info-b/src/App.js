@@ -13,6 +13,9 @@ import BoardProducts from "./pages/business/BoardProducts";
 import PerformanceCase from "./pages/research/PerformanceCase";
 import Talent from "./pages/recruitment/Talent";
 import Post from "./pages/community/Post";
+import Announcement from "./pages/community/Announcement";
+import Qna from "./pages/community/Qna";
+import Inquiry from "./pages/community/Inquiry";
 
 function App() {
   return (
@@ -35,6 +38,9 @@ function App() {
             <Route path="performance/cases" element={<PerformanceCase />} />
             <Route path="recruitment/talent" element={<Talent />} />
             {/* <Route path="recruitment/benefits" element={<Benefits />} /> */}
+            <Route path="community/announcement" element={<Announcement />} />
+            <Route path="community/qna" element={<Qna />} />
+            <Route path="community/inquiry" element={<Inquiry />} />
             <Route path="community/post" element={<Post />} />
           </Route>
         </Routes>

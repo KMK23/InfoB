@@ -1,0 +1,32 @@
+@import "../variables";
+.recruitment-qna {
+  padding: $spacing-xl 0;
+  @include container;
+
+  h1 {
+    margin-bottom: 30px;
+  }
+  // .post-search {
+  //   display: flex;
+  //   justify-content: end;
+  //   align-items: center;
+
+  //   // gap: 10px;
+  //   margin-bottom: 20px;
+  //   input {
+  //     padding: 16px 6px;
+  //     border: none;
+  //     border-bottom: 1px solid #b8b3b3;
+  //   }
+  //   button {
+  //     margin-top: 8px;
+  //     display: flex;
+  //     border: none;
+  //     background-color: transparent;
+  //     font-size: $font-size-large;
+  //   }
+  //   button:hover {
+  //     color: blue;
+  //   }
+  // }
+}
