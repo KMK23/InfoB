@@ -69,8 +69,9 @@ function Company() {
             <ul>
               <li className="tit">IT Service</li>
               <li className="con">
-                간단한 설명 간단한 설명 간단한 설명 간단한 설명 간단한 설명
-                간단한 설명 간단한 설명 간단한 설명
+                SI/SM 구축 및 운영, 시스템 통합 유지보수를 통해 공공 및 민간
+                분야의 IT 시스템 구축부터 운영까지, 전문적인 기술력으로 고객
+                맞춤형 서비스를 제공합니다.
               </li>
             </ul>
           </li>
@@ -79,8 +80,9 @@ function Company() {
             <ul>
               <li className="tit">IoT 시스템구축 및 솔루션</li>
               <li className="con">
-                간단한 설명 간단한 설명 간단한 설명 간단한 설명 간단한 설명
-                간단한 설명 간단한 설명 간단한 설명
+                하드웨어 개발 및 맞춤형 IoT 솔루션 제공을 통해 IoT 기기 개발부터
+                시스템 구축까지, 고객의 환경에 맞는 다양한 IoT 솔루션을
+                제공합니다.
               </li>
             </ul>
           </li>
@@ -116,21 +118,24 @@ function Company() {
           <SwiperSlide className="pro_box1">
             <div>
               <p>
-                <b>타이틀1</b>내용1
+                <b>시스템 통합 구축</b>
+                공공/민간 분야 SI 구축 및 컨설팅
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="pro_box2">
             <div>
               <p>
-                <b>타이틀2</b>내용2
+                <b>IoT 솔루션</b>
+                IoT 하드웨어 개발 및 시스템 구축
               </p>
             </div>
           </SwiperSlide>
           <SwiperSlide className="pro_box3">
             <div>
               <p>
-                <b>타이틀3</b>내용3
+                <b>유지보수 서비스</b>
+                IT 시스템 통합 유지보수 및 운영
               </p>
             </div>
           </SwiperSlide>
