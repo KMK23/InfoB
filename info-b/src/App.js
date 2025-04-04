@@ -7,7 +7,7 @@ import History from "./pages/company/History";
 import Certification from "./pages/company/Certification";
 import Company from "./pages/company/Company";
 import BusinessInfo from "./pages/business/BusinessInfo";
-import RnDBusiness from "./pages/business/RnDBusiness";
+// import RnDBusiness from "./pages/business/RnDBusiness";
 import LeakDetection from "./pages/business/LeakDetection";
 import BoardProducts from "./pages/business/BoardProducts";
 import PerformanceCase from "./pages/research/PerformanceCase";
@@ -35,6 +35,9 @@ function App() {
             <Route path="performance/cases" element={<PerformanceCase />} />
             <Route path="recruitment/talent" element={<Talent />} />
             <Route path="recruitment/benefits" element={<Benefits />} />
+            {/* <Route path="iCloud/community" element={<Community />} />
+            <Route path="iCloud/notice" element={<Notice />} />
+            <Route path="iCloud/question" element={<Question />} /> */}
           </Route>
         </Routes>
       </BrowserRouter>

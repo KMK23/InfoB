@@ -111,6 +111,7 @@
         transform: translateY(-50%);
         text-align: left;
         margin-left: 20px;
+        word-break: keep-all;
       }
     }
 
@@ -127,6 +128,7 @@
         top: 50%;
         transform: translateY(-50%);
         text-align: right;
+        word-break: keep-all;
       }
     }
 
@@ -143,6 +145,7 @@
         top: 50%;
         transform: translateY(-50%);
         text-align: left;
+        word-break: keep-all;
       }
     }
 
