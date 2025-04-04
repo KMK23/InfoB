@@ -15,6 +15,7 @@ function NavBar() {
         { title: "CEO 인사말", path: "/company/ceo" },
         { title: "연혁 및 조직도", path: "/company/history" },
         { title: "인증 및 특허", path: "/company/certification" },
+        { title: "오시는 길", path: "/company/location" },
       ],
     },
     {

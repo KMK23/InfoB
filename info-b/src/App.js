@@ -13,6 +13,7 @@ import BoardProducts from "./pages/business/BoardProducts";
 import PerformanceCase from "./pages/research/PerformanceCase";
 import Talent from "./pages/recruitment/Talent";
 import Post from "./pages/community/Post";
+import Location from "./pages/company/Location";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="company/ceo" element={<CeoMessage />} />
             <Route path="company/history" element={<History />} />
             <Route path="company/certification" element={<Certification />} />
+            <Route path="company/location" element={<Location />} />
             <Route path="business/info" element={<BusinessInfo />} />
             <Route
               path="business/rn-d"
