@@ -16,6 +16,7 @@ import Post from "./pages/community/Post";
 import Announcement from "./pages/community/Announcement";
 import Qna from "./pages/community/Qna";
 import Inquiry from "./pages/community/Inquiry";
+import Location from "./pages/company/Location";
 
 function App() {
   return (

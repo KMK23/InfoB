@@ -49,7 +49,7 @@ const Talent = () => {
         {/* 인재상  */}
 
         <div className="talent-header">
-          <h1>인재상</h1>
+          <h1 className="">인재상</h1>
           <p>우리는 이런 인재를 찾습니다.</p>
         </div>
         <div className="talent-content">
