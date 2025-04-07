@@ -57,9 +57,7 @@ const BusinessInfo = () => {
     {
       title: "Solution Consulting",
       details: [
-        "고객사 시스템 구성 고려하여",
-        "ERP, EP, ISP 공공, 제조",
-        "서비스 산업 군별로 최적의 솔루션 제안",
+        "고객사 시스템 구성 고려하여 ERP, EP, ISP 공공, 제조 서비스 산업 군별로 최적의 솔루션 제안",
       ],
       position: "top",
     },

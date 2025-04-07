@@ -79,7 +79,7 @@
   &__menu-link {
     color: #333;
     text-decoration: none;
-    font-size: 1rem;
+    font-size: $font-size-base;
     padding: 0.5rem 1rem;
     position: relative;
     white-space: nowrap;
@@ -108,7 +108,7 @@
     @media (max-width: 900px) {
       width: 100%;
       padding: 1rem;
-      font-size: 1.1rem;
+      font-size: $font-size-base;
 
       &::after {
         display: none;
@@ -200,6 +200,7 @@
     text-decoration: none;
     padding: 0.8rem 1.5rem;
     transition: all 0.3s ease;
+    font-size: $font-size-base;
 
     &:hover {
       color: $accent-color;
