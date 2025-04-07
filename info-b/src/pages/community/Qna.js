@@ -7,7 +7,7 @@ function Qna(props) {
   return (
     <div className="recruitment-qna">
       <div>
-        <h1 className="font-semibold text-3xl">Q&A</h1>
+        <h1 className="font-semibold text-3xl">FAQ</h1>
       </div>
       <div>
         <Search />

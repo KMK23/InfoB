@@ -94,19 +94,19 @@ function Inquiry(props) {
           </div>
         </div>
         <div className="flex">
-          <div className="w-2/12 bg-[#f6f6f6] border-gray-300 border py-3 flex justify-end pr-2">
+          <div className="w-1/12 bg-[#f6f6f6] border-gray-300 border py-3 flex justify-end pr-2">
             내용
             <span className="text-[#ff0000] text-xs">
               <FaStar />
             </span>
           </div>
-          <div className="w-10/12  border-gray-300 border p-2 h-[550px]">
+          <div className="w-11/12  border-gray-300 border p-2 h-[550px]">
             {/* <tr /> */}
             <MyEditor />
           </div>
         </div>
         <div className="flex">
-          <div className="w-2/12  bg-[#f6f6f6] border-gray-300 border py-4 flex justify-end pr-2 text-xs font-semibold">
+          <div className="w-1/12  bg-[#f6f6f6] border-gray-300 border py-4 flex justify-end pr-2 text-xs font-semibold">
             자동등록방지
             <span className="text-[#ff0000] text-xs">
               <FaStar />

@@ -17,7 +17,9 @@ function Post() {
       <div>
         <Community />
       </div>
-
+      <div>
+        <button>문의하기</button>
+      </div>
       <div>
         <div>
           <Pagination />
