@@ -45,8 +45,8 @@ function NavBar() {
       path: "/community/announcement",
       submenu: [
         { title: "공지사항", path: "/community/announcement" },
-        { title: "Q&A", path: "/community/qna" },
-        { title: "1:1문의", path: "/community/inquiry" },
+        { title: "FAQ", path: "/community/faq" },
+        // { title: "1:1문의", path: "/community/inquiry" },
         { title: "게시판", path: "/community/post" },
       ],
     },

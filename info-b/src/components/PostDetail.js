@@ -1,50 +1,55 @@
-import React, { useState } from "react";
-import MyEditor from "./MyEditor";
-import { FaStar } from "react-icons/fa";
-import Captcha from "./Captcha";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addDatas } from "../API/firebase";
+import { getDatas, updateDatas } from "../pages/API/firebase";
+import { FaStar } from "react-icons/fa";
+import MyEditor from "../pages/community/MyEditor";
 
-function Inquiry({ mode = "create" }) {
-  const [companyName, setCompanyName] = useState("");
-  const [authorName, setAuthorName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
+function PostDetail(props) {
+  const { id } = useParams(); //URL에서 post ID 가져오기
+  const [post, setPost] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [captchaVisible, setCaptchaVisible] = useState(true); // 캡차 visible 상태
+  const navigate = useNavigate();
 
-  // const navigate = useNavigate();
-  const { postId } = useParams(); // 게시글 ID (상세보기, 수정 시 사용)
-  const handleSubmit = async () => {
-    // Firestore에 데이터 추가
-    const newPost = {
-      companyName,
-      authorName,
-      phoneNumber,
-      email,
-      title,
-      content,
-      createdAt: new Date(),
-      check: false, // 기본적으로 '대기' 상태
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        const data = await getDatas("posts", {
+          condition: [["docId", "==", id]],
+        });
+        const post = data[0]; // 하나의 게시글만 가져옴
+        setPost(post);
+        setTitle(post.title);
+        setContent(post.content);
+      } catch (error) {
+        console.error("게시글 불러오기 실패:", error);
+      }
     };
-    console.log("Submitting post:", newPost); // 추가된 디버깅 로그
+    fetchPost();
+  }, [id]);
 
+  const handleUpdate = async () => {
     try {
-      await addDatas("posts", newPost); // 게시글 추가
-      alert("게시글이 등록되었습니다.");
-      navigate("/community/post"); //
+      const updatedPost = {
+        title,
+        content,
+        updatedAt: new Date(),
+      };
+      await updateDatas("posts", id, updatedPost); // Firestore에 게시글 업데이트
+      alert("게시글이 수정되었습니다.");
+      navigate("/community"); // 수정 후 목록 페이지로 돌아가기
     } catch (error) {
-      console.error("게시글 등록 실패:", error);
-      alert("게시글 등록에 실패했습니다.");
+      console.error("게시글 수정 실패:", error);
+      alert("게시글 수정에 실패했습니다.");
     }
   };
 
-  const navigate = useNavigate();
   const handleClick = () => {
     navigate("/community/post");
   };
-
+  if (!post) {
+    return <div>로딩 중...</div>;
+  }
   return (
     <div className="mx-48">
       <div>
@@ -57,8 +62,6 @@ function Inquiry({ mode = "create" }) {
           </div>
           <div className="w-5/12 border-gray-300 border p-2 flex justify-center">
             <input
-              value={companyName}
-              onChange={(e) => setCompanyName(e.target.value)}
               type="text"
               className="text-[14px] border-gray-400 border w-full pl-2  rounded-sm "
               placeholder="회사명"
@@ -72,8 +75,6 @@ function Inquiry({ mode = "create" }) {
           </div>
           <div className="w-5/12 border-gray-300 border p-2 flex justify-center">
             <input
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
               type="text"
               className="text-[14px] border-gray-400 border w-full pl-2  rounded-sm py-1"
               placeholder="작성자명"
@@ -114,8 +115,6 @@ function Inquiry({ mode = "create" }) {
           </div>
           <div className="w-5/12 border-gray-300 border p-2">
             <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               type="text"
               className="text-[14px] border-gray-400 border w-full pl-2  rounded-sm py-1"
               placeholder="help@infob.co.kr"
@@ -132,7 +131,6 @@ function Inquiry({ mode = "create" }) {
           <div className="w-11/12  border-gray-300 border p-2">
             <input
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
               type="text"
               className="text-[14px] border-gray-400 border w-full pl-2  rounded-sm py-1"
               placeholder="문의제목"
@@ -151,17 +149,7 @@ function Inquiry({ mode = "create" }) {
             <MyEditor />
           </div>
         </div>
-        <div className="flex">
-          <div className="text-[14px] font-semibold w-1/12 bg-[#f6f6f6] border-gray-300 border py-3 flex justify-end pr-1">
-            자동등록방지
-            <span className="text-[#ff0000] text-[8px]">
-              <FaStar />
-            </span>
-          </div>
-          <div className="w-11/12  border-gray-300 border  ">
-            <Captcha />
-          </div>
-        </div>
+
         <div className="flex justify-between mt-6">
           <div className="">
             <button
@@ -174,9 +162,9 @@ function Inquiry({ mode = "create" }) {
           <div>
             <button
               className="bg-gray-700 text-white px-4 py-3 rounded-md hover:bg-gray-600"
-              onClick={handleSubmit}
+              onClick={handleUpdate}
             >
-              완료
+              수정
             </button>
           </div>
         </div>
@@ -185,4 +173,4 @@ function Inquiry({ mode = "create" }) {
   );
 }
 
-export default Inquiry;
+export default PostDetail;

@@ -14,9 +14,10 @@ import PerformanceCase from "./pages/research/PerformanceCase";
 import Talent from "./pages/recruitment/Talent";
 import Post from "./pages/community/Post";
 import Announcement from "./pages/community/Announcement";
-import Qna from "./pages/community/Qna";
 import Inquiry from "./pages/community/Inquiry";
 import Location from "./pages/company/Location";
+import Faq from "./pages/community/Faq";
+import PostDetail from "./components/PostDetail";
 
 function App() {
   return (
@@ -41,9 +42,10 @@ function App() {
             <Route path="recruitment/talent" element={<Talent />} />
             {/* <Route path="recruitment/benefits" element={<Benefits />} /> */}
             <Route path="community/announcement" element={<Announcement />} />
-            <Route path="community/qna" element={<Qna />} />
+            <Route path="community/faq" element={<Faq />} />
             <Route path="community/inquiry" element={<Inquiry />} />
             <Route path="community/post" element={<Post />} />
+            <Route path="community/post/:id" element={<PostDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

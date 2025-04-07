@@ -1,16 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-const firebaseConfig = {
-  apiKey: "AIzaSyBGNCl0fP6c53yP_Tq6tEpxo62kGFM08CQ",
-  authDomain: "infob-8174a.firebaseapp.com",
-  projectId: "infob-8174a",
-  storageBucket: "infob-8174a.firebasestorage.app",
-  messagingSenderId: "331678925348",
-  appId: "1:331678925348:web:223e33cd187868830b4eb1",
-  measurementId: "G-MK7K01G839",
-};
-
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   addDoc,
@@ -35,6 +25,16 @@ import {
   ref,
   deleteObject,
 } from "firebase/storage";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBGNCl0fP6c53yP_Tq6tEpxo62kGFM08CQ",
+  authDomain: "infob-8174a.firebaseapp.com",
+  projectId: "infob-8174a",
+  storageBucket: "infob-8174a.firebasestorage.app",
+  messagingSenderId: "331678925348",
+  appId: "1:331678925348:web:223e33cd187868830b4eb1",
+  measurementId: "G-MK7K01G839",
+};
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -43,14 +43,19 @@ const storage = getStorage(app);
 
 async function addDatas(collectionName, userObj) {
   try {
+    console.log("Adding data to Firestore:", userObj); // 디버깅 로그 추가
     const docRef = await addDoc(collection(db, collectionName), userObj);
-    return docRef.id; // 문서 ID 반환
+    console.log("Document added with ID:", docRef.id); // 문서 ID 출력
+    return docRef.id;
   } catch (error) {
-    console.error("Error adding document: ", error);
+    console.error("Error adding document: ", error); // 오류 메시지
     throw new Error(error.message); // 에러 메시지 반환
   }
 }
 
+function getCollection(collectionName) {
+  return collection(db, collectionName);
+}
 function getQuery(collectionName, queryOptions) {
   const { conditions = [], orderBys = [], limits } = queryOptions;
   const collect = getCollection(collectionName);
@@ -77,7 +82,7 @@ async function getDatas(collectionName, queryOptions) {
     ...doc.data(),
     docId: doc.id,
   }));
-  return resultData;
+  return resultData; //게시글 데이터 반환
 }
 
 async function deleteDatas(collectionName, docId) {
@@ -122,3 +127,4 @@ async function updateDatas(collectionName, docId, updateObj) {
     throw error; // 에러를 던져서 호출하는 쪽에서 처리하게 하기
   }
 }
+export { getDatas, addDatas, updateDatas };

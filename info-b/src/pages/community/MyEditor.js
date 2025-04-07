@@ -15,7 +15,7 @@ function MyEditor() {
     toolbar: [
       // 제목, 서식
       [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"], // B I S
+      ["bold", "italic", "strike"], // B I S
       ["blockquote", "code-block"], // 인용구, 코드블럭
       ["link", "image"], // 링크, 이미지
 
@@ -31,12 +31,12 @@ function MyEditor() {
   return (
     <div className="w-full">
       {/* 탭 버튼 */}
-      <div className="flex border-b mb-2">
+      <div className="flex border-b mb-2 ">
         <button
           onClick={() => setActiveTab("write")}
-          className={`px-4 py-2 ${
+          className={`px-2 text-[14px] ${
             activeTab === "write"
-              ? "border-b-2 border-blue-500 font-bold"
+              ? "border-b border-blue-500   font-bold "
               : "text-gray-500"
           }`}
         >
@@ -44,9 +44,9 @@ function MyEditor() {
         </button>
         <button
           onClick={() => setActiveTab("preview")}
-          className={`px-4 py-2 ${
+          className={`px-2 text-[14px] ${
             activeTab === "preview"
-              ? "border-b-2 border-blue-500 font-bold"
+              ? "border-b-2 border-blue-500 font-bold "
               : "text-gray-500"
           }`}
         >
