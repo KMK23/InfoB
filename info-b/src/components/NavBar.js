@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../resources/images/main/logo_t.png";
 import "../styles/components/_navbar.scss";
 
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const menuItems = [
     {
@@ -41,7 +42,7 @@ function NavBar() {
     },
     {
       title: "커뮤니티",
-      path: "/community/post",
+      path: "/community/announcement",
       submenu: [
         { title: "공지사항", path: "/community/announcement" },
         { title: "Q&A", path: "/community/qna" },
@@ -51,9 +52,10 @@ function NavBar() {
     },
   ];
 
-  const handleMenuClick = (index, e) => {
+  const handleMenuClick = (index, e, path) => {
     e.preventDefault();
     setActiveMenu(activeMenu === index ? null : index);
+    navigate(path); // 메인 메뉴 클릭 시 해당 경로로 이동
   };
 
   const toggleMobileMenu = () => {
@@ -90,24 +92,13 @@ function NavBar() {
                 activeMenu === index ? "active" : ""
               }`}
             >
-              {/* 채용 메뉴는 바로 Link로 연결 */}
-              {item.title === "채용" ? (
-                <Link
-                  to={item.path}
-                  className="navbar__menu-link"
-                  onClick={() => setActiveMenu(null)} // 메뉴 닫기
-                >
-                  {item.title}
-                </Link>
-              ) : (
-                <a
-                  href={item.path}
-                  className="navbar__menu-link"
-                  onClick={(e) => handleMenuClick(index, e)}
-                >
-                  {item.title}
-                </a>
-              )}
+              <a
+                href={item.path}
+                className="navbar__menu-link"
+                onClick={(e) => handleMenuClick(index, e, item.path)}
+              >
+                {item.title}
+              </a>
               {/* Submenu 표시 */}
               {item.submenu && (
                 <div

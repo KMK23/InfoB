@@ -1,3 +1,5 @@
+@import "../variables";
+
 .business-info {
   padding: 4rem 2rem;
   background: #fff;
@@ -166,6 +168,7 @@
 
     span {
       display: block;
+      text-align: left;
       margin-bottom: 0.3rem;
       position: relative;
       padding-left: 12px;
