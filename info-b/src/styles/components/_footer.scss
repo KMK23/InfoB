@@ -3,7 +3,7 @@
 .footer {
   background-color: #f8f8f8;
   padding: $spacing-large 0;
-  font-family: "paybooc Medium", sans-serif;
+  font-family: $base-font;
 
   &__container {
     @include container;
@@ -20,7 +20,7 @@
 
   &__info {
     color: $gray;
-    font-size: 0.9rem;
+    font-size: $font-size-base;
     line-height: 1.8;
 
     p {
@@ -50,7 +50,7 @@
 
       a {
         color: $light-gray;
-        font-size: $font-size-small;
+        font-size: $font-size-base;
         transition: color 0.3s;
 
         &:hover {
@@ -66,6 +66,6 @@
     padding-top: $spacing-base;
     border-top: 1px solid rgba($white, 0.1);
     color: $light-gray;
-    font-size: $font-size-small;
+    font-size: $font-size-base;
   }
 }

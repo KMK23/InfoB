@@ -18,6 +18,7 @@ import patent005 from "../../resources/images/patent/patent-005.jpg";
 const Certification = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("certifications"); // "certifications" or "patents"
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -36,36 +37,51 @@ const Certification = () => {
       id: 1,
       image: certification001,
       title: "기업부설연구소 인정서",
-      description:
-        "기업부설연구소를 설치·운영하여 과학기술 분야 / 제14조제4항 규정 기업의 연구개발능력을 인정받아 설립, 인정번호와 함께 과학기술정보통신부 장관 명의로 발급받았습니다. 기업의 기술 개발과 혁신적인 연구로 글로벌 경쟁력을 확보하기 위한 연구소를 운영하고 있습니다.",
+      description: [
+        "- 과학기술정보통신부 장관 명의로 발급",
+        "- 기업의 연구개발능력 인정",
+        "- 글로벌 경쟁력 확보를 위한 연구소 운영",
+      ],
     },
     {
       id: 2,
       image: certification002,
       title: "벤처기업 확인서",
-      description:
-        "벤처기업육성에 관한 특별조치법에 의거하여 기술성과 사업성이 우수한 기업으로 인정받아 벤처기업임을 확인받았으며, 혁신적인 기술개발과 성장잠재력을 인정받아 중소벤처기업부로부터 발급받았습니다.",
+      description: [
+        "- 중소벤처기업부 발급",
+        "- 기술성과와 사업성 우수 기업 인정",
+        "- 혁신적 기술개발과 성장잠재력 보유",
+      ],
     },
     {
       id: 3,
       image: certification003,
       title: "ISO 27001 인증서",
-      description:
-        "정보보안관리체계에 대한 국제표준 인증으로, 조직의 정보보안 관리체계가 국제표준에 부합함을 인증받았습니다. 고객의 정보보호와 보안을 최우선으로 하는 기업임을 입증하였습니다.",
+      description: [
+        "- 정보보안관리체계 국제표준 인증",
+        "- 고객 정보보호 최우선 기업",
+        "- 체계적인 보안 관리 시스템 구축",
+      ],
     },
     {
       id: 4,
       image: certification004,
       title: "소프트웨어사업자 신고확인서",
-      description:
-        "소프트웨어 산업 진흥법에 의거하여 소프트웨어사업자로 등록되어 있음을 확인받았습니다. 이를 통해 전문적인 소프트웨어 개발 및 공급 능력을 인정받았습니다.",
+      description: [
+        "- 소프트웨어 산업 진흥법 의거 등록",
+        "- 전문적 소프트웨어 개발 능력 인정",
+        "- 소프트웨어 공급 자격 보유",
+      ],
     },
     {
       id: 5,
       image: certification005,
       title: "중소기업 확인서",
-      description:
-        "중소기업기본법 제2조에 의한 중소기업임을 확인받았으며, 대한민국 중소기업의 경쟁력 강화와 혁신성장을 선도하는 기업으로 인정받았습니다.",
+      description: [
+        "- 중소기업기본법 제2조 의거 확인",
+        "- 중소기업 경쟁력 강화 기업",
+        "- 혁신성장 선도 기업",
+      ],
     },
   ];
 
@@ -74,36 +90,51 @@ const Certification = () => {
       id: 1,
       image: patent001,
       title: "가로등 고장 감지 장치",
-      description:
-        "특허번호: 제 10-2073589호\n등록일: 2020년 1월 30일\n가로등의 고장을 실시간으로 감지하고 모니터링하는 시스템에 관한 특허입니다.",
+      description: [
+        "- 특허번호: 제 10-2073589호",
+        "- 등록일: 2020년 1월 30일",
+        "- 실시간 고장 감지 및 모니터링 시스템",
+      ],
     },
     {
       id: 2,
       image: patent002,
       title: "무선충전 기능을 구비한 다이어리 설치용 다용도 충전장치",
-      description:
-        "특허번호: 제 10-1520935호\n등록일: 2015년 5월 11일\n다이어리와 결합된 무선충전 시스템의 혁신적인 설계에 관한 특허입니다.",
+      description: [
+        "- 특허번호: 제 10-1520935호",
+        "- 등록일: 2015년 5월 11일",
+        "- 다이어리 결합형 무선충전 시스템",
+      ],
     },
     {
       id: 3,
       image: patent003,
       title: "휴대용 충전 장치 및 그의 충방전 방법",
-      description:
-        "특허번호: 제 10-1453929호\n등록일: 2014년 10월 16일\n효율적인 충방전 방식을 적용한 휴대용 충전 장치에 관한 특허입니다.",
+      description: [
+        "- 특허번호: 제 10-1453929호",
+        "- 등록일: 2014년 10월 16일",
+        "- 효율적 충방전 방식 적용",
+      ],
     },
     {
       id: 4,
       image: patent004,
       title: "휴대용 충전 장치",
-      description:
-        "특허번호: 제 10-1456582호\n등록일: 2014년 10월 24일\n혁신적인 디자인과 기능을 결합한 휴대용 충전 장치에 관한 특허입니다.",
+      description: [
+        "- 특허번호: 제 10-1456582호",
+        "- 등록일: 2014년 10월 24일",
+        "- 혁신적 디자인과 기능 결합",
+      ],
     },
     {
       id: 5,
       image: patent005,
       title: "시간-주파수 변환을 이용한 플랜트 설비의 누출음 탐지 장치 및 방법",
-      description:
-        "특허번호: 제 10-1958628호\n등록일: 2019년 3월 11일\n플랜트 설비의 누출을 효과적으로 감지하는 첨단 기술에 관한 특허입니다.",
+      description: [
+        "- 특허번호: 제 10-1958628호",
+        "- 등록일: 2019년 3월 11일",
+        "- 플랜트 설비 누출 감지 기술",
+      ],
     },
   ];
 
@@ -117,55 +148,80 @@ const Certification = () => {
           </p>
         </div>
 
-        <section className="certification__section">
-          <h2 className="section-title">인증서</h2>
-          <div className="certification__grid">
-            {certifications.map((cert) => (
-              <div key={cert.id} className="certification__card">
-                <div
-                  className="certification__image"
-                  onClick={() => openModal(cert.image)}
-                >
-                  <img src={cert.image} alt={cert.title} />
-                  <div className="certification__overlay">
-                    <span className="certification__zoom">확대보기</span>
-                  </div>
-                </div>
-                <div className="certification__content">
-                  <h3 className="certification__title">{cert.title}</h3>
-                  <p className="certification__description">
-                    {cert.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <div className="certification__tabs">
+          <button
+            className={`certification__tab ${
+              activeTab === "certifications" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("certifications")}
+          >
+            인증서
+          </button>
+          <button
+            className={`certification__tab ${
+              activeTab === "patents" ? "active" : ""
+            }`}
+            onClick={() => setActiveTab("patents")}
+          >
+            특허
+          </button>
+        </div>
 
-        <section className="certification__section">
-          <h2 className="section-title">특허</h2>
-          <div className="certification__grid">
-            {patents.map((patent) => (
-              <div key={patent.id} className="certification__card">
-                <div
-                  className="certification__image"
-                  onClick={() => openModal(patent.image)}
-                >
-                  <img src={patent.image} alt={patent.title} />
-                  <div className="certification__overlay">
-                    <span className="certification__zoom">확대보기</span>
+        {activeTab === "certifications" && (
+          <section className="certification__section">
+            <div className="certification__grid">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="certification__card">
+                  <div
+                    className="certification__image"
+                    onClick={() => openModal(cert.image)}
+                  >
+                    <img src={cert.image} alt={cert.title} />
+                    <div className="certification__overlay">
+                      <span className="certification__zoom">확대보기</span>
+                    </div>
+                  </div>
+                  <div className="certification__content">
+                    <h3 className="certification__title">{cert.title}</h3>
+                    <ul className="certification__description">
+                      {cert.description.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-                <div className="certification__content">
-                  <h3 className="certification__title">{patent.title}</h3>
-                  <p className="certification__description">
-                    {patent.description}
-                  </p>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {activeTab === "patents" && (
+          <section className="certification__section">
+            <div className="certification__grid">
+              {patents.map((patent) => (
+                <div key={patent.id} className="certification__card">
+                  <div
+                    className="certification__image"
+                    onClick={() => openModal(patent.image)}
+                  >
+                    <img src={patent.image} alt={patent.title} />
+                    <div className="certification__overlay">
+                      <span className="certification__zoom">확대보기</span>
+                    </div>
+                  </div>
+                  <div className="certification__content">
+                    <h3 className="certification__title">{patent.title}</h3>
+                    <ul className="certification__description">
+                      {patent.description.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
 
       {modalOpen && (
