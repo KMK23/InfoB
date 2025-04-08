@@ -6,6 +6,7 @@ import "../styles/components/_navbar.scss";
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [fontSize, setFontSize] = useState("normal"); // 기본값을 'normal'로 변경
   const navigate = useNavigate();
 
   const menuItems = [
@@ -62,6 +63,20 @@ function NavBar() {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const handleSubmenuClick = (path) => {
+    setActiveMenu(null); // 서브메뉴 닫기
+    setIsMobileMenuOpen(false); // 모바일 메뉴 닫기
+    navigate(path); // 해당 경로로 이동
+  };
+
+  const handleFontSize = () => {
+    setFontSize(fontSize === "small" ? "large" : "small");
+    document.documentElement.style.setProperty(
+      "--font-size-multiplier",
+      fontSize === "small" ? "1.1" : "0.9"
+    );
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar__inner">
@@ -69,6 +84,12 @@ function NavBar() {
           <Link to="/">
             <img src={logo} alt="INFOB" />
           </Link>
+        </div>
+
+        <div className="navbar__font-size">
+          <button className="navbar__font-size-btn" onClick={handleFontSize}>
+            가<sub>{fontSize === "small" ? "대" : "소"}</sub>
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -111,7 +132,7 @@ function NavBar() {
                       key={subItem.title}
                       to={subItem.path}
                       className="navbar__submenu-link"
-                      onClick={() => setActiveMenu(null)} // 메뉴 닫기
+                      onClick={() => handleSubmenuClick(subItem.path)}
                     >
                       {subItem.title}
                     </Link>

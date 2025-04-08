@@ -107,6 +107,19 @@ const BusinessInfo = () => {
         <h1 className="business-info__title">사업분야 : Consulting, SI </h1>
       </div>
       <div className="business-info__content">
+        <h2>IT Service</h2>
+        <p>
+          SI/SM 구축 및 운영, 시스템 통합 유지보수를 통해 공공 및 민간 분야의 IT
+          시스템 구축부터 운영까지, 전문적인 기술력으로 고객 맞춤형 서비스를
+          제공합니다.
+        </p>
+
+        <h2>IoT 시스템구축 및 솔루션</h2>
+        <p>
+          하드웨어 개발 및 맞춤형 IoT 솔루션 제공을 통해 IoT 기기 개발부터
+          시스템 구축까지, 고객의 환경에 맞는 다양한 IoT 솔루션을 제공합니다.
+        </p>
+
         {/* 원형 레이아웃 */}
         <div className="business-info__circle-container">
           {/* 중앙 원 */}

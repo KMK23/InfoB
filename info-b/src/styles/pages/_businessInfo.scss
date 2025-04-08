@@ -2,7 +2,7 @@
 
 .business-info {
   padding: 4rem 2rem;
-  background: #fff;
+  background: $bg-light;
 
   &__header {
     text-align: center;
@@ -10,8 +10,8 @@
   }
 
   &__title {
-    font-size: 2.2rem;
-    color: #333;
+    font-size: calc(2.2rem * var(--font-size-multiplier));
+    color: $text-color;
     margin-bottom: 0.8rem;
     font-weight: 600;
   }
@@ -19,17 +19,34 @@
   &__content {
     max-width: 1200px;
     margin: 0 auto;
+
+    > h2 {
+      font-size: calc(2rem * var(--font-size-multiplier));
+      color: $text-dark;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    > p {
+      font-size: calc(1.1rem * var(--font-size-multiplier));
+      color: $text-gray;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
   }
 
-  // 원형 레이아웃 컨테이너
-  &__circle-container {
+  // 원형 레이아웃 공통 스타일
+  &__circle-container,
+  &__si-container {
     position: relative;
     width: 600px;
     height: 600px;
     margin: 0 auto;
+    margin-bottom: 4rem;
   }
 
-  // 중앙 원
   &__center-circle {
     position: absolute;
     top: 50%;
@@ -37,24 +54,23 @@
     transform: translate(-50%, -50%);
     width: 150px;
     height: 150px;
-    background: #333;
+    background: $primary-dark;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
-    box-shadow: 0 0 20px rgba(233, 173, 28, 0.15);
-    border: 2px solid #e9ad1c;
+    box-shadow: 0 0 20px $shadow-medium;
+    border: 2px solid $primary-gold;
 
     h2 {
-      color: #e9ad1c;
-      font-size: 1.2rem;
+      color: $primary-gold;
+      font-size: calc(1.2rem * var(--font-size-multiplier));
       font-weight: 600;
       text-align: center;
     }
   }
 
-  // 연결선
   &__connections {
     position: absolute;
     top: 50%;
@@ -71,30 +87,36 @@
       left: 0;
       width: 100%;
       height: 100%;
-      border: 15px solid #e6e6e6;
+      border: 15px solid $bg-gray;
       border-radius: 50%;
     }
   }
 
-  // 주변 원들
   &__circle {
     position: absolute;
     width: 180px;
     height: 180px;
-    background: #e9ad1c;
+    background: $primary-gold;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: $text-light;
     padding: 1.5rem;
     transition: all 0.3s ease;
     z-index: 3;
-    box-shadow: 0 4px 8px rgba(233, 173, 28, 0.1);
+    box-shadow: 0 4px 8px $shadow-light;
 
     &:hover {
-      box-shadow: 0 10px 20px rgba(233, 173, 28, 0.2);
+      box-shadow: 0 10px 20px $shadow-dark;
+    }
+
+    h3 {
+      font-size: calc(1.2rem * var(--font-size-multiplier));
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      text-align: center;
     }
 
     // 위치 지정
@@ -150,20 +172,13 @@
         word-break: keep-all;
       }
     }
-
-    h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      text-align: center;
-    }
   }
 
   &__circle-details {
     position: absolute;
     width: 200px;
-    color: #666;
-    font-size: 0.9rem;
+    color: $text-gray;
+    font-size: calc(0.9rem * var(--font-size-multiplier));
     line-height: 1.4;
 
     span {
@@ -177,30 +192,40 @@
         content: "•";
         position: absolute;
         left: 0;
-        color: #e9ad1c;
+        color: $primary-gold;
       }
     }
   }
 
-  // SI 영역 (하단 그리드)
+  // SI 영역 스타일
   &__si-section {
     margin-top: 4rem;
+    position: relative;
 
     &-header {
-      text-align: center;
-      margin-bottom: 3rem;
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 3rem;
+      background: $primary-dark;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px $shadow-medium;
+      border: 2px solid $primary-gold;
+      z-index: 2;
 
       h2 {
-        font-size: 2.5rem;
-        color: #1a3c7c;
+        color: $primary-gold;
+        font-size: calc(1.2rem * var(--font-size-multiplier));
         font-weight: 600;
-        margin-bottom: 0.5rem;
+        text-align: center;
+        margin: 0;
       }
 
       p {
-        font-size: 1.2rem;
-        color: #666;
-        font-weight: 500;
+        display: none;
       }
     }
 
@@ -209,60 +234,64 @@
       grid-template-columns: repeat(2, 1fr);
       gap: 2rem;
       padding: 0 2rem;
-    }
 
-    .business-info__area {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 12px;
-      padding: 2rem;
-      transition: all 0.3s ease;
+      .business-info__area {
+        flex: 1;
+        min-width: 300px;
+        background: $bg-light;
+        border: 1px solid $border-gray;
+        border-radius: 12px;
+        padding: 2rem;
+        transition: all 0.3s ease;
 
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border-color: #e9ad1c;
-      }
-
-      h3 {
-        font-size: 1.3rem;
-        color: #1a3c7c;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.8rem;
-
-        svg {
-          color: #e9ad1c;
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 10px 20px $shadow-gray;
+          border-color: $primary-gold;
         }
-      }
 
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
+        h3 {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: calc(1.3rem * var(--font-size-multiplier));
+          color: $primary-gold;
+          font-weight: 600;
+          margin-bottom: 1.5rem;
 
-        li {
-          font-size: 0.95rem;
-          color: #666;
-          margin: 0.5rem 0;
-          padding-left: 1.2rem;
-          position: relative;
+          svg {
+            color: $primary-gold;
+          }
+        }
 
-          &:before {
-            content: "▸";
-            position: absolute;
-            left: 0;
-            color: #e9ad1c;
+        ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+
+          li {
+            font-size: calc(0.95rem * var(--font-size-multiplier));
+            color: $text-dark;
+            margin: 0.8rem 0;
+            padding-left: 1.2rem;
+            position: relative;
+
+            &:before {
+              content: "▸";
+              position: absolute;
+              left: 0;
+              color: $primary-gold;
+            }
           }
         }
       }
     }
   }
 
+  // 반응형 스타일
   @media (max-width: 992px) {
-    &__circle-container {
+    &__circle-container,
+    &__si-container {
       width: 100%;
       height: auto;
       padding: 2rem 0;
@@ -285,9 +314,20 @@
     &__circle {
       position: static;
       transform: none;
-      width: 160px;
-      height: 160px;
+      width: 100%;
+      height: auto;
       margin-bottom: 2rem;
+      border-radius: 12px;
+      padding: 2rem;
+      background: $bg-light;
+      border: 1px solid $primary-gold;
+      box-shadow: 0 4px 8px $shadow-light;
+
+      h3 {
+        color: $primary-gold;
+        font-size: calc(1.4rem * var(--font-size-multiplier));
+        margin-bottom: 1rem;
+      }
 
       &--top,
       &--left,
@@ -297,29 +337,58 @@
         .business-info__circle-details {
           position: static;
           transform: none;
-          width: auto;
-          max-width: 300px;
-          margin: 1rem auto;
-          text-align: center;
+          width: 100%;
+          margin: 0;
+          text-align: left;
+
+          span {
+            font-size: calc(1rem * var(--font-size-multiplier));
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+            color: $text-dark;
+          }
         }
+      }
+
+      &:hover {
+        transform: translateY(-5px);
       }
     }
 
+    // SI 섹션 반응형
     &__si-section {
       &-header {
+        width: 120px;
+        height: 120px;
         margin-bottom: 2rem;
 
         h2 {
-          font-size: 2rem;
-        }
-
-        p {
-          font-size: 1.1rem;
+          font-size: calc(1.1rem * var(--font-size-multiplier));
         }
       }
 
       &-content {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+
+        .business-info__area {
+          width: 100%;
+          min-width: auto;
+          padding: 1.5rem;
+          margin-bottom: 1rem;
+          border: 1px solid $primary-gold;
+
+          h3 {
+            font-size: calc(1.2rem * var(--font-size-multiplier));
+            margin-bottom: 1rem;
+          }
+
+          ul li {
+            font-size: calc(0.9rem * var(--font-size-multiplier));
+            margin: 0.5rem 0;
+          }
+        }
       }
     }
   }
@@ -328,41 +397,46 @@
     padding: 2rem 1rem;
 
     &__circle {
-      width: 140px;
-      height: 140px;
-      padding: 1rem;
+      padding: 1.5rem;
 
       h3 {
-        font-size: 1.2rem;
+        font-size: calc(1.2rem * var(--font-size-multiplier));
       }
 
-      p {
-        font-size: 0.8rem;
+      .business-info__circle-details span {
+        font-size: calc(0.9rem * var(--font-size-multiplier));
       }
     }
 
     &__si-section {
       &-header {
         h2 {
-          font-size: 1.8rem;
+          font-size: calc(1.8rem * var(--font-size-multiplier));
         }
 
         p {
-          font-size: 1rem;
+          font-size: calc(1rem * var(--font-size-multiplier));
         }
       }
 
       .business-info__area {
         padding: 1.5rem;
+        border: 1px solid $primary-gold;
 
         h3 {
-          font-size: 1.2rem;
+          font-size: calc(1.2rem * var(--font-size-multiplier));
         }
 
         ul li {
-          font-size: 0.9rem;
+          font-size: calc(0.9rem * var(--font-size-multiplier));
         }
       }
     }
+  }
+
+  &__subtitle {
+    font-size: calc(1.1rem * var(--font-size-multiplier));
+    color: $text-color;
+    margin-bottom: 2rem;
   }
 }

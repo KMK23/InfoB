@@ -2,7 +2,7 @@
 
 .navbar {
   width: 100%;
-  background-color: $white;
+  background-color: $bg-light;
   padding: 20px 0;
   border-bottom: 1px solid $border-color;
   position: relative;
@@ -21,6 +21,26 @@
     img {
       height: 30px;
       display: block;
+    }
+  }
+
+  &__font-size {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+
+    &-btn {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      color: $text-dark;
+
+      sub {
+        font-size: 11px;
+        margin-left: 1px;
+      }
     }
   }
 
@@ -61,25 +81,19 @@
 
     &.active {
       .navbar__menu-link {
-        color: $accent-color;
+        color: $primary-navy;
 
         &::after {
           width: 100%;
         }
       }
-
-      .navbar__submenu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-      }
     }
   }
 
   &__menu-link {
-    color: #333;
+    color: $text-dark;
     text-decoration: none;
-    font-size: $font-size-base;
+    font-size: $font-size-small;
     padding: 0.5rem 1rem;
     position: relative;
     white-space: nowrap;
@@ -93,12 +107,12 @@
       transform: translateX(-50%);
       width: 0;
       height: 2px;
-      background-color: $accent-color;
+      background-color: $primary-navy;
       transition: width 0.3s ease;
     }
 
     &:hover {
-      color: $accent-color;
+      color: $primary-navy;
 
       &::after {
         width: 100%;
@@ -108,7 +122,7 @@
     @media (max-width: 900px) {
       width: 100%;
       padding: 1rem;
-      font-size: $font-size-base;
+      font-size: 16px;
 
       &::after {
         display: none;
@@ -132,7 +146,7 @@
       width: 25px;
       height: 3px;
       margin: 5px 0;
-      background-color: #333;
+      background-color: $text-dark;
       transition: all 0.3s ease;
     }
 
@@ -196,20 +210,21 @@
   }
 
   &__submenu-link {
-    color: #333;
+    color: $text-dark;
     text-decoration: none;
-    padding: 0.8rem 1.5rem;
-    transition: all 0.3s ease;
+    padding: 0.5rem 1.5rem;
     font-size: $font-size-base;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 
     &:hover {
-      color: $accent-color;
-      background: rgba(0, 0, 0, 0.05);
+      background-color: rgba($primary-navy, 0.05);
+      color: $primary-navy;
     }
 
     @media (max-width: 900px) {
-      padding: 0.8rem 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 14px;
     }
   }
 }
-// ... existing code ...

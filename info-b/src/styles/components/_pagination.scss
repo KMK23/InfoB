@@ -1,9 +1,18 @@
+@import "../variables";
+
 .pagination {
   display: flex;
   list-style: none;
   padding: 10px;
   justify-content: center;
   align-items: center;
+
+  &__item {
+    &--active {
+      background-color: $primary-color;
+      color: $text-light;
+    }
+  }
 }
 
 .pagination li {

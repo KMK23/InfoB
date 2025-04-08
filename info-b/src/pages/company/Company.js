@@ -14,30 +14,30 @@ function Company() {
           pagination={{ clickable: true }}
           className="first-swiper"
         >
-          <SwiperSlide className="main_img1">
+          <SwiperSlide className="main_img1 slide1">
             <p>
-              Total Iaas 서비스 제공
+              SI & 컨설팅 서비스
               <span>
-                클라우드 구축, 백업, 재해복구 등 <br />
-                고객의 환경에 맞는 다양한 클라우드 서비스 제공
+                정보화 전략 수립부터 시스템 구축까지 <br />
+                고객 맞춤형 통합 솔루션 제공
               </span>
             </p>
           </SwiperSlide>
-          <SwiperSlide className="main_img1">
+          <SwiperSlide className="main_img1 slide2">
             <p>
-              Total Iaas 서비스 제공
+              IoT 시스템 구축
               <span>
-                클라우드 구축, 백업, 재해복구 등 <br />
-                고객의 환경에 맞는 다양한 클라우드 서비스 제공
+                하드웨어 개발 및 맞춤형 IoT 솔루션으로 <br />
+                스마트한 디지털 혁신 구현
               </span>
             </p>
           </SwiperSlide>
-          <SwiperSlide className="main_img1">
+          <SwiperSlide className="main_img1 slide3">
             <p>
-              Total Iaas 서비스 제공
+              클라우드 인프라 서비스
               <span>
                 클라우드 구축, 백업, 재해복구 등 <br />
-                고객의 환경에 맞는 다양한 클라우드 서비스 제공
+                안정적인 IT 인프라 환경 구축
               </span>
             </p>
           </SwiperSlide>

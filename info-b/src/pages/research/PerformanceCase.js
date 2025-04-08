@@ -1,39 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/pages/_performanceCase.scss";
 import FadeInSection from "../../components/FadeInSection";
 
 function PerformanceCase() {
+  const [selectedYear, setSelectedYear] = useState("2021");
+
   const timeline = [
     {
       year: "2021",
       projects: [
         {
-          client: "국세청",
-          project:
+          category: "국세청",
+          title:
             "국세청 '빅데이터를 활용한 분석모델 개발 사업' - 옥타곤(시간화툴) 기술지원",
         },
-        { client: "조달청", project: "차세대 RFID물품관리시스템 구축" },
         {
-          client: "엔텔스",
-          project:
+          category: "조달청",
+          title: "차세대 RFID물품관리시스템 구축",
+        },
+        {
+          category: "포스코",
+          title:
             "다중무선센서기반고로노체 CO가스, 고온모니터링을 통한 사전 작업자 안전 계약변경 합의서",
         },
         {
-          client: "한국산업기술평가관리원",
-          project: "KEIT 스마트 RCMS 고도화 사업",
+          category: "한국산업기술평가관리원",
+          title: "KEIT 스마트 RCMS 고도화 사업",
         },
         {
-          client: "KISTI",
-          project:
+          category: "조달청",
+          title: "차세대 RFID물품관리시스템 구축",
+        },
+        {
+          category: "KISTI",
+          title:
             "2021년 국가과학기술지식정보서비스 및 NTIS 데이터 연계/정제/품질관리 체계 구축",
         },
         {
-          client: "관세청",
-          project: "관세청 2021년 빅데이터 플랫폼 기반 분선모델 개발 사업",
+          category: "관세청",
+          title: "관세청 2021년 빅데이터 플랫폼 기반 분석모델 개발 사업",
         },
         {
-          client: "조달청",
-          project: "선제적 AI 기반 조달요청 발주지원 시스템 구축(포털개발)",
+          category: "조달청",
+          title: "선제적 AI 기반 조달요청 발주지원 시스템 구축(포털개발)",
+        },
+        {
+          category: "조달청",
+          title: "차세대 RFID물품관리시스템 구축",
+        },
+        {
+          category: "조달청",
+          title: "차세대 국가전자조달시스템 나라장터(차세대 나라장터) 구축",
+        },
+        {
+          category: "조달청",
+          title: "조달청 디지털서비스 전환을 위한지원 가능성 구축",
+        },
+        {
+          category: "조달청",
+          title: "조달청 차세대 국가전자조달시스템(나라장터) 구축 사업",
         },
       ],
     },
@@ -41,21 +66,45 @@ function PerformanceCase() {
       year: "2020",
       projects: [
         {
-          client: "조달청",
-          project: "차세대 RFID물품관리시스템 구축 사업(응용 개발 부문)",
+          category: "조달청",
+          title: "차세대 RFID물품관리시스템 구축 사업(응용 개발 부문)",
         },
         {
-          client: "국가정보자원관리원",
-          project: "2020년 제1차 범정부 정보자원 통합구축 HW1 사업",
-        },
-        { client: "국가철도공단", project: "KR 재산관리통합시스템 구축 용역" },
-        {
-          client: "조달청",
-          project: "혁신상품 공공조달 플랫폼 2단계 시스템 구축",
+          category: "조달청",
+          title: "2020년 제1차 범정부 정보자원 통합구축 HW1 사업",
         },
         {
-          client: "㈜원언더스텐드",
-          project: "차세대 포토카드 출력 플랫폼 개발(추가 개발분 포함)",
+          category: "조달청",
+          title: "조달청 재물조사시스템 재구축 사업",
+        },
+        {
+          category: "국가철도공단연구원",
+          title: "2020년 제1차 범정부 정보자원 통합구축 HW1 사업",
+        },
+        {
+          category: "국가철도공단",
+          title: "KR 재산관리통합시스템 구축 용역",
+        },
+        {
+          category: "조달청",
+          title: "혁신상품 공공조달 플랫폼 2단계 시스템 구축",
+        },
+        {
+          category: "조달청",
+          title: "조달업체 거래정보 분석시스템 구축(2차)",
+        },
+        {
+          category: "조달청",
+          title: "기술평가위원관리시스템 기능개선 사업",
+        },
+        {
+          category: "조달청",
+          title:
+            "e-발주시스템 연계와 업무의 현행화를 위한 시스템 기능 보완/사용성개선을 위한(중)",
+        },
+        {
+          category: "한국전자통신연구원",
+          title: "차세대 포토카드 출력 플랫폼 개발(추가 개발분 포함)",
         },
       ],
     },
@@ -63,34 +112,89 @@ function PerformanceCase() {
       year: "2019",
       projects: [
         {
-          client: "국민권익위원회",
-          project:
+          category: "조달청",
+          title: "2019년 제1차 범정부 정보자원 통합구축(HW1) 용역",
+        },
+        {
+          category: "국민권익위원회",
+          title:
             "한국정보화진흥원_지능정보 기반 차세대 신문고 구축/분석 및 설계",
         },
         {
-          client: "소방청",
-          project: "소방공무원 보건안전 관리시스템 구축사업",
+          category: "소방청",
+          title: "소방공무원 보건안전 관리시스템 구축사업",
         },
         {
-          client: "화인시스템",
-          project: "태양광 연계 및 ESS용 EMS소프트웨어 개발",
+          category: "화인시스템",
+          title: "태양광 연계 및 ESS용 EMS소프트웨어 개발",
         },
-        { client: "국토부", project: "GIS 기반 통합상황관리 시스템 구축" },
-        { client: "조달청", project: "국유재산조사관리시스템 3차 고도화 사업" },
+        {
+          category: "국토부",
+          title: "GIS 기반 통합상황관리 시스템 구축",
+        },
+        {
+          category: "조달청",
+          title: "국유재산조사관리시스템 3차 고도화 사업",
+        },
+        {
+          category: "소방청/국가정보자원관리원",
+          title:
+            "소방안전시설점검업무시스템(소방시스템 통합개발) 및 클라우드 기반 재구성사업",
+        },
+        {
+          category: "정부통합전산센터",
+          title: "한국산업단지공단 통합포털사업 컨설팅",
+        },
+        {
+          category: "조달청",
+          title: "혁신제품/우수제품 플랫폼 구축 고도화",
+        },
+        {
+          category: "조달청",
+          title: "혁신제품/우수제품 플랫폼 구축 고도화(중)",
+        },
+        {
+          category: "한국우편사업진흥원",
+          title:
+            "새우편시스템 구축을 위한 정보화전략 컨설팅 위한 전문가지원(정보 통합)",
+        },
       ],
     },
     {
       year: "2018",
       projects: [
         {
-          client: "인사혁신처",
-          project: "2018년 국가인재데이터베이스 유지보수 용역",
+          category: "인사혁신처",
+          title: "2018년 국가인재데이터베이스 유지보수 용역",
         },
-        { client: "엔텔스", project: "전력소프트 공통 플랫폼 개발" },
-        { client: "특허청", project: "특허청 전산자원 도입사업" },
         {
-          client: "전자통신연구소",
-          project: "복합재난 예측시나리오 재난 설정 및 연계모듈 개발",
+          category: "엔텔스",
+          title: "전력소프트 공통 플랫폼 개발",
+        },
+        {
+          category: "특허청",
+          title: "특허청 전산자원 도입사업",
+        },
+        {
+          category: "전자통신연구소",
+          title: "복합재난 예측시나리오 재난 설정 및 연계모듈 개발",
+        },
+        {
+          category: "소방청/국가정보자원관리원",
+          title: "GIS Report 분석과 개발업무 계약",
+        },
+        {
+          category: "울트라엔지니어링",
+          title:
+            "설계하자진단 2018년 유지보수용역(시스템 유지보수/시스템 운영)",
+        },
+        {
+          category: "엔텔스",
+          title: "전력소프트 공통 플랫폼 개발",
+        },
+        {
+          category: "보건복지부",
+          title: "복지정보원 정부자원시스템 기능개선 사업",
         },
       ],
     },
@@ -98,34 +202,23 @@ function PerformanceCase() {
       year: "2017",
       projects: [
         {
-          client: "Joy 디자인",
-          project: "WCD용 제어 및 모니터링 어플(앱) 계약",
+          category: "Joy 디자인",
+          title: "WCD용 제어 및 모니터링 어플(앱) 계약",
         },
         {
-          client: "특허청",
-          project: "2017년 제2차 범정부 정보자원 통합구축 HW1사업/통신장비설치",
+          category: "특허청",
+          title: "2017년 제2차 범정부 정보자원 통합구축 HW1사업/통신장비설치",
         },
       ],
     },
   ];
 
-  const YearSection = ({ yearData }) => (
-    <div className="year-section">
-      <h3>{yearData.year}년</h3>
-      <ul>
-        {yearData.projects.map((item, index) => (
-          <li key={index}>
-            <span className="client">{item.client}</span>
-            <span className="project">{item.project}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+  const years = ["2021", "2020", "2019", "2018", "2017"];
+  const selectedYearData = timeline.find((data) => data.year === selectedYear);
 
   return (
     <div className="performance-case">
-      <div className="page-title">
+      <div className="performance-case__header">
         <h2>구축 사례</h2>
         <p>
           다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의
@@ -133,12 +226,42 @@ function PerformanceCase() {
         </p>
       </div>
 
-      <div className="cases-container">
-        {timeline.map((yearData) => (
-          <FadeInSection key={yearData.year}>
-            <YearSection yearData={yearData} />
-          </FadeInSection>
+      <div className="performance-case__years">
+        {years.map((year) => (
+          <button
+            key={year}
+            className={`performance-case__year-btn ${
+              selectedYear === year ? "active" : ""
+            }`}
+            onClick={() => setSelectedYear(year)}
+          >
+            {year}년
+          </button>
         ))}
+      </div>
+
+      <div className="performance-case__content">
+        <FadeInSection>
+          <div className="performance-case__year">
+            <div className="performance-case__list">
+              {selectedYearData.projects.map((project, index) => (
+                <div
+                  key={index}
+                  className="performance-case__item"
+                  data-category={project.category}
+                >
+                  <span
+                    className="performance-case__category"
+                    data-category={project.category}
+                  >
+                    {project.category}
+                  </span>
+                  <h4>{project.title}</h4>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeInSection>
       </div>
     </div>
   );
