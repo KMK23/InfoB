@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/pages/_businessInfo.scss";
 import {
   FaChartLine,
@@ -8,9 +8,14 @@ import {
   FaChartBar,
   FaShieldAlt,
   FaBriefcase,
+  FaLightbulb,
+  FaCogs,
+  FaMicrochip,
 } from "react-icons/fa";
 
 const BusinessInfo = () => {
+  const [activeTab, setActiveTab] = useState("SI");
+
   const siAreas = [
     {
       id: 1,
@@ -53,32 +58,35 @@ const BusinessInfo = () => {
     },
   ];
 
-  const circles = [
+  const consultingAreas = [
     {
+      id: 1,
       title: "Solution Consulting",
-      details: [
+      icon: <FaLightbulb />,
+      items: [
         "고객사 시스템 구성 고려하여 ERP, EP, ISP 공공, 제조 서비스 산업 군별로 최적의 솔루션 제안",
       ],
-      position: "top",
     },
     {
+      id: 2,
       title: "Specialization Consulting",
-      details: [
+      icon: <FaShieldAlt />,
+      items: [
         "통합 보안 서비스종합환경 서비스",
         "종합 자원 전사적 자원관리 시스템 서비스",
         "EnterPrise Portal 솔루션 구축 서비스",
       ],
-      position: "left",
     },
     {
+      id: 3,
       title: "Business Consulting",
-      details: [
+      icon: <FaBriefcase />,
+      items: [
         "비즈니스 컨설팅 서비스",
         "e-Biz 서비스경영 정보 관리 시스템 구축 서비스",
         "제품 수명 주기 관리",
         "B2B, B2C, B2G",
       ],
-      position: "right",
     },
   ];
 
@@ -103,62 +111,39 @@ const BusinessInfo = () => {
 
   return (
     <div className="business-info">
-      <div className="business-info__header">
-        <h1 className="business-info__title">사업분야 : Consulting, SI </h1>
-      </div>
-      <div className="business-info__content">
-        <h2>IT Service</h2>
-        <p>
-          SI/SM 구축 및 운영, 시스템 통합 유지보수를 통해 공공 및 민간 분야의 IT
-          시스템 구축부터 운영까지, 전문적인 기술력으로 고객 맞춤형 서비스를
-          제공합니다.
-        </p>
-
-        <h2>IoT 시스템구축 및 솔루션</h2>
-        <p>
-          하드웨어 개발 및 맞춤형 IoT 솔루션 제공을 통해 IoT 기기 개발부터
-          시스템 구축까지, 고객의 환경에 맞는 다양한 IoT 솔루션을 제공합니다.
-        </p>
-
-        {/* 원형 레이아웃 */}
-        <div className="business-info__circle-container">
-          {/* 중앙 원 */}
-          <div className="business-info__center-circle">
-            <h2>CONSULTING</h2>
+      <div className="business-info__intro">
+        <div className="business-info__intro-content">
+          <div className="business-info__intro-title">
+            <h1>
+              {/* <span className="highlight-text">사업분야</span> */}
+              <span className="main-text">Consulting, SI</span>
+            </h1>
           </div>
-
-          {/* 연결선 */}
-          <div className="business-info__connections"></div>
-
-          {/* 주변 원들 */}
-          {circles.map((circle, index) => (
-            <div
-              key={index}
-              className={`business-info__circle business-info__circle--${circle.position}`}
-            >
-              <h3>{circle.title}</h3>
-              <div className="business-info__circle-details">
-                {circle.details.map((detail, i) => (
-                  <span key={i}>{detail}</span>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
+      </div>
 
-        {/* SI 영역 */}
-        <div className="business-info__si-section">
-          <div className="business-info__si-section-header">
-            <h2>SI</h2>
-            <p>System Integration</p>
-          </div>
-          <div className="business-info__si-section-content">
+      <div className="business-info__tabs">
+        <button
+          className={`tab-button ${activeTab === "SI" ? "active" : ""}`}
+          onClick={() => setActiveTab("SI")}
+        >
+          SI
+        </button>
+        <button
+          className={`tab-button ${activeTab === "Consulting" ? "active" : ""}`}
+          onClick={() => setActiveTab("Consulting")}
+        >
+          Consulting
+        </button>
+      </div>
+
+      <div className="business-info__cards">
+        {activeTab === "SI" ? (
+          <div className="business-info__card-grid">
             {siAreas.map((area) => (
-              <div key={area.id} className="business-info__area">
-                <h3>
-                  {area.icon}
-                  {area.title}
-                </h3>
+              <div key={area.id} className="business-info__card">
+                <div className="card-icon">{area.icon}</div>
+                <h3>{area.title}</h3>
                 <ul>
                   {area.items.map((item, index) => (
                     <li key={index}>{item}</li>
@@ -167,7 +152,21 @@ const BusinessInfo = () => {
               </div>
             ))}
           </div>
-        </div>
+        ) : (
+          <div className="business-info__card-grid">
+            {consultingAreas.map((area) => (
+              <div key={area.id} className="business-info__card">
+                <div className="card-icon">{area.icon}</div>
+                <h3>{area.title}</h3>
+                <ul>
+                  {area.items.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* <div className="business-info__footer">

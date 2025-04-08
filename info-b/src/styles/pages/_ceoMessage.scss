@@ -18,7 +18,7 @@
     flex: 1;
 
     .title {
-      font-size: 2.5rem;
+      font-size: calc(2.5rem * var(--font-size-multiplier));
       font-weight: bold;
       color: #2c3e50;
       margin-bottom: 2rem;
@@ -36,7 +36,7 @@
     }
 
     .message {
-      font-size: 1.1rem;
+      font-size: calc(1.1rem * var(--font-size-multiplier));
       line-height: 1.8;
       color: #495057;
       margin-bottom: 2rem;
@@ -70,13 +70,13 @@
       margin-top: 3rem;
 
       .position {
-        font-size: 1rem;
+        font-size: calc(1rem * var(--font-size-multiplier));
         color: #6c757d;
         margin-bottom: 0.5rem;
       }
 
       .name {
-        font-size: 1.5rem;
+        font-size: calc(1.5rem * var(--font-size-multiplier));
         font-weight: bold;
         color: #2c3e50;
       }
@@ -137,7 +137,7 @@
 
     &__content {
       .title {
-        font-size: 2rem;
+        font-size: calc(2rem * var(--font-size-multiplier));
         text-align: center;
 
         &::after {
@@ -159,17 +159,17 @@
 
     &__content {
       .title {
-        font-size: 1.8rem;
+        font-size: calc(1.8rem * var(--font-size-multiplier));
       }
 
       .message {
-        font-size: 1rem;
+        font-size: calc(1rem * var(--font-size-multiplier));
         line-height: 1.6;
       }
 
       .signature {
         .name {
-          font-size: 1.3rem;
+          font-size: calc(1.3rem * var(--font-size-multiplier));
         }
       }
     }
