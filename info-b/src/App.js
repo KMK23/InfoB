@@ -7,7 +7,6 @@ import History from "./pages/company/History";
 import Certification from "./pages/company/Certification";
 import Company from "./pages/company/Company";
 import BusinessInfo from "./pages/business/BusinessInfo";
-// import RnDBusiness from "./pages/business/RnDBusiness";
 import LeakDetection from "./pages/business/LeakDetection";
 import BoardProducts from "./pages/business/BoardProducts";
 import PerformanceCase from "./pages/research/PerformanceCase";
@@ -17,7 +16,8 @@ import Announcement from "./pages/community/Announcement";
 import Inquiry from "./pages/community/Inquiry";
 import Location from "./pages/company/Location";
 import Faq from "./pages/community/Faq";
-import PostDetail from "./components/PostDetail";
+// import PostDetail from "./pages/community/PostDetail";
+import Board from "./components/Board";
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
             <Route path="community/faq" element={<Faq />} />
             <Route path="community/inquiry" element={<Inquiry />} />
             <Route path="community/post" element={<Post />} />
-            <Route path="community/post/:id" element={<PostDetail />} />
+            <Route path="community/post/:id" element={<Board />} />
           </Route>
         </Routes>
       </BrowserRouter>

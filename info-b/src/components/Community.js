@@ -1,4 +1,4 @@
-import { getAdditionalUserInfo } from "firebase/auth";
+// import { getAdditionalUserInfo } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { getDatas } from "../pages/API/firebase";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +69,7 @@ function Community(props) {
             <div className="w-2/12">
               {new Date(post.createdAt?.toDate()).toLocaleDateString()}
             </div>
-            <div className="w-1/12">{post.content}</div>
+            <div className="w-1/12">54</div>
           </div>
         ))}
 

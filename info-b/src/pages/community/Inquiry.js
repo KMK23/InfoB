@@ -8,7 +8,11 @@ import { addDatas } from "../API/firebase";
 function Inquiry({ mode = "create" }) {
   const [companyName, setCompanyName] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState({
+    first: "",
+    second: "",
+    third: "",
+  });
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -16,12 +20,16 @@ function Inquiry({ mode = "create" }) {
 
   // const navigate = useNavigate();
   const { postId } = useParams(); // 게시글 ID (상세보기, 수정 시 사용)
+
+  const handlePhoneChange = (e, part) => {
+    setPhoneNumber((prev) => ({ ...prev, [part]: e.target.value }));
+  };
   const handleSubmit = async () => {
     // Firestore에 데이터 추가
     const newPost = {
       companyName,
       authorName,
-      phoneNumber,
+      phoneNumber: `${phoneNumber.first}-${phoneNumber.second}-${phoneNumber.third}`,
       email,
       title,
       content,
@@ -92,18 +100,24 @@ function Inquiry({ mode = "create" }) {
               type="text"
               className="border-gray-400 border   pl-2 rounded-sm w-2/12 "
               placeholder="010"
+              value={phoneNumber.first}
+              onChange={(e) => handlePhoneChange(e, "first")}
             />
             _
             <input
               type="text"
               className="border-gray-400 border   pl-2 rounded-sm w-2/12 "
               placeholder="xxxx"
+              value={phoneNumber.second}
+              onChange={(e) => handlePhoneChange(e, "second")}
             />
             _
             <input
               type="text"
               className="border-gray-400 border   pl-2 rounded-sm w-2/12 "
               placeholder="xxxx"
+              value={phoneNumber.third}
+              onChange={(e) => handlePhoneChange(e, "third")}
             />
           </div>
           <div className="flex items-center justify-end text-[14px] font-semibold w-1/12 bg-[#f6f6f6] border-gray-300 border  pr-2">
@@ -148,7 +162,7 @@ function Inquiry({ mode = "create" }) {
           </div>
           <div className="w-11/12  border-gray-300 border p-2 h-[550px]">
             {/* <tr /> */}
-            <MyEditor />
+            <MyEditor setContent={setContent} />
           </div>
         </div>
         <div className="flex">

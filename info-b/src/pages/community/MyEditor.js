@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-function MyEditor() {
+function MyEditor({ content, isEditing }) {
   const [editorValue, setEditorValue] = useState("");
   const [activeTab, setActiveTab] = useState("write");
   const quillRef = useRef();
@@ -10,6 +10,7 @@ function MyEditor() {
   const handleChange = (value) => {
     setEditorValue(value);
   };
+  // console.log(setContent);
 
   const modules = {
     toolbar: [
@@ -27,7 +28,9 @@ function MyEditor() {
       // 구분선은 수동으로 작성해야 함. `<hr />` 직접 넣기
     ],
   };
-
+  useEffect(() => {
+    setEditorValue(content); // content가 업데이트될 때마다 에디터 내용 변경
+  }, [content]);
   return (
     <div className="w-full">
       {/* 탭 버튼 */}
@@ -63,6 +66,7 @@ function MyEditor() {
           theme="snow"
           modules={modules}
           className="h-80"
+          readOnly={!isEditing}
         />
       ) : (
         <div className="border p-4 min-h-96 prose max-w-none bg-white">
