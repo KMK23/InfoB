@@ -171,4 +171,12 @@ function getCurrentUser() {
   });
 }
 
-export { getDatas, addDatas, updateDatas, signIn, signOutUser, getCurrentUser };
+export {
+  getDatas,
+  addDatas,
+  updateDatas,
+  signIn,
+  signOutUser,
+  getCurrentUser,
+  deleteDatas,
+};

@@ -30,7 +30,7 @@ function Community(props) {
     return <div>로딩 중...</div>;
   }
   const handlePostClick = (postId) => {
-    navigate(`/community/post/${postId}`);
+    navigate(`/community/inquiry/${postId}`);
   };
 
   return (
@@ -55,23 +55,33 @@ function Community(props) {
           </div>
         </div>
         {/* <div> */}
-        {posts.map((post, index) => (
-          <div key={post.docId} className="flex border-b border-gray-200 py-4">
-            <div className="w-1/12">{index + 1}</div>
-            <button
-              className="w-6/12 hover:text-blue-600"
-              onClick={() => handlePostClick(post.docId)}
-            >
-              {/* <div className="w-6/12"></div> */}
-              {post.title}
-            </button>
-            <div className="w-2/12">{post.authorName}</div>
-            <div className="w-2/12">
-              {new Date(post.createdAt?.toDate()).toLocaleDateString()}
-            </div>
-            <div className="w-1/12">54</div>
+        {loading ? (
+          <div>로딩 중...</div>
+        ) : posts.length === 0 ? (
+          <div className="flex border-b justify-center text-xl border-gray-200 py-4">
+            게시글이 없습니다.
           </div>
-        ))}
+        ) : (
+          posts.map((post, index) => (
+            <div
+              key={post.docId}
+              className="flex border-b border-gray-200 py-4"
+            >
+              <div className="w-1/12">{index + 1}</div>
+              <button
+                className="w-6/12 hover:text-blue-600"
+                onClick={() => handlePostClick(post.docId)}
+              >
+                {post.title}
+              </button>
+              <div className="w-2/12">{post.authorName}</div>
+              <div className="w-2/12">
+                {new Date(post.createdAt?.toDate()).toLocaleDateString()}
+              </div>
+              <div className="w-1/12">{post.views || 0}</div>
+            </div>
+          ))
+        )}
 
         {/* </div> */}
       </div>

@@ -1,10 +1,69 @@
 import React, { useEffect, useState } from "react";
 import MyEditor from "../pages/community/MyEditor";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { PiListDashesBold } from "react-icons/pi";
-import { getDatas } from "../pages/API/firebase";
+import {
+  addDatas,
+  deleteDatas,
+  getDatas,
+  updateDatas,
+} from "../pages/API/firebase";
+import { FaStar } from "react-icons/fa";
+import Captcha from "../pages/community/Captcha";
 
-function Board(props) {
+function Board() {
+  const location = useLocation();
+  const [companyName, setCompanyName] = useState("");
+  const [authorName, setAuthorName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState({
+    first: "",
+    second: "",
+    third: "",
+  });
+  const [email, setEmail] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState(""); // MyEditor 컴포넌트와 연결되는 content 상태
+  const [captchaVisible, setCaptchaVisible] = useState(true);
+
+  // const handlePhoneChange = (e, part) => {
+  //   setPhoneNumber((prev) => ({ ...prev, [part]: e.target.value }));
+  // };
+
+  // const handleSubmit = async () => {
+  //   const newPost = {
+  //     companyName,
+  //     authorName,
+  //     phoneNumber: `${phoneNumber.first}-${phoneNumber.second}-${phoneNumber.third}`,
+  //     email,
+  //     title,
+  //     content,
+  //     createdAt: new Date(),
+  //     check: false, // 기본적으로 '대기' 상태
+  //   };
+
+  // useEffect(() => {
+  //   if (mode === "inquiry") {
+  //     setTitle("1:1 문의"); // 문의하기 모드일 때
+  //   } else if (mode === "edit") {
+  //     setTitle("수정글"); // 수정 모드일 때
+  //   } else if (mode === "detail") {
+  //     setTitle(formData.title || ""); // 게시글 제목 (상세보기 모드)
+  //   }
+  // }, [mode, formData]);
+
+  //   try {
+  //     await addDatas("posts", newPost); // Firestore에 데이터 추가
+  //     alert("게시글이 등록되었습니다.");
+  //     navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
+  //   } catch (error) {
+  //     console.error("게시글 등록 실패:", error);
+  //     alert("게시글 등록에 실패했습니다.");
+  //   }
+  // };
+
+  // const handleClick = () => {
+  //   navigate("/community/post"); // 취소 버튼 클릭 시 게시글 목록으로 이동
+  // };
   const [formData, setFormDate] = useState({
     companyName: "",
     authorName: "",
@@ -20,10 +79,7 @@ function Board(props) {
   const [post, setPost] = useState(null);
   // const [title, setTitle] = useState("");
   // const [content, setContent] = useState("");
-  // console.log(id);
-  // console.log(post);
-  // console.log(title);
-  // console.log(content);
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -38,7 +94,9 @@ function Board(props) {
         console.error("게시글 불러오기 실패:", error);
       }
     };
-    fetchPost();
+    if (id) {
+      fetchPost();
+    }
   }, [id]);
 
   //수정 가능 여부설정
@@ -52,9 +110,7 @@ function Board(props) {
       [name]: value,
     });
   };
-  // useEffect(() => {
-  //   setFormDate(post);
-  // }, [post]);
+
   const handlePhoneChange = (e) => {
     const { value } = e.target;
 
@@ -70,21 +126,40 @@ function Board(props) {
     }
   };
 
-  // const handleUpdate = async () => {
-  //   try {
-  //     const updatedPost = {
-  //       title,
-  //       content,
-  //       updatedAt: new Date(),
-  //     };
-  //     await updateDatas("posts", id, updatedPost); // Firestore에 게시글 업데이트
-  //     alert("게시글이 수정되었습니다.");
-  //     navigate("/community"); // 수정 후 목록 페이지로 돌아가기
-  //   } catch (error) {
-  //     console.error("게시글 수정 실패:", error);
-  //     alert("게시글 수정에 실패했습니다.");
-  //   }
-  // };
+  const handleUpdate = async () => {
+    try {
+      const updatedPost = {
+        companyName: formData.companyName,
+        authorName: formData.authorName,
+        contact: formData.phoneNumber || "", // phoneNumber가 없으면 빈 문자열로 처리
+        email: formData.email || "", // email 값이 없으면 빈 문자열로 처리
+        title: formData.title || "", // title 값이 없으면 빈 문자열로 처리
+        content: formData.content || "", // content 값이 없으면 빈 문자열로 처리
+        phoneNumber: formData.phoneNumber || "", // phoneNumber가 없으면 빈 문자열로 처리
+        updatedAt: new Date(),
+      };
+      console.log(updatedPost);
+      await updateDatas("posts", id, updatedPost); // Firestore에 게시글 업데이트
+      alert("게시글이 수정되었습니다.");
+
+      // 수정 후 게시판으로 돌아가기
+      navigate(`/community/post`);
+    } catch (error) {
+      console.error("게시글 수정 실패:", error);
+      alert("게시글 수정에 실패했습니다.");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteDatas("posts", id); // 게시글 삭제
+      alert("게시글이 삭제되었습니다.");
+      navigate("/community/post"); // 게시판 목록으로 돌아가기
+    } catch (error) {
+      console.error("게시글 삭제 실패:", error);
+      alert("게시글 삭제에 실패했습니다.");
+    }
+  };
 
   const navigate = useNavigate();
   const handleClick = () => {
@@ -189,6 +264,7 @@ function Board(props) {
           <div className="w-11/12  border-gray-300 border p-2">
             <input
               type="text"
+              name="title"
               className="text-[14px] border-gray-400 border w-full pl-2  rounded-sm py-1"
               placeholder="문의제목"
               value={formData.title}
@@ -204,10 +280,25 @@ function Board(props) {
           </div>
           <div className="w-11/12  border-gray-300 border p-2 h-[420px]">
             {/* <tr /> */}
-            <MyEditor content={formData.content} isEditing={isEditing} />
+            <MyEditor
+              content={formData.content}
+              isEditing={isEditing}
+              setFormDate={setFormDate}
+            />
           </div>
         </div>
-
+        {/* 자동등록방지 입력 */}
+        {/* <div className="flex">
+          <div className="text-[14px] font-semibold w-1/12 bg-[#f6f6f6] border-gray-300 border py-3 flex justify-end pr-1">
+            자동등록방지
+            <span className="text-[#ff0000] text-[8px]">
+              <FaStar />
+            </span>
+          </div>
+          <div className="w-11/12 border-gray-300 border">
+            <Captcha />
+          </div>
+        </div> */}
         <div className="flex justify-between mt-6">
           <div className="">
             <button
@@ -218,12 +309,15 @@ function Board(props) {
             </button>
           </div>
           <div>
-            <button className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 mr-2">
+            <button
+              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 mr-2"
+              onClick={handleDelete}
+            >
               삭제
             </button>
             <button
               className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
-              onClick={handleEditClick}
+              onClick={isEditing ? handleUpdate : handleEditClick}
             >
               {isEditing ? "수정완료" : "수정"}
             </button>

@@ -59,9 +59,9 @@ function App() {
               {/* <Route path="recruitment/benefits" element={<Benefits />} /> */}
               <Route path="community/announcement" element={<Announcement />} />
               <Route path="community/faq" element={<Faq />} />
-              <Route path="community/inquiry" element={<Inquiry />} />
+              <Route path="community/inquiry/" element={<Inquiry />} />
               <Route path="community/post" element={<Post />} />
-              <Route path="community/post/:id" element={<Board />} />
+              <Route path="community/inquiry/:id" element={<Board />} />
             </Route>
 
             {/* Admin routes */}

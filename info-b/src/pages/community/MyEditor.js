@@ -2,38 +2,36 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-function MyEditor({ content, isEditing }) {
+function MyEditor({ content, setContent, isEditing, setFormDate }) {
   const [editorValue, setEditorValue] = useState("");
   const [activeTab, setActiveTab] = useState("write");
   const quillRef = useRef();
 
   const handleChange = (value) => {
-    setEditorValue(value);
+    if (isEditing) {
+      // setFormDate 대신 setContent로 수정
+      setContent(value); // 여기서 setContent가 호출됩니다.
+    }
   };
-  // console.log(setContent);
 
   const modules = {
     toolbar: [
-      // 제목, 서식
       [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "strike"], // B I S
-      ["blockquote", "code-block"], // 인용구, 코드블럭
-      ["link", "image"], // 링크, 이미지
-
-      // 리스트 & 체크박스 흉내
+      ["bold", "italic", "strike"],
+      ["blockquote", "code-block"],
+      ["link", "image"],
       [{ list: "ordered" }, { list: "bullet" }],
       [{ indent: "-1" }, { indent: "+1" }],
-      [{ align: [] }], // 정렬
-
-      // 구분선은 수동으로 작성해야 함. `<hr />` 직접 넣기
+      [{ align: [] }],
     ],
   };
+
   useEffect(() => {
-    setEditorValue(content); // content가 업데이트될 때마다 에디터 내용 변경
+    setEditorValue(content);
   }, [content]);
+
   return (
     <div className="w-full">
-      {/* 탭 버튼 */}
       <div className="flex border-b mb-2 ">
         <button
           onClick={() => setActiveTab("write")}
@@ -57,20 +55,18 @@ function MyEditor({ content, isEditing }) {
         </button>
       </div>
 
-      {/* 에디터 / 프리뷰 */}
       {activeTab === "write" ? (
         <ReactQuill
           ref={quillRef}
-          value={editorValue}
+          value={content}
           onChange={handleChange}
           theme="snow"
           modules={modules}
           className="h-80"
-          readOnly={!isEditing}
         />
       ) : (
-        <div className="border p-4 min-h-96 prose max-w-none bg-white">
-          <div dangerouslySetInnerHTML={{ __html: editorValue }} />
+        <div className="border p-4 h-96 prose max-w-none bg-white">
+          <div dangerouslySetInnerHTML={{ __html: content }} />
         </div>
       )}
     </div>
