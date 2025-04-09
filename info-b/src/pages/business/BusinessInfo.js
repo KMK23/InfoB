@@ -139,7 +139,7 @@ const BusinessInfo = () => {
 
       <div className="business-info__cards">
         {activeTab === "SI" ? (
-          <div className="business-info__card-grid">
+          <div className="business-info__card-grid si-grid">
             {siAreas.map((area) => (
               <div key={area.id} className="business-info__card">
                 <div className="card-icon">{area.icon}</div>
@@ -153,7 +153,7 @@ const BusinessInfo = () => {
             ))}
           </div>
         ) : (
-          <div className="business-info__card-grid">
+          <div className="business-info__card-grid consulting-grid">
             {consultingAreas.map((area) => (
               <div key={area.id} className="business-info__card">
                 <div className="card-icon">{area.icon}</div>

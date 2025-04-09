@@ -1,31 +1,41 @@
 @import "../variables";
 
 .footer {
-  background-color: #f8f8f8;
-  padding: $spacing-large 0;
-  font-family: $base-font;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+  border-top: 1px solid rgba($primary-navy, 0.1);
 
   &__container {
-    @include container;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
     display: flex;
-    text-align: center;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__logo {
-    margin-bottom: $spacing-base;
+    flex-shrink: 0;
+    margin-right: 2rem;
 
     img {
       height: 40px;
+      width: auto;
     }
   }
 
   &__info {
-    color: $gray;
-    font-size: $font-size-base;
-    line-height: 1.8;
+    text-align: right;
+    color: $primary-dark;
+    font-size: 0.9rem;
+    line-height: 1.6;
 
     p {
       margin: 0;
+
+      &:not(:last-child) {
+        margin-bottom: 0.5rem;
+      }
     }
   }
 
@@ -68,5 +78,21 @@
     border-top: 1px solid rgba($white, 0.1);
     color: $light-gray;
     font-size: $font-size-base;
+  }
+
+  @media (max-width: 768px) {
+    &__container {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    &__logo {
+      margin-right: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    &__info {
+      text-align: center;
+    }
   }
 }

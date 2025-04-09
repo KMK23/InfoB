@@ -1,0 +1,39 @@
+@import "../variables";
+
+.admin-dashboard {
+  h2 {
+    margin-bottom: 2rem;
+    color: $primary-navy;
+  }
+
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .dashboard-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    h3 {
+      color: $primary-navy;
+      margin-bottom: 1rem;
+      font-size: $font-size-h4;
+    }
+
+    .card-content {
+      p {
+        margin: 0.5rem 0;
+        color: $primary-dark;
+        font-size: $font-size-base;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}

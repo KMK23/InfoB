@@ -1,0 +1,100 @@
+@import "../variables";
+
+.content-management {
+  h2 {
+    margin-bottom: 2rem;
+    color: $primary-navy;
+  }
+
+  .content-tabs {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+
+    .tab-button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      background: transparent;
+      color: $primary-dark;
+      cursor: pointer;
+      font-size: $font-size-base;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s ease;
+
+      &:hover {
+        color: $primary-navy;
+      }
+
+      &.active {
+        color: $primary-navy;
+        border-bottom-color: $primary-navy;
+      }
+    }
+  }
+
+  .content-list {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba($primary-navy, 0.1);
+      }
+
+      th {
+        background: rgba($primary-navy, 0.05);
+        color: $primary-navy;
+        font-weight: 500;
+      }
+
+      td {
+        color: $primary-dark;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+    }
+
+    .edit-button,
+    .delete-button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: $font-size-small;
+      margin-right: 0.5rem;
+      transition: all 0.3s ease;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+
+    .edit-button {
+      background: $primary-navy;
+      color: white;
+
+      &:hover {
+        background: darken($primary-navy, 10%);
+      }
+    }
+
+    .delete-button {
+      background: #dc3545;
+      color: white;
+
+      &:hover {
+        background: darken(#dc3545, 10%);
+      }
+    }
+  }
+}

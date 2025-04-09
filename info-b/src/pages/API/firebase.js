@@ -1,7 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
 import {
   addDoc,
   collection,
@@ -127,4 +132,43 @@ async function updateDatas(collectionName, docId, updateObj) {
     throw error; // 에러를 던져서 호출하는 쪽에서 처리하게 하기
   }
 }
-export { getDatas, addDatas, updateDatas };
+
+// 로그인 함수
+async function signIn(email, password) {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return userCredential.user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 로그아웃 함수
+async function signOutUser() {
+  try {
+    await signOut(auth);
+    return true;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// 현재 로그인된 사용자 가져오기
+function getCurrentUser() {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
+}
+
+export { getDatas, addDatas, updateDatas, signIn, signOutUser, getCurrentUser };
