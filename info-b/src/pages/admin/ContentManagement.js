@@ -1,32 +1,26 @@
 import React, { useState } from "react";
 import "../../styles/pages/_contentManagement.scss";
+import NoticeManagement from "./NoticeManagement";
+import PostManagement from "./PostManagement";
+import { useLocation } from "react-router-dom";
 
 const ContentManagement = () => {
-  const [activeTab, setActiveTab] = useState("notice");
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState(
+    location.state?.activeTab || "notice"
+  );
 
-  const contents = {
-    notice: [
-      { id: 1, title: "공지사항 제목 1", date: "2024-04-09", status: "게시중" },
-      { id: 2, title: "공지사항 제목 2", date: "2024-04-08", status: "게시중" },
-    ],
-    inquiry: [
-      {
-        id: 1,
-        title: "문의사항 제목 1",
-        date: "2024-04-09",
-        status: "답변대기",
-      },
-      {
-        id: 2,
-        title: "문의사항 제목 2",
-        date: "2024-04-08",
-        status: "답변완료",
-      },
-    ],
-    faq: [
-      { id: 1, title: "FAQ 제목 1", date: "2024-04-09", status: "게시중" },
-      { id: 2, title: "FAQ 제목 2", date: "2024-04-08", status: "게시중" },
-    ],
+  const renderContent = () => {
+    switch (activeTab) {
+      case "notice":
+        return <NoticeManagement />;
+      case "inquiry":
+        return <PostManagement />;
+      case "faq":
+        return <div>FAQ 관리 (준비중)</div>;
+      default:
+        return <NoticeManagement />;
+    }
   };
 
   return (
@@ -43,7 +37,7 @@ const ContentManagement = () => {
           className={`tab-button ${activeTab === "inquiry" ? "active" : ""}`}
           onClick={() => setActiveTab("inquiry")}
         >
-          문의사항
+          게시판
         </button>
         <button
           className={`tab-button ${activeTab === "faq" ? "active" : ""}`}
@@ -52,33 +46,7 @@ const ContentManagement = () => {
           FAQ
         </button>
       </div>
-      <div className="content-list">
-        <table>
-          <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성일</th>
-              <th>상태</th>
-              <th>관리</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contents[activeTab].map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.title}</td>
-                <td>{item.date}</td>
-                <td>{item.status}</td>
-                <td>
-                  <button className="edit-button">수정</button>
-                  <button className="delete-button">삭제</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <div className="content-body">{renderContent()}</div>
     </div>
   );
 };
