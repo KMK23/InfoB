@@ -45,10 +45,6 @@ const Talent = () => {
     },
     { icon: icon6, name: "교통지원", details: ["야간근무 교통비 지급"] },
   ];
-
-  const handleClick = () => {
-    navigate("");
-  };
   return (
     <div className="recruitment-talent">
       <div className="recruitment-main">
@@ -69,7 +65,15 @@ const Talent = () => {
               <p>또한 고객의 눈높이에 맞추며 원활한 소통이 가능합니다.</p>
             </div>
             <div className="talent-button">
-              <button onClick={handleClick}>채용공고 보기</button>
+              <button
+                onClick={() =>
+                  window.open(
+                    "https://www.saramin.co.kr/zf_user/company-info/view-inner-recruit?csn=enBrbW5VMWRRT3VtOHRPN0swNXU5UT09"
+                  )
+                }
+              >
+                채용공고 보기
+              </button>
             </div>
           </div>
           <div className="talent-img">

@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 function Post() {
   const [search, setSearch] = useState("");
 
-  const handleSearchClick = () => {
-    setSearch();
+  const handleSearchClick = (searchTerm) => {
+    setSearch(searchTerm);
   };
   const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ function Post() {
         <Search onClick={handleSearchClick} />
       </div>
       <div>
-        <Community />
+        <Community search={search} />
       </div>
       <div className="flex justify-end">
         <button

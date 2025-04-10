@@ -1,19 +1,20 @@
-// import { getAdditionalUserInfo } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { getDatas } from "../pages/API/firebase";
+import { getDatas, updateDatas } from "../pages/API/firebase";
 import { useNavigate } from "react-router-dom";
-// import "../styles/components/_community.scss";
-function Community(props) {
-  const [posts, setPosts] = useState([]); //게시글 상태
-  const [loading, setLoading] = useState(true); //로딩
+
+function Community({ search }) {
+  const [posts, setPosts] = useState([]); // 게시글 상태
+  const [loading, setLoading] = useState(true); // 로딩
   const navigate = useNavigate(); // navigate 변수 선언
+
+  // 게시글 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const queryOptions = {
           condition: [],
           orderBys: [{ field: "createdAt", direction: "desc" }],
-          limits: 10, //예시로 10개의 게시글만 가져옴.
+          limits: 10, // 예시로 10개의 게시글만 가져옴
         };
         const data = await getDatas("posts", queryOptions);
         setPosts(data);
@@ -26,17 +27,39 @@ function Community(props) {
     fetchPosts();
   }, []);
 
+  // 게시글 클릭 시 조회수 업데이트 후 상세보기로 이동
+  const handlePostClick = async (postId) => {
+    try {
+      const clickedPost = posts.find((post) => post.docId === postId);
+      if (!clickedPost) return;
+
+      const currentViews = clickedPost.views || 0;
+
+      // 조회수 업데이트
+      await updateDatas("posts", postId, {
+        views: currentViews + 1,
+      });
+
+      // 상세 페이지로 이동
+      navigate(`/community/inquiry/${postId}`);
+    } catch (error) {
+      console.error("조회수 업데이트 실패:", error);
+    }
+  };
+
+  // 검색된 게시글 필터링
+  const filteredPosts = posts.filter((post) =>
+    post.title.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
-  const handlePostClick = (postId) => {
-    navigate(`/community/inquiry/${postId}`);
-  };
 
   return (
-    <div className="">
-      <div className="my-6 ">
-        {/*전체 */}
+    <div className="community">
+      <div className="my-6">
+        {/* 게시글 리스트 헤더 */}
         <div className="flex border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center">
           <div className="w-1/12">
             <p className="border-r border-gray-300 m-0">번호</p>
@@ -54,15 +77,15 @@ function Community(props) {
             <p className="m-0">조회수</p>
           </div>
         </div>
-        {/* <div> */}
-        {loading ? (
-          <div>로딩 중...</div>
-        ) : posts.length === 0 ? (
+
+        {/* 게시글이 없을 경우 */}
+        {filteredPosts.length === 0 ? (
           <div className="flex border-b justify-center text-xl border-gray-200 py-4">
-            게시글이 없습니다.
+            No data.
           </div>
         ) : (
-          posts.map((post, index) => (
+          // 필터링된 게시글 렌더링
+          filteredPosts.map((post, index) => (
             <div
               key={post.docId}
               className="flex border-b border-gray-200 py-4"
@@ -82,8 +105,6 @@ function Community(props) {
             </div>
           ))
         )}
-
-        {/* </div> */}
       </div>
     </div>
   );
