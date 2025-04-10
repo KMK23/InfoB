@@ -28,7 +28,7 @@ const NoticeManagement = () => {
       }
     };
     fetchData();
-  }, [dispatch, notices]);
+  }, [dispatch]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "-";
