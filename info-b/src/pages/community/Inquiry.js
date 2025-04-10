@@ -26,6 +26,26 @@ function Inquiry({ mode = "create" }) {
   };
 
   const handleSubmit = async () => {
+    // 입력값들이 모두 채워졌는지 체크
+    if (
+      !companyName ||
+      !authorName ||
+      !phoneNumber.first ||
+      !phoneNumber.second ||
+      !phoneNumber.third ||
+      !email ||
+      !title ||
+      !content
+    ) {
+      Swal.fire({
+        title: "빈칸을 입력해주세요.",
+        text: "모든 필드를 채워주세요.",
+        icon: "warning",
+        confirmButtonText: "확인",
+      });
+      return; // 빈칸이 있을 경우 함수 종료
+    }
+
     const newPost = {
       companyName,
       authorName,
@@ -36,19 +56,35 @@ function Inquiry({ mode = "create" }) {
       createdAt: new Date(),
       check: false, // 기본적으로 '대기' 상태
     };
-    if (newPost) {
-      alert("빈칸을 입력해주세요.");
-    }
 
     try {
-      await addDatas("posts", newPost); // Firestore에 데이터 추가
-      Swal.fire({
-        title: "게시글이 등록되었습니다.",
-        text: "게시글 등록이 완료되었습니다!",
-        icon: "success",
-        confirmButtonText: "확인",
+      const result = await Swal.fire({
+        title: "문의하시겠습니까?",
+        text: "게시글이 등록됩니다.",
+        icon: "warning",
+        showCancelButton: true, // Cancel 버튼을 보이도록 설정
+        confirmButtonText: "예",
+        cancelButtonText: "아니오",
+        reverseButtons: true, // 버튼 순서를 반대로 설정
       });
-      navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
+
+      if (result.isConfirmed) {
+        await addDatas("posts", newPost); // Firestore에 데이터 추가
+        Swal.fire({
+          title: "게시글이 등록되었습니다.",
+          text: "게시글 등록이 완료되었습니다!",
+          icon: "success",
+          confirmButtonText: "확인",
+        });
+        navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
+      } else {
+        Swal.fire({
+          title: "취소됨",
+          text: "게시글 문의가 취소되었습니다.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      }
     } catch (error) {
       Swal.fire({
         title: "게시글 등록 실패",
