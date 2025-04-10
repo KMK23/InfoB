@@ -7,7 +7,9 @@ import icon5 from "../../resources/images/main/monitor.png";
 import icon3 from "../../resources/images/main/smile.png";
 import icon1 from "../../resources/images/main/time.png";
 import icon2 from "../../resources/images/main/growth.png";
+import { useNavigate } from "react-router-dom";
 const Talent = () => {
+  const navigate = useNavigate();
   const items = [
     {
       icon: icon1,
@@ -43,6 +45,10 @@ const Talent = () => {
     },
     { icon: icon6, name: "교통지원", details: ["야간근무 교통비 지급"] },
   ];
+
+  const handleClick = () => {
+    navigate("");
+  };
   return (
     <div className="recruitment-talent">
       <div className="recruitment-main">
@@ -63,7 +69,7 @@ const Talent = () => {
               <p>또한 고객의 눈높이에 맞추며 원활한 소통이 가능합니다.</p>
             </div>
             <div className="talent-button">
-              <button>채용공고 보기</button>
+              <button onClick={handleClick}>채용공고 보기</button>
             </div>
           </div>
           <div className="talent-img">
@@ -73,18 +79,25 @@ const Talent = () => {
       </div>
       {/*복리후생 시작 */}
       <div className="recruitment-benefits">
-        <div className="benefits-header">
-          <h1>복리후생</h1>
+        <div className="">
+          <h1 className=" text-4xl  mb-20"> 복리후생</h1>
         </div>
-        <div className="benefits-icon">
+        <div className="grid grid-cols-3 gap-8 text-white place-items-center  ">
           {items.map((item, i) => (
-            <div className="icon-main" key={i}>
+            <div
+              className="flex w-96 gap-6 h-28 justify-center items-center"
+              key={i}
+            >
               <div key={i}>
-                <img src={item.icon} width={80} />
+                <img
+                  src={item.icon}
+                  width={85}
+                  className=" brightness-150 invert "
+                />
               </div>
-              <div>
-                <h2>{item.name}</h2>
-                <ul>
+              <div className="">
+                <h2 className="text-2xl">{item.name}</h2>
+                <ul className="text-start list-disc text-xl">
                   {item.details.map((detail, i) => (
                     <li key={i}>{detail}</li>
                   ))}

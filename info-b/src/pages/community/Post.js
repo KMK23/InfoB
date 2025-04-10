@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../styles/pages/_post.scss";
 // import { FaSearch } from "react-icons/fa";
 import Community from "../../components/Community";
@@ -7,6 +7,11 @@ import Pagination from "../../components/Pagination";
 import { useNavigate } from "react-router-dom";
 
 function Post() {
+  const [search, setSearch] = useState("");
+
+  const handleSearchClick = () => {
+    setSearch();
+  };
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -18,7 +23,7 @@ function Post() {
         <h1 className="text-3xl font-semibold">게시판</h1>
       </div>
       <div>
-        <Search />
+        <Search onClick={handleSearchClick} />
       </div>
       <div>
         <Community />

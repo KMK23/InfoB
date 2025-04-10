@@ -12,9 +12,7 @@ function Faq(props) {
       <div>
         <Search />
       </div>
-      <div>
-        <Community />
-      </div>
+      <div></div>
       <div>
         {" "}
         <Pagination />

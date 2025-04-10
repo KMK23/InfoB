@@ -7,7 +7,7 @@ import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
 const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 수
 
-const Pagination = () => {
+const Pagination = ({ post }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   // 예제 데이터 (1~100까지 숫자 리스트)
@@ -30,8 +30,8 @@ const Pagination = () => {
         nextLabel={<MdKeyboardArrowRight />}
         breakLabel={"..."}
         pageCount={pageCount}
-        marginPagesDisplayed={2}
-        pageRangeDisplayed={5}
+        marginPagesDisplayed={1}
+        pageRangeDisplayed={6}
         onPageChange={handlePageClick}
         containerClassName={"pagination"} // 전체 컨테이너 스타일
         activeClassName={"active"} // 선택된 페이지 스타일

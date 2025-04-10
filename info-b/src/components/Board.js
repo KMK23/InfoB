@@ -279,26 +279,30 @@ function Board() {
             <span className="text-[#ff0000] text-[8px]"></span>
           </div>
           <div className="w-11/12  border-gray-300 border p-2 h-[420px]">
-            {/* <tr /> */}
-            <MyEditor
-              content={formData.content}
-              isEditing={isEditing}
-              setFormDate={setFormDate}
-            />
+            {isEditing ? (
+              <MyEditor
+                content={formData.content}
+                isEditing={isEditing}
+                setContent={(value) =>
+                  setFormDate((prev) => ({ ...prev, content: value }))
+                }
+              />
+            ) : (
+              <div
+                className="w-full h-full text-start overflow-y-auto leading-relaxed"
+                style={{ whiteSpace: "pre-wrap" }}
+                dangerouslySetInnerHTML={{ __html: formData.content }}
+              />
+            )}
           </div>
         </div>
         {/* 자동등록방지 입력 */}
-        {/* <div className="flex">
+        <div className="flex">
           <div className="text-[14px] font-semibold w-1/12 bg-[#f6f6f6] border-gray-300 border py-3 flex justify-end pr-1">
-            자동등록방지
-            <span className="text-[#ff0000] text-[8px]">
-              <FaStar />
-            </span>
+            첨부파일
           </div>
-          <div className="w-11/12 border-gray-300 border">
-            <Captcha />
-          </div>
-        </div> */}
+          <div className="w-11/12 border-gray-300 border"></div>
+        </div>
         <div className="flex justify-between mt-6">
           <div className="">
             <button
@@ -309,18 +313,40 @@ function Board() {
             </button>
           </div>
           <div>
-            <button
-              className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 mr-2"
-              onClick={handleDelete}
-            >
-              삭제
-            </button>
-            <button
-              className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
-              onClick={isEditing ? handleUpdate : handleEditClick}
-            >
-              {isEditing ? "수정완료" : "수정"}
-            </button>
+            {isEditing ? (
+              <>
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 mr-2"
+                  onClick={() => {
+                    // 취소 시 원래 데이터로 리셋하고 상세보기 모드로 돌아가기
+                    setIsEditing(false);
+                  }}
+                >
+                  취소
+                </button>
+                <button
+                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
+                  onClick={handleUpdate}
+                >
+                  수정완료
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 mr-2"
+                  onClick={handleDelete}
+                >
+                  삭제
+                </button>
+                <button
+                  className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
+                  onClick={handleEditClick}
+                >
+                  수정
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -42,11 +42,11 @@ function NavBar() {
       ],
     },
     {
-      title: "커뮤니티",
+      title: "고객지원",
       path: "/community/announcement",
       submenu: [
         { title: "공지사항", path: "/community/announcement" },
-        { title: "FAQ", path: "/community/faq" },
+        // { title: "FAQ", path: "/community/faq" },
         // { title: "1:1문의", path: "/community/inquiry" },
         { title: "게시판", path: "/community/post" },
       ],
