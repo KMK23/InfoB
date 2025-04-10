@@ -42,7 +42,7 @@ function NavBar() {
       ],
     },
     {
-      title: "고객지원",
+      title: "커뮤니티",
       path: "/community/announcement",
       submenu: [
         { title: "공지사항", path: "/community/announcement" },

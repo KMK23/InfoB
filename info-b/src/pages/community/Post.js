@@ -21,6 +21,7 @@ function Post() {
     <div className="recruitment-post">
       <div>
         <h1 className="text-3xl font-semibold">게시판</h1>
+        <p>인포비정보기술 게시판입니다.</p>
       </div>
       <div>
         <Search onClick={handleSearchClick} />

@@ -16,8 +16,10 @@ function Search({ onClick }) {
     }
   };
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" || e.key === "") {
-      onclick(searchTerm);
+    if (e.key === "Enter") {
+      if (onClick) {
+        onClick(searchTerm); // onClick을 제대로 호출하도록 수정
+      }
     }
   };
   return (

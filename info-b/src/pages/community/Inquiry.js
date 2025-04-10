@@ -4,6 +4,7 @@ import { FaStar } from "react-icons/fa";
 import Captcha from "./Captcha";
 import { useNavigate } from "react-router-dom";
 import { addDatas } from "../API/firebase";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 function Inquiry({ mode = "create" }) {
   const [companyName, setCompanyName] = useState("");
@@ -35,14 +36,26 @@ function Inquiry({ mode = "create" }) {
       createdAt: new Date(),
       check: false, // 기본적으로 '대기' 상태
     };
+    if (newPost) {
+      alert("빈칸을 입력해주세요.");
+    }
 
     try {
       await addDatas("posts", newPost); // Firestore에 데이터 추가
-      alert("게시글이 등록되었습니다.");
+      Swal.fire({
+        title: "게시글이 등록되었습니다.",
+        text: "게시글 등록이 완료되었습니다!",
+        icon: "success",
+        confirmButtonText: "확인",
+      });
       navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
     } catch (error) {
-      console.error("게시글 등록 실패:", error);
-      alert("게시글 등록에 실패했습니다.");
+      Swal.fire({
+        title: "게시글 등록 실패",
+        text: "게시글 등록에 실패했습니다. 다시 시도해주세요.",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
     }
   };
 
@@ -161,7 +174,7 @@ function Inquiry({ mode = "create" }) {
               <FaStar />
             </span>
           </div>
-          <div className="w-11/12 border-gray-300 border p-2 h-[410px]">
+          <div className="w-11/12 border-gray-300 border p-2 h-[480px]">
             <MyEditor
               content={content} // content 상태를 MyEditor에 전달
               // setFormDate={setContent} // MyEditor에서 변경된 내용 반영

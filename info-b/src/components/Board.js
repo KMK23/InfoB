@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MyEditor from "../pages/community/MyEditor";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { PiListDashesBold } from "react-icons/pi";
+import Swal from "sweetalert2"; // Import SweetAlert2
 import {
   addDatas,
   deleteDatas,
@@ -140,24 +141,62 @@ function Board() {
       };
       console.log(updatedPost);
       await updateDatas("posts", id, updatedPost); // Firestore에 게시글 업데이트
-      alert("게시글이 수정되었습니다.");
-
+      Swal.fire({
+        title: "Success!",
+        text: "게시글이 수정되었습니다.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
       // 수정 후 게시판으로 돌아가기
       navigate(`/community/post`);
     } catch (error) {
       console.error("게시글 수정 실패:", error);
-      alert("게시글 수정에 실패했습니다.");
+      Swal.fire({
+        title: "Error!",
+        text: "게시글 수정에 실패했습니다.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
   const handleDelete = async () => {
     try {
-      await deleteDatas("posts", id); // 게시글 삭제
-      alert("게시글이 삭제되었습니다.");
-      navigate("/community/post"); // 게시판 목록으로 돌아가기
+      const result = await Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "게시글이 삭제됩니다. 이 작업은 취소할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "예",
+        cancelButtonText: "아니오",
+        reverseButtons: true,
+      });
+
+      if (result.isConfirmed) {
+        await deleteDatas("posts", id); // 게시글 삭제
+        Swal.fire({
+          title: "삭제 완료",
+          text: "게시글이 삭제되었습니다.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        navigate("/community/post"); // 게시판 목록으로 돌아가기
+      } else {
+        Swal.fire({
+          title: "취소됨",
+          text: "게시글 삭제가 취소되었습니다.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+      }
     } catch (error) {
       console.error("게시글 삭제 실패:", error);
-      alert("게시글 삭제에 실패했습니다.");
+      Swal.fire({
+        title: "오류",
+        text: "게시글 삭제에 실패했습니다.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -278,7 +317,7 @@ function Board() {
             내용
             <span className="text-[#ff0000] text-[8px]"></span>
           </div>
-          <div className="w-11/12  border-gray-300 border p-2 h-[420px]">
+          <div className="w-11/12  border-gray-300 border p-2 h-[480px]">
             {isEditing ? (
               <MyEditor
                 content={formData.content}

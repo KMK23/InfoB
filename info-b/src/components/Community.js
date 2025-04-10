@@ -49,7 +49,7 @@ function Community({ search }) {
 
   // 검색된 게시글 필터링
   const filteredPosts = posts.filter((post) =>
-    post.title.toLowerCase().includes(search.toLowerCase())
+    (post.title || "").toLowerCase().includes((search || "").toLowerCase())
   );
 
   if (loading) {
