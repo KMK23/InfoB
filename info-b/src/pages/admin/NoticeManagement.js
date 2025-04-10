@@ -28,7 +28,7 @@ const NoticeManagement = () => {
       }
     };
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, notices]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "-";
@@ -96,9 +96,6 @@ const NoticeManagement = () => {
       console.error("공지사항 등록 실패:", error);
       alert("공지사항 등록에 실패했습니다.");
     }
-  };
-  const handleWrite = () => {
-    setShowNoticeForm(true);
   };
   return (
     <div className="notice-management">
