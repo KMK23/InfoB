@@ -26,6 +26,10 @@ import Board from "./components/Board";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ContentManagement from "./pages/admin/ContentManagement";
 import Settings from "./pages/admin/Settings";
+import PostManagement from "./pages/admin/PostManagement";
+import NoticeManagement from "./pages/admin/NoticeManagement";
+import EditPost from "./pages/admin/EditPost";
+import EditNotice from "./pages/admin/EditNotice";
 
 function App() {
   return (
@@ -95,6 +99,10 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="posts" element={<PostManagement />} />
+              <Route path="notices" element={<NoticeManagement />} />
+              <Route path="edit-post/:id" element={<EditPost />} />
+              <Route path="edit-notice/:id" element={<EditNotice />} />
             </Route>
           </Routes>
         </BrowserRouter>
