@@ -11,4 +11,15 @@ module.exports = function (app) {
       },
     })
   );
+
+  app.use(
+    "/firebase",
+    createProxyMiddleware({
+      target: "https://firebasestorage.googleapis.com",
+      changeOrigin: true,
+      pathRewrite: {
+        "^/firebase": "",
+      },
+    })
+  );
 };

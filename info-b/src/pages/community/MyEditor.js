@@ -2,12 +2,9 @@ import "react-quill/dist/quill.snow.css";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRef, useState } from "react";
 import ReactQuill from "react-quill";
-
 function MyEditor({ value, onChange }) {
-  const [editorValue, setEditorValue] = useState("");
   const [activeTab, setActiveTab] = useState("write");
   const quillRef = useRef();
-
   const imageHandler = () => {
     const input = document.createElement("input");
     input.setAttribute("type", "file");
@@ -53,7 +50,6 @@ function MyEditor({ value, onChange }) {
       },
     },
   };
-
   return (
     <div className="editor-container">
       <div className="tab-buttons">
