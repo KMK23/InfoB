@@ -44,7 +44,11 @@ const NoticeForm = ({ onSave, onClose }) => {
       </div>
       <div className="form-group">
         <label htmlFor="content">내용</label>
-        <MyEditor value={formData.content} onChange={handleEditorChange} />
+        <MyEditor
+          content={formData.content}
+          setContent={handleEditorChange}
+          isEditing={true}
+        />
       </div>
       <div className="button-group">
         <button type="button" onClick={onClose} className="cancel-button">
