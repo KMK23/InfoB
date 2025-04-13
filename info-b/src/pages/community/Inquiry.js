@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import MyEditor from "./MyEditor";
 import { FaStar } from "react-icons/fa";
 import Captcha from "./Captcha";
@@ -17,16 +17,22 @@ function Inquiry({ mode = "create" }) {
   const [email, setEmail] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); // MyEditor 컴포넌트와 연결되는 content 상태
-  const [captchaVisible, setCaptchaVisible] = useState(true);
+  const [isCaptchaValid, setIsCaptchaValid] = useState(false); //
+  const captchaRef = useRef(null); //
 
   const navigate = useNavigate();
 
   const handlePhoneChange = (e, part) => {
-    setPhoneNumber((prev) => ({ ...prev, [part]: e.target.value }));
+    const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 남기기
+    setPhoneNumber((prev) => ({ ...prev, [part]: value }));
   };
 
   const handleSubmit = async () => {
-    // 입력값들이 모두 채워졌는지 체크
+    const fullPhone = `${phoneNumber.first}-${phoneNumber.second}-${phoneNumber.third}`;
+    const phoneRegex = /^010-\d{4}-\d{4}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    // 빈 칸 검사
     if (
       !companyName ||
       !authorName ||
@@ -43,18 +49,55 @@ function Inquiry({ mode = "create" }) {
         icon: "warning",
         confirmButtonText: "확인",
       });
-      return; // 빈칸이 있을 경우 함수 종료
+      return;
     }
 
+    // 전화번호 유효성 검사
+    if (!phoneRegex.test(fullPhone)) {
+      Swal.fire({
+        title: "전화번호 형식 오류",
+        text: "전화번호는 010-XXXX-XXXX 형식으로 입력해주세요.",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+      return;
+    }
+
+    // 이메일 유효성 검사
+    if (!emailRegex.test(email)) {
+      Swal.fire({
+        title: "이메일 형식 오류",
+        text: "올바른 이메일 주소를 입력해주세요.",
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+      return;
+    }
+    if (!isCaptchaValid) {
+      Swal.fire({
+        title: "자동등록방지 실패",
+        text: "이미지에 나온 문자를 정확히 입력해주세요.",
+        icon: "error",
+        confirmButtonText: "확인",
+      }).then(() => {
+        // 경고창 닫힌 후 캡차 새로고침
+        if (captchaRef.current) {
+          captchaRef.current.refreshCaptcha();
+        }
+      });
+      return;
+    }
+
+    // 유효성 통과 후 작성된 내용 등록
     const newPost = {
       companyName,
       authorName,
-      phoneNumber: `${phoneNumber.first}-${phoneNumber.second}-${phoneNumber.third}`,
+      phoneNumber: fullPhone,
       email,
       title,
       content,
       createdAt: new Date(),
-      check: false, // 기본적으로 '대기' 상태
+      check: false,
     };
 
     try {
@@ -62,21 +105,21 @@ function Inquiry({ mode = "create" }) {
         title: "문의하시겠습니까?",
         text: "게시글이 등록됩니다.",
         icon: "warning",
-        showCancelButton: true, // Cancel 버튼을 보이도록 설정
+        showCancelButton: true,
         confirmButtonText: "예",
         cancelButtonText: "아니오",
-        reverseButtons: true, // 버튼 순서를 반대로 설정
+        reverseButtons: true,
       });
 
       if (result.isConfirmed) {
-        await addDatas("posts", newPost); // Firestore에 데이터 추가
+        await addDatas("posts", newPost);
         Swal.fire({
           title: "게시글이 등록되었습니다.",
           text: "게시글 등록이 완료되었습니다!",
           icon: "success",
           confirmButtonText: "확인",
         });
-        navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
+        navigate("/community/post");
       } else {
         Swal.fire({
           title: "취소됨",
@@ -228,7 +271,7 @@ function Inquiry({ mode = "create" }) {
             </span>
           </div>
           <div className="w-11/12 border-gray-300 border">
-            <Captcha />
+            <Captcha onValidate={setIsCaptchaValid} ref={captchaRef} />
           </div>
         </div>
         {/* 버튼 */}
