@@ -30,6 +30,7 @@ import PostManagement from "./pages/admin/PostManagement";
 import NoticeManagement from "./pages/admin/NoticeManagement";
 import EditPost from "./pages/admin/EditPost";
 import EditNotice from "./pages/admin/EditNotice";
+import NoticeDetail from "./pages/notices/NoticeDetail";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
               <Route path="community/inquiry/" element={<Inquiry />} />
               <Route path="community/post" element={<Post />} />
               <Route path="community/inquiry/:id" element={<Board />} />
+              <Route path="notice/detail/:id" element={<NoticeDetail />} />
             </Route>
 
             {/* Admin routes */}

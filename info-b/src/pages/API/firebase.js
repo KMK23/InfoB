@@ -171,6 +171,62 @@ function getCurrentUser() {
   });
 }
 
+// 게시글의 답변 목록 조회
+export const getAnswers = async (postId) => {
+  try {
+    const answersRef = collection(db, "posts", postId, "answers");
+    const answersSnapshot = await getDocs(answersRef);
+    return {
+      exists: !answersSnapshot.empty,
+      data: answersSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })),
+    };
+  } catch (error) {
+    console.error("답변 조회 실패:", error);
+    throw error;
+  }
+};
+
+// 답변 추가
+export const addAnswer = async (postId, answerData) => {
+  try {
+    const answersRef = collection(db, "posts", postId, "answers");
+    const docRef = await addDoc(answersRef, {
+      ...answerData,
+      createdAt: new Date(),
+    });
+    return {
+      id: docRef.id,
+      ...answerData,
+      createdAt: new Date(),
+    };
+  } catch (error) {
+    console.error("답변 추가 실패:", error);
+    throw error;
+  }
+};
+
+// 답변 수정
+export const updateAnswer = async (postId, answerId, answerData) => {
+  try {
+    const answerRef = doc(db, "posts", postId, "answers", answerId);
+    await updateDoc(answerRef, {
+      ...answerData,
+      updatedAt: new Date(),
+    });
+    return {
+      id: answerId,
+      ...answerData,
+      updatedAt: new Date(),
+    };
+  } catch (error) {
+    console.error("답변 수정 실패:", error);
+    throw error;
+  }
+};
+
 export {
   getDatas,
   addDatas,

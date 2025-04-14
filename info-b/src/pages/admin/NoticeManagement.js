@@ -5,6 +5,7 @@ import {
   deleteNotice,
   fetchNotices,
   addNotice,
+  updateNotice,
 } from "../../store/slices/noticesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -13,21 +14,25 @@ import NoticeForm from "../../components/NoticeForm";
 
 const NoticeManagement = () => {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
+  const [showNoticeDetail, setShowNoticeDetail] = useState(false);
+  const [selectedNotice, setSelectedNotice] = useState(null);
   const notices = useSelector((state) => state.notices?.notices);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // 실시간으로 공지사항 데이터를 가져오는 함수
+  const fetchNoticesData = async () => {
+    try {
+      await dispatch(
+        fetchNotices({ collectionName: "notices", queryOptions: {} })
+      ).unwrap();
+    } catch (error) {
+      console.error("공지사항 로딩 실패:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await dispatch(
-          fetchNotices({ collectionName: "notices", queryOptions: {} })
-        ).unwrap();
-      } catch (error) {
-        console.error("공지사항 로딩 실패:", error);
-      }
-    };
-    fetchData();
+    fetchNoticesData();
   }, [dispatch]);
 
   const formatDate = (timestamp) => {
@@ -68,6 +73,8 @@ const NoticeManagement = () => {
           deleteNotice({ collectionName: "notices", docId })
         ).unwrap();
         alert("공지사항이 삭제되었습니다.");
+        // 삭제 후 목록 새로고침
+        fetchNoticesData();
       } catch (error) {
         console.error("공지사항 삭제 실패:", error);
         alert("공지사항 삭제에 실패했습니다.");
@@ -83,8 +90,8 @@ const NoticeManagement = () => {
     try {
       const newNotice = {
         ...formData,
-        createdAt: new Date().toISOString(), // ISO 문자열로 변환
-        check: true,
+        createdAt: new Date().toISOString(),
+        check: false, // 기본적으로 '비공개' 상태로 시작
       };
 
       await dispatch(
@@ -92,11 +99,48 @@ const NoticeManagement = () => {
       ).unwrap();
       setShowNoticeForm(false);
       alert("공지사항이 등록되었습니다.");
+      // 등록 후 목록 새로고침
+      fetchNoticesData();
     } catch (error) {
       console.error("공지사항 등록 실패:", error);
       alert("공지사항 등록에 실패했습니다.");
     }
   };
+
+  // 게시 상태 토글 함수
+  const handleTogglePublish = async (notice) => {
+    try {
+      const updatedNotice = {
+        ...notice,
+        check: !notice.check,
+        updatedAt: new Date().toISOString(),
+      };
+
+      await dispatch(
+        updateNotice({
+          collectionName: "notices",
+          id: notice.docId,
+          data: updatedNotice,
+        })
+      ).unwrap();
+      // 상태 변경 후 목록 새로고침
+      fetchNoticesData();
+    } catch (error) {
+      console.error("공지사항 상태 변경 실패:", error);
+      alert("상태 변경에 실패했습니다.");
+    }
+  };
+
+  const handleNoticeClick = (notice) => {
+    setSelectedNotice(notice);
+    setShowNoticeDetail(true);
+  };
+
+  const handleCloseDetail = () => {
+    setShowNoticeDetail(false);
+    setSelectedNotice(null);
+  };
+
   return (
     <div className="notice-management">
       <div className="management-header">
@@ -112,6 +156,27 @@ const NoticeManagement = () => {
             onSave={handleSaveNotice}
             onClose={() => setShowNoticeForm(false)}
           />
+        </div>
+      ) : showNoticeDetail ? (
+        <div className="notice-detail-container">
+          <div className="notice-detail">
+            <h3>{selectedNotice.title}</h3>
+            <div className="notice-info">
+              <span>작성자: {selectedNotice.authorName || "관리자"}</span>
+              <span>작성일: {formatDate(selectedNotice.createdAt)}</span>
+            </div>
+            <div
+              className="notice-content"
+              dangerouslySetInnerHTML={{ __html: selectedNotice.content }}
+            />
+            <div className="notice-actions">
+              <button onClick={() => handleEdit(selectedNotice)}>수정</button>
+              <button onClick={() => handleDelete(selectedNotice.docId)}>
+                삭제
+              </button>
+              <button onClick={handleCloseDetail}>닫기</button>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="content-list">
@@ -131,17 +196,26 @@ const NoticeManagement = () => {
                 notices.map((notice, index) => (
                   <tr key={notice.docId}>
                     <td>{index + 1}</td>
-                    <td>{notice.title}</td>
+                    <td>
+                      <span
+                        className="notice-title"
+                        onClick={() => handleNoticeClick(notice)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {notice.title}
+                      </span>
+                    </td>
                     <td>{notice.authorName || "관리자"}</td>
                     <td>{formatDate(notice.createdAt)}</td>
                     <td>
-                      <span
-                        className={`status ${
+                      <button
+                        onClick={() => handleTogglePublish(notice)}
+                        className={`status-toggle ${
                           notice.check ? "active" : "pending"
                         }`}
                       >
                         {notice.check ? "게시중" : "비공개"}
-                      </span>
+                      </button>
                     </td>
                     <td>
                       <button

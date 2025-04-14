@@ -1,10 +1,10 @@
 import React from "react";
-import Community from "../../components/Community";
 import "../../styles/pages/_announcement.scss";
 import Search from "../../components/Search";
 import Pagination from "../../components/Pagination";
+import NoticeList from "../notices/NoticeList";
 
-function Announcement(props) {
+function Announcement() {
   return (
     <div className="recruitment-announcement">
       <div>
@@ -14,7 +14,7 @@ function Announcement(props) {
         <Search />
       </div>
       <div>
-        <Community />
+        <NoticeList />
       </div>
       <div>
         <Pagination />
