@@ -30,6 +30,9 @@ import PostManagement from "./pages/admin/PostManagement";
 import NoticeManagement from "./pages/admin/NoticeManagement";
 import EditPost from "./pages/admin/EditPost";
 import EditNotice from "./pages/admin/EditNotice";
+import LogIn from "./pages/recruitment/login/LogIn";
+import Find from "./pages/recruitment/login/Find";
+import Accession from "./pages/recruitment/login/Accession";
 
 function App() {
   return (
@@ -66,6 +69,9 @@ function App() {
               <Route path="community/inquiry/" element={<Inquiry />} />
               <Route path="community/post" element={<Post />} />
               <Route path="community/inquiry/:id" element={<Board />} />
+              <Route path="login/login" element={<LogIn />} />
+              <Route path="login/find" element={<Find />} />
+              <Route path="login/accession" element={<Accession />} />
             </Route>
 
             {/* Admin routes */}

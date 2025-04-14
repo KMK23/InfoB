@@ -51,6 +51,11 @@ function NavBar() {
         { title: "게시판", path: "/community/post" },
       ],
     },
+    {
+      title: "로그인",
+      path: "/login/login",
+      submenu: [{ title: "공지사항", path: "/login/login" }],
+    },
   ];
 
   const handleMenuClick = (index, e, path) => {
