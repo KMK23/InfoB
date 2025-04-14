@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../resources/images/main/logo_t.png";
 import "../styles/components/_navbar.scss";
+// import { MdLogin } from "react-icons/md";
 
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -54,7 +55,7 @@ function NavBar() {
     {
       title: "로그인",
       path: "/login/login",
-      submenu: [{ title: "공지사항", path: "/login/login" }],
+      // icon: <MdLogin />,
     },
   ];
 
@@ -123,6 +124,9 @@ function NavBar() {
                 className="navbar__menu-link"
                 onClick={(e) => handleMenuClick(index, e, item.path)}
               >
+                {/* {item.icon && (
+                  <span className="navbar__menu-icon">{item.icon}</span>
+                )} */}
                 {item.title}
               </a>
               {/* Submenu 표시 */}
