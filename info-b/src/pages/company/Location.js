@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchBasicInfo } from "../../store/slices/basicInfoSlice";
 import "../../styles/pages/_location.scss";
 import KakaoMap from "../../components/KaKaoMap";
 
 function Location() {
+  const dispatch = useDispatch();
+  const { basicInfo, status } = useSelector((state) => state.basicInfo);
+
+  useEffect(() => {
+    dispatch(fetchBasicInfo({ collectionName: "basicInfo", queryOptions: {} }));
+  }, [dispatch]);
+
+  console.log("Location data:", basicInfo);
+
+  if (status === "loading") {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
+
+  if (!basicInfo || !Array.isArray(basicInfo) || basicInfo.length === 0) {
+    return <div>위치 정보를 찾을 수 없습니다.</div>;
+  }
+
+  const basicData = basicInfo[0];
+  if (!basicData?.company?.address || !basicData?.company?.contact) {
+    return <div>주소 또는 연락처 정보가 없습니다.</div>;
+  }
+
+  const { address, contact } = basicData.company;
+
   return (
     <div className="location-page">
       <div className="page-header">
@@ -17,14 +43,21 @@ function Location() {
       <div className="location-info">
         <div className="address">
           <h3>주소</h3>
-          <p>대전광역시 서구 문예로 69, 702호(둔산동, 오성빌딩)</p>
+          <p>{address.main}</p>
+          {address.old && (
+            <p className="old-address">
+              <small>(구주소: {address.old})</small>
+            </p>
+          )}
         </div>
         <div className="contact">
           <h3>연락처</h3>
-          <p>Tel : 042-483-6572 | Fax : 042-484-6572</p>
+          <p>
+            Tel : {contact.tel} | Fax : {contact.fax}
+          </p>
         </div>
         <div className="copyright">
-          <p>© 2022 INFOB. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} INFOB. All rights reserved.</p>
         </div>
       </div>
     </div>

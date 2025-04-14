@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCertifications } from "../../store/slices/certificationsSlice";
 import "../../styles/pages/_certification.scss";
 
 // 인증서 이미지 import
@@ -15,10 +17,42 @@ import patent003 from "../../resources/images/patent/patent-003.png";
 import patent004 from "../../resources/images/patent/patent-004.png";
 import patent005 from "../../resources/images/patent/patent-005.jpg";
 
+const certificationImages = {
+  "certification-001.png": certification001,
+  "certification-002.png": certification002,
+  "certification-004.png": certification003,
+  "certification-005.png": certification004,
+  "certification-006.png": certification005,
+};
+
+const patentImages = {
+  "patent-001.png": patent001,
+  "patent-002.png": patent002,
+  "patent-003.png": patent003,
+  "patent-004.png": patent004,
+  "patent-005.jpg": patent005,
+};
+
 const Certification = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("certifications"); // "certifications" or "patents"
+  const [activeTab, setActiveTab] = useState("certification"); // "certification" or "patent"
+
+  const dispatch = useDispatch();
+  const { certifications: certData, status } = useSelector(
+    (state) => state.certifications
+  );
+
+  useEffect(() => {
+    dispatch(
+      fetchCertifications({
+        collectionName: "certifications",
+        queryOptions: {},
+      })
+    );
+  }, [dispatch]);
+
+  console.log("Certification data:", certData);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -32,151 +66,68 @@ const Certification = () => {
     document.body.style.overflow = "unset";
   };
 
-  const certifications = [
-    {
-      id: 1,
-      image: certification001,
-      title: "기업부설연구소 인정서",
-      description: [
-        "- 과학기술정보통신부 장관 명의로 발급",
-        "- 기업의 연구개발능력 인정",
-        "- 글로벌 경쟁력 확보를 위한 연구소 운영",
-      ],
-    },
-    {
-      id: 2,
-      image: certification002,
-      title: "벤처기업 확인서",
-      description: [
-        "- 중소벤처기업부 발급",
-        "- 기술성과와 사업성 우수 기업 인정",
-        "- 혁신적 기술개발과 성장잠재력 보유",
-      ],
-    },
-    {
-      id: 3,
-      image: certification003,
-      title: "ISO 27001 인증서",
-      description: [
-        "- 정보보안관리체계 국제표준 인증",
-        "- 고객 정보보호 최우선 기업",
-        "- 체계적인 보안 관리 시스템 구축",
-      ],
-    },
-    {
-      id: 4,
-      image: certification004,
-      title: "소프트웨어사업자 신고확인서",
-      description: [
-        "- 소프트웨어 산업 진흥법 의거 등록",
-        "- 전문적 소프트웨어 개발 능력 인정",
-        "- 소프트웨어 공급 자격 보유",
-      ],
-    },
-    {
-      id: 5,
-      image: certification005,
-      title: "중소기업 확인서",
-      description: [
-        "- 중소기업기본법 제2조 의거 확인",
-        "- 중소기업 경쟁력 강화 기업",
-        "- 혁신성장 선도 기업",
-      ],
-    },
-  ];
+  if (status === "loading") {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
 
-  const patents = [
-    {
-      id: 1,
-      image: patent001,
-      title: "가로등 고장 감지 장치",
-      description: [
-        "- 특허번호: 제 10-2073589호",
-        "- 등록일: 2020년 1월 30일",
-        "- 실시간 고장 감지 및 모니터링 시스템",
-      ],
-    },
-    {
-      id: 2,
-      image: patent002,
-      title: "무선충전 기능을 구비한 다이어리 설치용 다용도 충전장치",
-      description: [
-        "- 특허번호: 제 10-1520935호",
-        "- 등록일: 2015년 5월 11일",
-        "- 다이어리 결합형 무선충전 시스템",
-      ],
-    },
-    {
-      id: 3,
-      image: patent003,
-      title: "휴대용 충전 장치 및 그의 충방전 방법",
-      description: [
-        "- 특허번호: 제 10-1453929호",
-        "- 등록일: 2014년 10월 16일",
-        "- 효율적 충방전 방식 적용",
-      ],
-    },
-    {
-      id: 4,
-      image: patent004,
-      title: "휴대용 충전 장치",
-      description: [
-        "- 특허번호: 제 10-1456582호",
-        "- 등록일: 2014년 10월 24일",
-        "- 혁신적 디자인과 기능 결합",
-      ],
-    },
-    {
-      id: 5,
-      image: patent005,
-      title: "시간-주파수 변환을 이용한 플랜트 설비의 누출음 탐지 장치 및 방법",
-      description: [
-        "- 특허번호: 제 10-1958628호",
-        "- 등록일: 2019년 3월 11일",
-        "- 플랜트 설비 누출 감지 기술",
-      ],
-    },
-  ];
+  if (!certData || !Array.isArray(certData) || certData.length === 0) {
+    return <div>인증서 및 특허 정보를 찾을 수 없습니다.</div>;
+  }
+
+  const certificationData = certData[0];
+  if (!certificationData?.company?.certifications?.items) {
+    return <div>데이터 구조가 올바르지 않습니다.</div>;
+  }
+
+  const items = certificationData.company.certifications.items;
+  const certifications = items.filter((item) => item.type === "certification");
+  const patents = items.filter((item) => item.type === "patent");
 
   return (
     <div className="certification">
       <div className="certification__container">
         <div className="certification__header">
-          <h1 className="title">인증 및 특허</h1>
+          <h1 className="title">
+            {certificationData.company.certifications.title || "인증 및 특허"}
+          </h1>
           <p className="subtitle">
-            INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다
+            {certificationData.company.certifications.subtitle ||
+              "INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다"}
           </p>
         </div>
 
         <div className="certification__tabs">
           <button
             className={`certification__tab ${
-              activeTab === "certifications" ? "active" : ""
+              activeTab === "certification" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("certifications")}
+            onClick={() => setActiveTab("certification")}
           >
             인증서
           </button>
           <button
             className={`certification__tab ${
-              activeTab === "patents" ? "active" : ""
+              activeTab === "patent" ? "active" : ""
             }`}
-            onClick={() => setActiveTab("patents")}
+            onClick={() => setActiveTab("patent")}
           >
             특허
           </button>
         </div>
 
-        {activeTab === "certifications" && (
+        {activeTab === "certification" && (
           <section className="certification__section">
             <div className="certification__grid">
               {certifications.map((cert) => (
                 <div key={cert.id} className="certification__card">
                   <div
                     className="certification__image"
-                    onClick={() => openModal(cert.image)}
+                    onClick={() => openModal(certificationImages[cert.image])}
                   >
-                    <img src={cert.image} alt={cert.title} />
+                    <img
+                      src={certificationImages[cert.image]}
+                      alt={cert.title}
+                    />
                     <div className="certification__overlay">
                       <span className="certification__zoom">확대보기</span>
                     </div>
@@ -195,16 +146,16 @@ const Certification = () => {
           </section>
         )}
 
-        {activeTab === "patents" && (
+        {activeTab === "patent" && (
           <section className="certification__section">
             <div className="certification__grid">
               {patents.map((patent) => (
                 <div key={patent.id} className="certification__card">
                   <div
                     className="certification__image"
-                    onClick={() => openModal(patent.image)}
+                    onClick={() => openModal(patentImages[patent.image])}
                   >
-                    <img src={patent.image} alt={patent.title} />
+                    <img src={patentImages[patent.image]} alt={patent.title} />
                     <div className="certification__overlay">
                       <span className="certification__zoom">확대보기</span>
                     </div>

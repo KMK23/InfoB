@@ -1,0 +1,76 @@
+{
+  "title": "설정",
+  "sections": [
+    {
+      "title": "기본 설정",
+      "fields": [
+        {
+          "id": "siteName",
+          "label": "사이트 이름",
+          "type": "text",
+          "value": "회사명"
+        },
+        {
+          "id": "siteDescription",
+          "label": "사이트 설명",
+          "type": "textarea",
+          "value": "회사 설명"
+        }
+      ]
+    },
+    {
+      "title": "연락처 정보",
+      "fields": [
+        {
+          "id": "contactEmail",
+          "label": "이메일",
+          "type": "email",
+          "value": "contact@company.com"
+        },
+        {
+          "id": "contactPhone",
+          "label": "전화번호",
+          "type": "text",
+          "value": "02-1234-5678"
+        },
+        {
+          "id": "address",
+          "label": "주소",
+          "type": "text",
+          "value": "서울시 강남구"
+        }
+      ]
+    },
+    {
+      "title": "시스템 설정",
+      "fields": [
+        {
+          "id": "backupFrequency",
+          "label": "백업 주기",
+          "type": "select",
+          "value": "daily",
+          "options": [
+            {
+              "value": "daily",
+              "label": "매일"
+            },
+            {
+              "value": "weekly",
+              "label": "매주"
+            },
+            {
+              "value": "monthly",
+              "label": "매월"
+            }
+          ]
+        },
+        {
+          "id": "maintenanceMode",
+          "label": "유지보수 모드",
+          "type": "checkbox",
+          "value": false
+        }
+      ]
+    }
+  ]
+}

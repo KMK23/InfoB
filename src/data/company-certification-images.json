@@ -1,0 +1,40 @@
+{
+  "company": {
+    "certifications": {
+      "images": [
+        {
+          "id": "cert-1",
+          "title": "ISO 9001:2015",
+          "type": "인증",
+          "imageUrl": "/images/certifications/iso9001.png",
+          "issueDate": "2023-01-15",
+          "description": "품질경영시스템 인증"
+        },
+        {
+          "id": "cert-2",
+          "title": "ISO 14001:2015",
+          "type": "인증",
+          "imageUrl": "/images/certifications/iso14001.png",
+          "issueDate": "2023-02-20",
+          "description": "환경경영시스템 인증"
+        },
+        {
+          "id": "patent-1",
+          "title": "초음파 누수탐지 센서",
+          "type": "특허",
+          "imageUrl": "/images/patents/ultrasonic-sensor.png",
+          "issueDate": "2022-12-10",
+          "description": "저전력 초음파 누수탐지 센서 기술"
+        },
+        {
+          "id": "patent-2",
+          "title": "무선 통신 중계기",
+          "type": "특허",
+          "imageUrl": "/images/patents/lora-repeater.png",
+          "issueDate": "2023-03-15",
+          "description": "LoRa 기반 무선 통신 중계 기술"
+        }
+      ]
+    }
+  }
+}
