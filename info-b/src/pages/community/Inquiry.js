@@ -3,7 +3,8 @@ import MyEditor from "./MyEditor";
 import { FaStar } from "react-icons/fa";
 import Captcha from "./Captcha";
 import { useNavigate } from "react-router-dom";
-import { addDatas } from "../API/firebase";
+import { useDispatch } from "react-redux";
+import { createPost } from "../../store/slices/postsSlice";
 import Swal from "sweetalert2"; // Import SweetAlert2
 
 function Inquiry({ mode = "create" }) {
@@ -21,6 +22,7 @@ function Inquiry({ mode = "create" }) {
   const captchaRef = useRef(null); //
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handlePhoneChange = (e, part) => {
     const value = e.target.value.replace(/[^0-9]/g, ""); // 숫자만 남기기
@@ -112,7 +114,12 @@ function Inquiry({ mode = "create" }) {
       });
 
       if (result.isConfirmed) {
-        await addDatas("posts", newPost);
+        await dispatch(
+          createPost({
+            collectionName: "posts",
+            data: newPost,
+          })
+        ).unwrap();
         Swal.fire({
           title: "게시글이 등록되었습니다.",
           text: "게시글 등록이 완료되었습니다!",

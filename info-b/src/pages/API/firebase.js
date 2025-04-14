@@ -227,6 +227,29 @@ export const updateAnswer = async (postId, answerId, answerData) => {
   }
 };
 
+// 게시글과 관련된 모든 답변 삭제
+export const deletePostWithAnswers = async (postId) => {
+  try {
+    // 1. 답변 컬렉션의 모든 문서 가져오기
+    const answersRef = collection(db, "posts", postId, "answers");
+    const answersSnapshot = await getDocs(answersRef);
+
+    // 2. 모든 답변 문서 삭제
+    const deleteAnswersPromises = answersSnapshot.docs.map((doc) =>
+      deleteDoc(doc.ref)
+    );
+    await Promise.all(deleteAnswersPromises);
+
+    // 3. 게시글 삭제
+    await deleteDatas("posts", postId);
+
+    return { success: true };
+  } catch (error) {
+    console.error("게시글 및 답변 삭제 실패:", error);
+    throw error;
+  }
+};
+
 export {
   getDatas,
   addDatas,

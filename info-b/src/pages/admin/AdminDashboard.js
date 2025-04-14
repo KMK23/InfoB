@@ -98,57 +98,6 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
-
-        <div className="dashboard-card inquiry-card">
-          <div className="card-icon">
-            <i className="fas fa-question-circle"></i>
-          </div>
-          <h3>문의사항</h3>
-          <div className="card-content">
-            <div className="stat-item">
-              <span className="stat-label">미답변</span>
-              <span className="stat-value highlight">5개</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">답변완료</span>
-              <span className="stat-value">25개</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-card faq-card">
-          <div className="card-icon">
-            <i className="fas fa-book"></i>
-          </div>
-          <h3>FAQ</h3>
-          <div className="card-content">
-            <div className="stat-item">
-              <span className="stat-label">총 FAQ</span>
-              <span className="stat-value">30개</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">최근 수정</span>
-              <span className="stat-value">1일 전</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="dashboard-card system-card">
-          <div className="card-icon">
-            <i className="fas fa-server"></i>
-          </div>
-          <h3>시스템 상태</h3>
-          <div className="card-content">
-            <div className="stat-item">
-              <span className="stat-label">서버 상태</span>
-              <span className="stat-value success">정상</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">마지막 백업</span>
-              <span className="stat-value">12시간 전</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

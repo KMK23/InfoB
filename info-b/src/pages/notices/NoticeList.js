@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchNotices } from "../../store/slices/noticesSlice";
+import { fetchNotices, updateNotice } from "../../store/slices/noticesSlice";
 import "../../styles/components/_noticeList.scss";
 import { useNavigate } from "react-router-dom";
-import { updateDatas } from "../API/firebase";
 
 const NoticeList = () => {
   const dispatch = useDispatch();
@@ -47,19 +46,22 @@ const NoticeList = () => {
 
       const currentViews = clickedNotice.views || 0;
 
-      // 조회수 업데이트
-      await updateDatas("notices", noticeId, {
-        views: currentViews + 1,
-      });
+      // 조회수 업데이트를 Redux 액션으로 변경
+      await dispatch(
+        updateNotice({
+          collectionName: "notices",
+          docId: noticeId,
+          data: { views: currentViews + 1 },
+        })
+      ).unwrap();
 
       // 상세 페이지로 이동
       navigate(`/notice/detail/${noticeId}`);
-      console.log(clickedNotice);
     } catch (error) {
       console.error("조회수 업데이트 실패:", error);
     }
   };
-  console.log(notices);
+
   return (
     <div className="notice-list">
       {/* 게시글 리스트 헤더 */}

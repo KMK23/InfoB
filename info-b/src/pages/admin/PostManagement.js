@@ -37,16 +37,29 @@ const PostManagement = () => {
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "-";
-    const date = new Date(timestamp.seconds * 1000);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
 
-  const handleEdit = (post) => {
-    console.log("수정할 게시글:", post);
-    navigate(`/admin/edit-post/${post.docId}`);
+    try {
+      let date;
+      if (typeof timestamp === "string") {
+        date = new Date(timestamp);
+      } else if (timestamp.seconds) {
+        date = new Date(timestamp.seconds * 1000);
+      } else if (timestamp instanceof Date) {
+        date = timestamp;
+      } else {
+        return "-";
+      }
+
+      if (isNaN(date.getTime())) return "-";
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return "-";
+    }
   };
 
   const handleReply = async (post) => {
@@ -61,11 +74,6 @@ const PostManagement = () => {
   };
 
   // HTML 태그 제거 함수 추가
-  const stripHtmlTags = (html) => {
-    const tmp = document.createElement("div");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
-  };
 
   const handleSaveReply = async () => {
     try {
