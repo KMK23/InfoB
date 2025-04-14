@@ -6,13 +6,15 @@ import {
   getAnswers,
   addAnswer,
   updateAnswer,
+  deletePostWithAnswers,
+  addDatas,
 } from "../../pages/API/firebase";
 
 const initialState = {
   posts: [],
   status: "idle",
   error: null,
-  isLoading: false,
+  loading: false,
   answers: {}, // { postId: { exists: boolean, data: [] } }
 };
 
@@ -24,14 +26,25 @@ const postsSlice = createSlice({
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.status = "loading";
+        state.loading = true;
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.loading = false;
         state.posts = action.payload;
+        state.error = null;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";
+        state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        const { docId, data } = action.payload;
+        const post = state.posts.find((p) => p.docId === docId);
+        if (post) {
+          Object.assign(post, data);
+        }
       });
 
     // 답변 조회
@@ -89,7 +102,54 @@ const postsSlice = createSlice({
         state.loading = false;
         state.error = action.error.message;
       });
+
+    // 게시글 삭제
+    builder
+      .addCase(deletePost.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = state.posts.filter(
+          (post) => post.docId !== action.payload.docId
+        );
+        state.answers = action.payload.answers;
+      })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
+
+    // 게시글 생성
+    builder
+      .addCase(createPost.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts.unshift(action.payload);
+      })
+      .addCase(createPost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
+});
+
+// Timestamp를 직렬화 가능한 형태로 변환하는 함수
+const serializeTimestamp = (timestamp) => {
+  if (!timestamp) return null;
+  if (timestamp.toDate) {
+    return timestamp.toDate().toISOString();
+  }
+  return timestamp;
+};
+
+// 게시글 데이터 직렬화 함수
+const serializePost = (post) => ({
+  ...post,
+  createdAt: serializeTimestamp(post.createdAt),
+  updatedAt: serializeTimestamp(post.updatedAt),
 });
 
 export const fetchPosts = createAsyncThunk(
@@ -97,23 +157,7 @@ export const fetchPosts = createAsyncThunk(
   async ({ collectionName, queryOptions }, { rejectWithValue }) => {
     try {
       const result = await getDatas(collectionName, queryOptions);
-      // 모든 Timestamp 필드를 변환
-      const serializedResult = result.map((post) => ({
-        ...post,
-        createdAt: post.createdAt
-          ? {
-              seconds: post.createdAt.seconds,
-              nanoseconds: post.createdAt.nanoseconds,
-            }
-          : null,
-        updatedAt: post.updatedAt
-          ? {
-              seconds: post.updatedAt.seconds,
-              nanoseconds: post.updatedAt.nanoseconds,
-            }
-          : null,
-      }));
-      return serializedResult;
+      return result.map(serializePost);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -134,10 +178,16 @@ export const updatePost = createAsyncThunk(
 
 export const deletePost = createAsyncThunk(
   "posts/deletePost",
-  async ({ collectionName, docId }, { rejectWithValue }) => {
+  async ({ collectionName, docId }, { rejectWithValue, getState }) => {
     try {
-      const result = await deleteDatas(collectionName, docId);
-      return result;
+      await deletePostWithAnswers(docId);
+
+      // answers 상태에서도 해당 게시글의 답변 정보 제거
+      const state = getState();
+      const newAnswers = { ...state.posts.answers };
+      delete newAnswers[docId];
+
+      return { docId, answers: newAnswers };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -165,6 +215,18 @@ export const updateAnswerThunk = createAsyncThunk(
   async ({ postId, answerId, answerData }) => {
     const response = await updateAnswer(postId, answerId, answerData);
     return { postId, answerId, answer: response };
+  }
+);
+
+export const createPost = createAsyncThunk(
+  "posts/createPost",
+  async ({ collectionName, data }, { rejectWithValue }) => {
+    try {
+      const result = await addDatas(collectionName, data);
+      return { ...data, docId: result.id };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
 );
 

@@ -7,40 +7,29 @@ import {
   deleteDatas,
 } from "../../pages/API/firebase";
 
+// Timestamp를 직렬화 가능한 형태로 변환하는 함수
+const serializeTimestamp = (timestamp) => {
+  if (!timestamp) return null;
+  if (timestamp.toDate) {
+    return timestamp.toDate().toISOString();
+  }
+  return timestamp;
+};
+
+// 공지사항 데이터 직렬화 함수
+const serializeNotice = (notice) => ({
+  ...notice,
+  createdAt: serializeTimestamp(notice.createdAt),
+  updatedAt: serializeTimestamp(notice.updatedAt),
+});
+
 // 공지사항 가져오기
 export const fetchNotices = createAsyncThunk(
   "notices/fetchNotices",
   async ({ collectionName, queryOptions }, { rejectWithValue }) => {
     try {
       const result = await getDatas(collectionName, queryOptions);
-      const serializedResult = result.map((notice) => {
-        // Timestamp를 안전하게 처리
-        let createdAtDate = null;
-        let updatedAtDate = null;
-
-        if (notice.createdAt?.seconds) {
-          createdAtDate = new Date(
-            notice.createdAt.seconds * 1000
-          ).toISOString();
-        } else if (notice.createdAt) {
-          createdAtDate = new Date(notice.createdAt).toISOString();
-        }
-
-        if (notice.updatedAt?.seconds) {
-          updatedAtDate = new Date(
-            notice.updatedAt.seconds * 1000
-          ).toISOString();
-        } else if (notice.updatedAt) {
-          updatedAtDate = new Date(notice.updatedAt).toISOString();
-        }
-
-        return {
-          ...notice,
-          createdAt: createdAtDate,
-          updatedAt: updatedAtDate,
-        };
-      });
-      return serializedResult;
+      return result.map(serializeNotice);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -68,14 +57,10 @@ export const addNotice = createAsyncThunk(
 // 공지사항 수정
 export const updateNotice = createAsyncThunk(
   "notices/updateNotice",
-  async ({ collectionName, id, data }, { rejectWithValue }) => {
+  async ({ collectionName, docId, data }, { rejectWithValue }) => {
     try {
-      const updatedData = {
-        ...data,
-        updatedAt: new Date().toISOString(),
-      };
-      const result = await updateDatas(collectionName, id, updatedData);
-      return result;
+      await updateDatas(collectionName, docId, data);
+      return { docId, ...data };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -101,30 +86,34 @@ const noticesSlice = createSlice({
     notices: [],
     status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
+    loading: false,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchNotices.pending, (state) => {
         state.status = "loading";
+        state.loading = true;
       })
       .addCase(fetchNotices.fulfilled, (state, action) => {
         state.status = "succeeded";
+        state.loading = false;
         state.notices = action.payload;
+        state.error = null;
       })
       .addCase(fetchNotices.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.loading = false;
+        state.error = action.error.message;
       })
       .addCase(addNotice.fulfilled, (state, action) => {
         state.notices.push(action.payload);
       })
       .addCase(updateNotice.fulfilled, (state, action) => {
-        const index = state.notices.findIndex(
-          (notice) => notice.docId === action.payload.docId
-        );
-        if (index !== -1) {
-          state.notices[index] = action.payload;
+        const { docId, ...data } = action.payload;
+        const notice = state.notices.find((n) => n.docId === docId);
+        if (notice) {
+          Object.assign(notice, data);
         }
       })
       .addCase(deleteNotice.fulfilled, (state, action) => {
