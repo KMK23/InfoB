@@ -139,10 +139,12 @@ const postsSlice = createSlice({
 // Timestamp를 직렬화 가능한 형태로 변환하는 함수
 const serializeTimestamp = (timestamp) => {
   if (!timestamp) return null;
-  if (timestamp.toDate) {
-    return timestamp.toDate().toISOString();
+  if (typeof timestamp === "string") return timestamp;
+  if (timestamp.toDate) return timestamp.toDate().toISOString();
+  if (timestamp.seconds) {
+    return new Date(timestamp.seconds * 1000).toISOString();
   }
-  return timestamp;
+  return null;
 };
 
 // 게시글 데이터 직렬화 함수
@@ -150,6 +152,11 @@ const serializePost = (post) => ({
   ...post,
   createdAt: serializeTimestamp(post.createdAt),
   updatedAt: serializeTimestamp(post.updatedAt),
+  answers: post.answers?.map((answer) => ({
+    ...answer,
+    createdAt: serializeTimestamp(answer.createdAt),
+    updatedAt: serializeTimestamp(answer.updatedAt),
+  })),
 });
 
 export const fetchPosts = createAsyncThunk(
@@ -198,7 +205,17 @@ export const fetchAnswers = createAsyncThunk(
   "posts/fetchAnswers",
   async (postId) => {
     const response = await getAnswers(postId);
-    return { postId, ...response };
+    // 답변 데이터 직렬화
+    const serializedData = response.data?.map((answer) => ({
+      ...answer,
+      createdAt: serializeTimestamp(answer.createdAt),
+      updatedAt: serializeTimestamp(answer.updatedAt),
+    }));
+    return {
+      postId,
+      exists: response.exists,
+      data: serializedData || [],
+    };
   }
 );
 
