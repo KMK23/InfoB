@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../styles/pages/_contentManagement.scss";
 import NoticeManagement from "./NoticeManagement";
 import PostManagement from "./PostManagement";
@@ -9,6 +9,13 @@ const ContentManagement = () => {
   const [activeTab, setActiveTab] = useState(
     location.state?.activeTab || "notice"
   );
+
+  // location.state가 변경될 때마다 activeTab 업데이트
+  useEffect(() => {
+    if (location.state?.activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [location.state]);
 
   const renderContent = () => {
     switch (activeTab) {

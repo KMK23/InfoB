@@ -33,6 +33,7 @@ import EditNotice from "./pages/admin/EditNotice";
 import LogIn from "./pages/recruitment/login/LogIn";
 import Find from "./pages/recruitment/login/Find";
 import Accession from "./pages/recruitment/login/Accession";
+import NoticeDetail from "./pages/notices/NoticeDetail";
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
               <Route path="login/login" element={<LogIn />} />
               <Route path="login/find" element={<Find />} />
               <Route path="login/accession" element={<Accession />} />
+              <Route path="notice/detail/:id" element={<NoticeDetail />} />
             </Route>
 
             {/* Admin routes */}
