@@ -1,15 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getDatas } from "../../../src/pages/API/firebase";
+import { getDatas } from "../../pages/API/firebase";
 
 export const fetchTalent = createAsyncThunk(
   "talent/fetchTalent",
-  async (_, { rejectWithValue }) => {
-    try {
-      const data = await getDatas("talent");
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
+  async ({ collectionName, queryOptions = {} }) => {
+    const data = await getDatas(collectionName, queryOptions);
+    return data;
   }
 );
 
@@ -32,9 +28,9 @@ const talentSlice = createSlice({
       })
       .addCase(fetchTalent.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });
 
-export default talentSlice.reducer;
+export const talentReducer = talentSlice.reducer;

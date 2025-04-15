@@ -48,7 +48,6 @@ const storage = getStorage(app);
 
 async function addDatas(collectionName, userObj) {
   try {
-    console.log("Adding data to Firestore:", userObj); // 디버깅 로그 추가
     const docRef = await addDoc(collection(db, collectionName), userObj);
     console.log("Document added with ID:", docRef.id); // 문서 ID 출력
     return docRef.id;
@@ -74,7 +73,9 @@ function getQuery(collectionName, queryOptions) {
     q = query(q, orderBy(order.field, order.direction || "desc"));
   });
 
-  q = query(q, limit(limits));
+  if (limits) {
+    q = query(q, limit(limits));
+  }
 
   return q;
 }
@@ -87,7 +88,7 @@ async function getDatas(collectionName, queryOptions) {
     ...doc.data(),
     docId: doc.id,
   }));
-  return resultData; //게시글 데이터 반환
+  return resultData;
 }
 
 async function deleteDatas(collectionName, docId) {

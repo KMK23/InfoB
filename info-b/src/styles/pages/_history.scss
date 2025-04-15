@@ -1,100 +1,101 @@
 @import "../variables";
 
 .history {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 80px 20px;
-  background-color: $secondary-color;
-  color: $text-light;
+  padding: 4rem 2rem;
+  background-color: white;
+  color: #333;
 
   &__title {
-    font-size: calc(36px * $font-size-multiplier);
     text-align: center;
-    color: $primary-color;
-    margin-bottom: 10px;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
   }
 
   &__subtitle {
-    font-size: calc(18px * $font-size-multiplier);
     text-align: center;
-    color: $text-gray;
-    margin-bottom: 80px;
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 4rem;
   }
 
   &__timeline {
     position: relative;
     max-width: 1000px;
     margin: 0 auto;
-    padding-top: 40px;
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
+      width: 2px;
+      background: #333;
+      top: 0;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 1px;
-      height: 100%;
-      background-color: $text-light;
     }
   }
 
   &__period {
-    margin-bottom: 80px;
     position: relative;
+    margin-bottom: 8rem;
+    width: 100%;
+    min-height: 120px;
 
-    &:before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      background-color: $primary-color;
-      border: 2px solid $text-light;
-      transition: all 0.3s ease;
+    &:nth-child(even) {
+      .history__period-header,
+      .history__events {
+        left: 0;
+        width: 45%;
+        text-align: right;
+        padding-right: 2rem;
+      }
     }
 
-    &:hover {
-      &:before {
-        background-color: $primary-color;
-        border-color: $primary-color;
+    &:nth-child(odd) {
+      .history__period-header,
+      .history__events {
+        left: 55%;
+        width: 45%;
+        text-align: left;
+        padding-left: 2rem;
       }
+    }
 
-      .history__period-header h2 {
-        transform: translateX(50%);
-      }
+    &::before {
+      content: "";
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border: 2px solid #333;
+      border-radius: 50%;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 
   &__period-header {
-    text-align: left;
-    margin-bottom: 30px;
-    position: relative;
+    position: absolute;
+    top: 0;
 
     h2 {
-      font-size: calc(28px * $font-size-multiplier);
-      font-weight: 600;
-      color: $primary-color;
-      position: absolute;
-      left: 20%;
-      transform: translateX(0);
-      top: -8px;
-      transition: transform 0.3s ease;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+      margin-bottom: 1rem;
     }
   }
 
   &__events {
-    position: relative;
-    margin-top: 20px;
+    position: absolute;
+    top: 3rem;
   }
 
   &__event {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    position: relative;
-    padding-left: 50%;
+    margin-bottom: 1rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -102,90 +103,105 @@
   }
 
   &__event-content {
-    color: white;
-    line-height: 1.6;
-    font-size: calc(15px * var(--font-size-multiplier));
-    padding-left: 50px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #333;
   }
 
-  @include mobile {
-    padding: 40px 15px;
-
-    &__title {
-      font-size: calc(24px * var(--font-size-multiplier));
-    }
-
-    &__subtitle {
-      font-size: calc(16px * var(--font-size-multiplier));
-      margin-bottom: 60px;
-    }
+  @media (max-width: 768px) {
+    padding: 2rem 1rem;
 
     &__timeline {
-      padding-top: 30px;
+      max-width: 100%;
 
-      &:before {
-        left: 50%;
+      &::before {
+        left: 15px;
+        transform: none;
       }
     }
 
     &__period {
-      margin-bottom: 60px;
+      margin-bottom: 3rem;
+      min-height: auto;
+      padding-left: 45px;
+      position: relative;
 
-      &:before {
-        left: 50%;
-        transform: translateX(-50%);
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        background-color: #e9ad1c;
-        border: 2px solid white;
-        z-index: 1;
-        transition: all 0.3s ease;
-      }
-
-      &:hover {
-        &:before {
-          background-color: #e9ad1c;
-          border-color: #e9ad1c;
+      &:nth-child(odd),
+      &:nth-child(even) {
+        .history__period-header {
+          position: relative;
+          left: 0;
+          width: 100%;
+          text-align: left;
+          padding: 0;
+          margin-bottom: 1rem;
         }
 
-        .history__period-header h2 {
-          transform: translateX(30%);
+        .history__events {
+          position: relative;
+          left: 0;
+          width: 100%;
+          text-align: left;
+          padding: 0;
+          top: 0;
+        }
+
+        &::before {
+          left: 15px;
+          top: 8px;
+          transform: none;
         }
       }
     }
 
     &__period-header {
       h2 {
-        font-size: calc(20px * var(--font-size-multiplier));
-        left: 20%;
-        transform: translateX(0);
-        transition: transform 0.3s ease;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
       }
     }
 
     &__event {
-      padding-left: 50%;
+      margin-bottom: 0.5rem;
     }
 
     &__event-content {
-      padding-left: 30px;
-      font-size: calc(14px * var(--font-size-multiplier));
+      font-size: 0.9rem;
+      line-height: 1.4;
     }
   }
-}
 
-@media (max-width: 480px) {
-  .history {
+  @media (max-width: 480px) {
+    padding: 1.5rem 1rem;
+
+    &__period {
+      padding-left: 35px;
+      margin-bottom: 2rem;
+
+      &:nth-child(odd),
+      &:nth-child(even) {
+        &::before {
+          width: 10px;
+          height: 10px;
+          left: 10px;
+        }
+      }
+    }
+
+    &__timeline {
+      &::before {
+        left: 10px;
+      }
+    }
+
     &__period-header {
       h2 {
-        font-size: calc(24px * var(--font-size-multiplier));
+        font-size: 1.1rem;
       }
     }
 
     &__event-content {
-      padding-left: 25px;
-      font-size: calc(13px * var(--font-size-multiplier));
+      font-size: 0.85rem;
     }
   }
 }

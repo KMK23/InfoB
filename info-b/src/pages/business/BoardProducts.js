@@ -22,7 +22,9 @@ function BoardProducts() {
   const { products, status } = useSelector((state) => state.products);
 
   useEffect(() => {
-    dispatch(fetchProducts({ collectionName: "products", queryOptions: {} }));
+    dispatch(
+      fetchProducts({ collectionName: "productDetail", queryOptions: {} })
+    );
   }, [dispatch]);
 
   console.log("Products data:", products);
@@ -41,11 +43,11 @@ function BoardProducts() {
     JSON.stringify(productsData, null, 2)
   );
 
-  if (!productsData?.company?.products?.boardProducts) {
+  if (!productsData?.boardProducts) {
     return <div>보드 제품 정보가 올바르지 않습니다.</div>;
   }
 
-  const boardProducts = productsData.company.products.boardProducts;
+  const boardProducts = productsData.boardProducts;
   console.log("Board products:", boardProducts);
 
   if (!Array.isArray(boardProducts)) {
@@ -76,16 +78,9 @@ function BoardProducts() {
 
       <section className="product-section">
         <FadeInSection>
-          <div className="section-header">
-            <h2>보드제품</h2>
-            <p>고성능 하드웨어 솔루션으로 다양한 산업 분야를 지원합니다</p>
-          </div>
-        </FadeInSection>
-
-        <div className="product-list">
-          {boardProducts.map((product) => (
-            <FadeInSection key={product.id}>
-              <div className="product-item">
+          <div className="product-list">
+            {boardProducts.map((product) => (
+              <div key={product.id} className="product-item">
                 <div className="product-header">
                   <h3>{product.name}</h3>
                   {product.releaseDate && (
@@ -97,7 +92,7 @@ function BoardProducts() {
                     <div className="image-container">
                       <img
                         src={productImages[product.image]}
-                        alt={product.name}
+                        alt={`${product.name} 이미지`}
                       />
                     </div>
                   </div>
@@ -105,78 +100,121 @@ function BoardProducts() {
                 <FadeInSection>
                   <div className="product-content">
                     <div className="features">
-                      {product.features?.description && (
-                        <>
-                          <h4>기능</h4>
-                          <p>{product.features.description}</p>
-                        </>
-                      )}
-                      {Array.isArray(product.features?.description) && (
-                        <>
-                          <h4>기능</h4>
+                      <h4 className="content-title">제품 특징</h4>
+                      {Array.isArray(product.features.description) ? (
+                        <ul className="feature-list">
                           {product.features.description.map((desc, index) => (
-                            <p key={index}>{desc}</p>
+                            <li key={index} className="feature-item">
+                              <span className="feature-icon">
+                                {getFeatureIcon(index)}
+                              </span>
+                              <span className="feature-text">{desc}</span>
+                            </li>
                           ))}
-                        </>
-                      )}
-                      {product.features?.specifications && (
-                        <>
-                          <h4>규격</h4>
-                          <ul>
-                            {Object.entries(
-                              product.features.specifications
-                            ).map(([key, value], index) => {
-                              // value가 객체인 경우 처리
-                              if (typeof value === "object" && value !== null) {
-                                const displayValue = Object.entries(value)
-                                  .map(([k, v]) => `${v}`)
-                                  .join(", ");
-                                return (
-                                  <li key={index}>
-                                    <span className="feature-icon">
-                                      {getIconForSpec(key)}
-                                    </span>
-                                    <span className="feature-text">
-                                      {displayValue}
-                                    </span>
-                                  </li>
-                                );
-                              }
-                              // value가 문자열인 경우 처리
-                              return (
-                                <li key={index}>
-                                  <span className="feature-icon">
-                                    {getIconForSpec(key)}
-                                  </span>
-                                  <span className="feature-text">{value}</span>
-                                </li>
-                              );
-                            })}
-                          </ul>
-                        </>
+                        </ul>
+                      ) : (
+                        <p className="feature-description">
+                          {product.features.description}
+                        </p>
                       )}
                     </div>
+                    {product.features.specifications && (
+                      <div className="specifications">
+                        <h4 className="content-title">제품 사양</h4>
+                        <table className="spec-table">
+                          <tbody>
+                            {Object.entries(
+                              product.features.specifications
+                            ).map(([key, value]) => {
+                              if (typeof value === "object" && value !== null) {
+                                return Object.entries(value).map(
+                                  ([subKey, subValue], subIndex) => (
+                                    <tr key={`${key}-${subKey}`}>
+                                      {subIndex === 0 && (
+                                        <th rowSpan={Object.keys(value).length}>
+                                          {getSpecTitle(key)}
+                                        </th>
+                                      )}
+                                      <td>{getSpecTitle(subKey)}</td>
+                                      <td>
+                                        {typeof subValue === "object"
+                                          ? Object.entries(subValue).map(
+                                              ([k, v]) => (
+                                                <div key={k}>
+                                                  {getSpecTitle(k)}: {v}
+                                                </div>
+                                              )
+                                            )
+                                          : subValue}
+                                      </td>
+                                    </tr>
+                                  )
+                                );
+                              }
+                              return (
+                                <tr key={key}>
+                                  <th>{getSpecTitle(key)}</th>
+                                  <td colSpan="2">{value}</td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </FadeInSection>
               </div>
-            </FadeInSection>
-          ))}
-        </div>
+            ))}
+          </div>
+        </FadeInSection>
       </section>
     </div>
   );
 }
 
-function getIconForSpec(key) {
-  const icons = {
-    communication: "🔌",
-    ports: "🔌",
-    wdt: "⏱️",
-    voltage: "⚡",
-    temperature: "🌡️",
-    humidity: "💧",
+function getFeatureIcon(index) {
+  const icons = ["📡", "🔋", "⚡", "📊", "🔄", "🌐"];
+  return icons[index] || "📝";
+}
+
+function getSpecTitle(key) {
+  const titles = {
+    power: "전원",
+    무선: "무선",
+    frequency: "주파수",
+    wirelessOutput: "무선출력",
+    antenna: "안테나",
+    temperature: "사용온도",
+    humidity: "습도",
+    voltage: "전압",
+    wdt: "WDT",
+    communication: "통신",
+    전원: "전원",
+    사용온도: "사용온도",
   };
-  return icons[key] || "📝";
+  return titles[key] || key;
+}
+
+function renderSpecifications(spec) {
+  if (typeof spec === "string") {
+    return <p className="spec-value">{spec}</p>;
+  }
+
+  if (typeof spec === "object" && spec !== null) {
+    return (
+      <div className="spec-details">
+        {Object.entries(spec).map(([key, value]) => (
+          <div key={key} className="spec-item">
+            <h6 className="spec-subtitle">{getSpecTitle(key)}</h6>
+            {renderSpecifications(value)}
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export default BoardProducts;

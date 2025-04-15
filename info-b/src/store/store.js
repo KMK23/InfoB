@@ -9,8 +9,8 @@ import certificationsReducer from "./slices/certificationsSlice";
 import historyReducer from "./slices/historySlice";
 import performanceReducer from "./slices/performanceSlice";
 import productsReducer from "./slices/productsSlice";
-import talentReducer from "./slices/talentSlice";
 import benefitsReducer from "./slices/benefitsSlice";
+import { talentReducer } from "./slices/talentSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,8 +24,8 @@ export const store = configureStore({
     history: historyReducer,
     performance: performanceReducer,
     products: productsReducer,
-    talent: talentReducer,
     benefits: benefitsReducer,
+    talent: talentReducer,
   },
 });
 
