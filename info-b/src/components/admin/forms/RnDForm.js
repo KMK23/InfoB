@@ -1,112 +1,329 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../../styles/components/admin/forms/_rndForm.scss";
 
 const RnDForm = ({ editData, setEditData }) => {
-  const handleUpdateProduct = (field, value) => {
+  const [showNewForm, setShowNewForm] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    type: "leakDetection",
+    name: "",
+    id: "",
+    releaseDate: "",
+    features: {
+      description: "",
+    },
+  });
+
+  const handleUpdateLeakDetection = (index, field, value) => {
+    const newLeakDetection = [...editData.leakDetection];
+    if (field === "description") {
+      newLeakDetection[index] = {
+        ...newLeakDetection[index],
+        features: {
+          ...newLeakDetection[index].features,
+          description: value.split("\n"),
+        },
+      };
+    } else {
+      newLeakDetection[index] = {
+        ...newLeakDetection[index],
+        [field]: value,
+      };
+    }
     setEditData({
       ...editData,
-      product: {
-        ...editData.product,
+      leakDetection: newLeakDetection,
+    });
+  };
+
+  const handleUpdateBoardProduct = (index, field, value) => {
+    const newBoardProducts = [...editData.boardProducts];
+    if (field === "description") {
+      newBoardProducts[index] = {
+        ...newBoardProducts[index],
+        features: {
+          ...newBoardProducts[index].features,
+          description: value,
+        },
+      };
+    } else {
+      newBoardProducts[index] = {
+        ...newBoardProducts[index],
         [field]: value,
+      };
+    }
+    setEditData({
+      ...editData,
+      boardProducts: newBoardProducts,
+    });
+  };
+
+  const handleAddProduct = () => {
+    if (newProduct.type === "leakDetection") {
+      setEditData({
+        ...editData,
+        leakDetection: [
+          {
+            name: newProduct.name,
+            id: newProduct.id,
+            releaseDate: newProduct.releaseDate,
+            features: {
+              description: newProduct.features.description.split("\n"),
+            },
+          },
+          ...editData.leakDetection,
+        ],
+      });
+    } else {
+      setEditData({
+        ...editData,
+        boardProducts: [
+          {
+            name: newProduct.name,
+            id: newProduct.id,
+            releaseDate: newProduct.releaseDate,
+            features: {
+              description: newProduct.features.description,
+            },
+          },
+          ...editData.boardProducts,
+        ],
+      });
+    }
+    setShowNewForm(false);
+    setNewProduct({
+      type: "leakDetection",
+      name: "",
+      id: "",
+      releaseDate: "",
+      features: {
+        description: "",
       },
     });
   };
 
-  const handleUpdateFeatures = (value) => {
+  const handleDeleteLeakDetection = (index) => {
+    const newLeakDetection = editData.leakDetection.filter(
+      (_, i) => i !== index
+    );
     setEditData({
       ...editData,
-      product: {
-        ...editData.product,
-        features: {
-          ...editData.product.features,
-          description:
-            editData.productType === "leakDetection"
-              ? value.split("\n")
-              : value,
-        },
-      },
+      leakDetection: newLeakDetection,
     });
+  };
+
+  const handleDeleteBoardProduct = (index) => {
+    const newBoardProducts = editData.boardProducts.filter(
+      (_, i) => i !== index
+    );
+    setEditData({
+      ...editData,
+      boardProducts: newBoardProducts,
+    });
+  };
+
+  const handleUpdateNewProduct = (field, value) => {
+    if (field === "description") {
+      setNewProduct({
+        ...newProduct,
+        features: {
+          ...newProduct.features,
+          description: value,
+        },
+      });
+    } else {
+      setNewProduct({
+        ...newProduct,
+        [field]: value,
+      });
+    }
   };
 
   return (
     <div className="rnd-form">
-      <div className="form-section">
-        <div className="input-group">
-          <label htmlFor="productName">제품명</label>
-          <input
-            id="productName"
-            type="text"
-            value={editData.product?.name || ""}
-            onChange={(e) => handleUpdateProduct("name", e.target.value)}
-            placeholder="제품명을 입력하세요"
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="productId">제품 ID</label>
-          <input
-            id="productId"
-            type="text"
-            value={editData.product?.id || ""}
-            onChange={(e) => handleUpdateProduct("id", e.target.value)}
-            placeholder="제품 ID를 입력하세요"
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="productImage">
-            {editData.productType === "leakDetection"
-              ? "이미지 파일명 (쉼표로 구분)"
-              : "이미지 파일명"}
-          </label>
-          {editData.productType === "leakDetection" ? (
+      <button className="add-button" onClick={() => setShowNewForm(true)}>
+        새 제품 추가
+      </button>
+
+      {showNewForm && (
+        <div className="form-section new-product">
+          <div className="item-header">
+            <h4>새 제품</h4>
+            <button
+              className="delete-button"
+              onClick={() => setShowNewForm(false)}
+            >
+              취소
+            </button>
+          </div>
+          <div className="input-group">
+            <label>제품 종류</label>
+            <select
+              value={newProduct.type}
+              onChange={(e) => handleUpdateNewProduct("type", e.target.value)}
+            >
+              <option value="leakDetection">누출탐지센서</option>
+              <option value="boardProduct">보드제품</option>
+            </select>
+          </div>
+          <div className="input-group">
+            <label>제품명</label>
             <input
-              id="productImage"
               type="text"
-              value={editData.product?.images?.join(", ") || ""}
+              value={newProduct.name}
+              onChange={(e) => handleUpdateNewProduct("name", e.target.value)}
+            />
+          </div>
+          <div className="input-group">
+            <label>제품 ID</label>
+            <input
+              type="text"
+              value={newProduct.id}
+              onChange={(e) => handleUpdateNewProduct("id", e.target.value)}
+            />
+          </div>
+          <div className="input-group">
+            <label>출시예정</label>
+            <input
+              type="text"
+              value={newProduct.releaseDate}
               onChange={(e) =>
-                handleUpdateProduct(
-                  "images",
-                  e.target.value.split(",").map((img) => img.trim())
-                )
+                handleUpdateNewProduct("releaseDate", e.target.value)
               }
-              placeholder="예: image1.jpg, image2.jpg"
             />
-          ) : (
-            <input
-              id="productImage"
-              type="text"
-              value={editData.product?.image || ""}
-              onChange={(e) => handleUpdateProduct("image", e.target.value)}
-              placeholder="예: image.jpg"
+          </div>
+          <div className="input-group">
+            <label>제품 설명</label>
+            <textarea
+              value={newProduct.features.description}
+              onChange={(e) =>
+                handleUpdateNewProduct("description", e.target.value)
+              }
             />
-          )}
+          </div>
+          <button className="submit-button" onClick={handleAddProduct}>
+            추가하기
+          </button>
         </div>
-        <div className="input-group">
-          <label htmlFor="productDescription">제품 설명</label>
-          <textarea
-            id="productDescription"
-            value={
-              editData.productType === "leakDetection"
-                ? editData.product?.features?.description?.join("\n") || ""
-                : editData.product?.features?.description || ""
-            }
-            onChange={(e) => handleUpdateFeatures(e.target.value)}
-            placeholder={
-              editData.productType === "leakDetection"
-                ? "제품 설명을 입력하세요 (줄바꿈으로 구분)"
-                : "제품 설명을 입력하세요"
-            }
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="releaseDate">출시 예정일</label>
-          <input
-            id="releaseDate"
-            type="text"
-            value={editData.product?.releaseDate || ""}
-            onChange={(e) => handleUpdateProduct("releaseDate", e.target.value)}
-            placeholder="예: 2024년 하반기 출시예정"
-          />
-        </div>
+      )}
+
+      <div className="form-section">
+        <h3>누출탐지센서</h3>
+        {editData.leakDetection.map((item, index) => (
+          <div key={index} className="form-item">
+            <div className="item-header">
+              <h4>{item.name || "새 제품"}</h4>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteLeakDetection(index)}
+              >
+                "{item.name || "이 제품"}" 삭제
+              </button>
+            </div>
+            <div className="input-group">
+              <label>제품명</label>
+              <input
+                type="text"
+                value={item.name || ""}
+                onChange={(e) =>
+                  handleUpdateLeakDetection(index, "name", e.target.value)
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>제품 ID</label>
+              <input
+                type="text"
+                value={item.id || ""}
+                onChange={(e) =>
+                  handleUpdateLeakDetection(index, "id", e.target.value)
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>출시예정</label>
+              <input
+                type="text"
+                value={item.releaseDate || ""}
+                onChange={(e) =>
+                  handleUpdateLeakDetection(
+                    index,
+                    "releaseDate",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>제품 설명</label>
+              <textarea
+                value={item.features?.description?.join("\n") || ""}
+                onChange={(e) =>
+                  handleUpdateLeakDetection(
+                    index,
+                    "description",
+                    e.target.value
+                  )
+                }
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="form-section">
+        <h3>보드제품</h3>
+        {editData.boardProducts.map((item, index) => (
+          <div key={index} className="form-item">
+            <div className="item-header">
+              <h4>{item.name || "새 제품"}</h4>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteBoardProduct(index)}
+              >
+                "{item.name || "이 제품"}" 삭제
+              </button>
+            </div>
+            <div className="input-group">
+              <label>제품명</label>
+              <input
+                type="text"
+                value={item.name || ""}
+                onChange={(e) =>
+                  handleUpdateBoardProduct(index, "name", e.target.value)
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>제품 ID</label>
+              <input
+                type="text"
+                value={item.id || ""}
+                onChange={(e) =>
+                  handleUpdateBoardProduct(index, "id", e.target.value)
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>출시예정</label>
+              <input
+                type="text"
+                value={item.releaseDate || ""}
+                onChange={(e) =>
+                  handleUpdateBoardProduct(index, "releaseDate", e.target.value)
+                }
+              />
+            </div>
+            <div className="input-group">
+              <label>제품 설명</label>
+              <textarea
+                value={item.features?.description || ""}
+                onChange={(e) =>
+                  handleUpdateBoardProduct(index, "description", e.target.value)
+                }
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
-import "../../../styles/components/admin/forms/_casesForm.scss";
+import "../../../styles/components/admin/forms/_performanceForm.scss";
 
-const CasesForm = ({ editData, setEditData }) => {
+const PerformanceForm = ({ editData, setEditData }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setEditData((prev) => ({
@@ -14,14 +14,14 @@ const CasesForm = ({ editData, setEditData }) => {
   };
 
   return (
-    <div className="cases-form">
+    <div className="performance-form">
       <div className="form-group">
         <label htmlFor="year">연도</label>
         <input
           type="text"
           id="year"
           name="year"
-          value={editData.performanceCases?.year || ""}
+          value={editData.performanceCases.year || ""}
           onChange={handleInputChange}
           placeholder="예: 2024"
         />
@@ -33,7 +33,7 @@ const CasesForm = ({ editData, setEditData }) => {
           type="text"
           id="category"
           name="category"
-          value={editData.performanceCases?.category || ""}
+          value={editData.performanceCases.category || ""}
           onChange={handleInputChange}
           placeholder="예: 공공기관"
         />
@@ -45,7 +45,7 @@ const CasesForm = ({ editData, setEditData }) => {
           type="text"
           id="title"
           name="title"
-          value={editData.performanceCases?.title || ""}
+          value={editData.performanceCases.title || ""}
           onChange={handleInputChange}
           placeholder="프로젝트 제목을 입력하세요"
         />
@@ -54,4 +54,4 @@ const CasesForm = ({ editData, setEditData }) => {
   );
 };
 
-export default CasesForm;
+export default PerformanceForm;

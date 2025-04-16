@@ -22,6 +22,7 @@ import CasesForm from "../../components/admin/forms/CasesForm";
 import RecruitmentForm from "../../components/admin/forms/RecruitmentForm";
 import BenefitsForm from "../../components/admin/forms/BenefitsForm";
 import RnDForm from "../../components/admin/forms/RnDForm";
+import PerformanceForm from "../../components/admin/forms/PerformanceForm";
 
 const COLLECTIONS = {
   company: {
@@ -79,12 +80,7 @@ const COLLECTIONS = {
     sections: [
       {
         id: "recruitment",
-        label: "채용정보",
-        collection: "talent",
-      },
-      {
-        id: "benefits",
-        label: "복리후생",
+        label: "인재상",
         collection: "talent",
       },
     ],
@@ -106,6 +102,8 @@ const CollectionEditor = () => {
       (section) => section.id === selectedSection
     );
     if (currentSection) {
+      console.log("현재 섹션:", currentSection);
+      console.log("컬렉션 이름:", currentSection.collection);
       dispatch(
         fetchProducts({
           collectionName: currentSection.collection,
@@ -115,7 +113,7 @@ const CollectionEditor = () => {
     }
   }, [dispatch, selectedCollection, selectedSection]);
 
-  const handleEdit = (productType, productIndex) => {
+  const handleEdit = (section, item) => {
     if (!products || !products[0]) return;
 
     const data = products[0];
@@ -185,12 +183,27 @@ const CollectionEditor = () => {
         break;
       case "cases":
         editContent = {
-          performanceCases: [...(data.cases || [])],
+          performanceCases: item || {
+            year: "",
+            category: "",
+            title: "",
+          },
         };
         break;
       case "recruitment":
         editContent = {
-          recruitmentInfo: [...(data.recruitment || [])],
+          company: {
+            talent: data.company?.talent || {
+              title: "",
+              subtitle: "",
+              description: [],
+              recruitmentUrl: "",
+              benefits: {
+                title: "복리후생",
+                items: [],
+              },
+            },
+          },
         };
         break;
       case "benefits":
@@ -199,23 +212,24 @@ const CollectionEditor = () => {
         };
         break;
       case "RnD":
-        if (productType === "leakDetection") {
-          editContent = {
-            productType: "leakDetection",
-            productIndex: productIndex,
-            product: data.leakDetection[productIndex]
-              ? JSON.parse(JSON.stringify(data.leakDetection[productIndex]))
-              : null,
-          };
-        } else if (productType === "boardProducts") {
-          editContent = {
-            productType: "boardProducts",
-            productIndex: productIndex,
-            product: data.boardProducts[productIndex]
-              ? JSON.parse(JSON.stringify(data.boardProducts[productIndex]))
-              : null,
-          };
-        }
+        editContent = {
+          leakDetection: data.leakDetection
+            ? JSON.parse(JSON.stringify(data.leakDetection))
+            : [],
+          boardProducts: data.boardProducts
+            ? JSON.parse(JSON.stringify(data.boardProducts))
+            : [],
+        };
+        break;
+      case "performance":
+        editContent = {
+          performanceCases: {
+            year: item ? item.year : "",
+            category: item ? item.category : "",
+            title: item ? item.title : "",
+            id: item ? item.id : null,
+          },
+        };
         break;
       default:
         break;
@@ -290,21 +304,116 @@ const CollectionEditor = () => {
           updatedData.services = editData.services;
           break;
         case "cases":
-          updatedData.cases = editData.performanceCases;
+          if (!updatedData.company) updatedData.company = {};
+          if (!updatedData.company.performanceCases) {
+            updatedData.company.performanceCases = {
+              title: "구축 사례",
+              description:
+                "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
+              timeline: [],
+            };
+          }
+
+          const casesExistingYear =
+            updatedData.company.performanceCases.timeline.find(
+              (t) => t.year === editData.performanceCases.year
+            );
+
+          if (casesExistingYear) {
+            if (editData.performanceCases.id) {
+              // 기존 프로젝트 수정
+              const projectIndex = casesExistingYear.projects.findIndex(
+                (p) => p.id === editData.performanceCases.id
+              );
+              if (projectIndex !== -1) {
+                casesExistingYear.projects[projectIndex] = {
+                  id: editData.performanceCases.id,
+                  category: editData.performanceCases.category,
+                  title: editData.performanceCases.title,
+                };
+              }
+            } else {
+              // 새 프로젝트 추가
+              casesExistingYear.projects.push({
+                id: `${editData.performanceCases.year}-${Date.now()}`,
+                category: editData.performanceCases.category,
+                title: editData.performanceCases.title,
+              });
+            }
+          } else {
+            // 새로운 연도 추가
+            updatedData.company.performanceCases.timeline.push({
+              year: editData.performanceCases.year,
+              projects: [
+                {
+                  id: `${editData.performanceCases.year}-${Date.now()}`,
+                  category: editData.performanceCases.category,
+                  title: editData.performanceCases.title,
+                },
+              ],
+            });
+          }
           break;
         case "recruitment":
-          updatedData.recruitment = editData.recruitmentInfo;
+          if (!updatedData.company) updatedData.company = {};
+          updatedData.company.talent = editData.company.talent;
           break;
         case "benefits":
           updatedData.benefits = editData.benefits;
           break;
         case "RnD":
-          if (editData.productType === "leakDetection") {
-            if (!updatedData.leakDetection) updatedData.leakDetection = [];
-            updatedData.leakDetection[editData.productIndex] = editData.product;
-          } else if (editData.productType === "boardProducts") {
-            if (!updatedData.boardProducts) updatedData.boardProducts = [];
-            updatedData.boardProducts[editData.productIndex] = editData.product;
+          updatedData.leakDetection = editData.leakDetection;
+          updatedData.boardProducts = editData.boardProducts;
+          break;
+        case "performance":
+          if (!updatedData.company) updatedData.company = {};
+          if (!updatedData.company.performanceCases) {
+            updatedData.company.performanceCases = {
+              title: "구축 사례",
+              description:
+                "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
+              timeline: [],
+            };
+          }
+
+          const performanceExistingYear =
+            updatedData.company.performanceCases.timeline.find(
+              (t) => t.year === editData.performanceCases.year
+            );
+
+          if (performanceExistingYear) {
+            if (editData.performanceCases.id) {
+              // 기존 프로젝트 수정
+              const projectIndex = performanceExistingYear.projects.findIndex(
+                (p) => p.id === editData.performanceCases.id
+              );
+              if (projectIndex !== -1) {
+                performanceExistingYear.projects[projectIndex] = {
+                  id: editData.performanceCases.id,
+                  category: editData.performanceCases.category,
+                  title: editData.performanceCases.title,
+                };
+              }
+            } else {
+              // 새 프로젝트 추가
+              performanceExistingYear.projects.push({
+                id: `${editData.performanceCases.year}-${Date.now()}`,
+                category: editData.performanceCases.category,
+                title: editData.performanceCases.title,
+              });
+            }
+          } else {
+            // 새로운 연도 추가
+            updatedData.company.performanceCases.timeline.push({
+              year: editData.performanceCases.year,
+              projects: [
+                {
+                  id: `${editData.performanceCases.year}-${Date.now()}`,
+                  category: editData.performanceCases.category,
+                  title: editData.performanceCases.title,
+                },
+              ],
+            });
           }
           break;
         default:
@@ -341,13 +450,83 @@ const CollectionEditor = () => {
     setEditData(null);
   };
 
+  const handleDelete = async (section, item) => {
+    if (!products || !products[0]) return;
+
+    const updatedData = JSON.parse(JSON.stringify(products[0]));
+    const currentSection = COLLECTIONS[selectedCollection].sections.find(
+      (section) => section.id === selectedSection
+    );
+
+    switch (section) {
+      case "recruitment":
+        if (!updatedData.recruitment) return;
+        updatedData.recruitment = updatedData.recruitment.filter(
+          (_, index) => index !== item
+        );
+        break;
+
+      case "benefits":
+        if (!updatedData.benefits) return;
+        updatedData.benefits = updatedData.benefits.filter(
+          (_, index) => index !== item
+        );
+        break;
+
+      case "cases":
+      case "performance":
+        if (!updatedData.company) return;
+
+        const yearData = updatedData.company.performanceCases.timeline.find(
+          (t) => t.year === item.year
+        );
+
+        if (yearData) {
+          yearData.projects = yearData.projects.filter((p) => p.id !== item.id);
+
+          if (yearData.projects.length === 0) {
+            updatedData.company.performanceCases.timeline =
+              updatedData.company.performanceCases.timeline.filter(
+                (t) => t.year !== item.year
+              );
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    try {
+      await dispatch(
+        updateCollection({
+          collectionName: currentSection.collection,
+          docId: products[0].docId,
+          data: updatedData,
+        })
+      ).unwrap();
+
+      dispatch(
+        fetchProducts({
+          collectionName: currentSection.collection,
+          queryOptions: {},
+        })
+      );
+
+      alert("성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("삭제 중 오류:", error);
+      alert("삭제 중 오류가 발생했습니다: " + error.message);
+    }
+  };
+
   const renderContent = () => {
     if (!products || !products[0]) {
       return <div className="loading">데이터를 불러오는 중...</div>;
     }
 
     const data = products[0];
-    console.log("현재 데이터:", data);
+    console.log("전체 데이터 확인:", data);
+    console.log("현재 선택된 섹션:", selectedSection);
 
     switch (selectedSection) {
       case "ceo":
@@ -368,46 +547,88 @@ const CollectionEditor = () => {
       case "history":
         return (
           <div className="view-mode">
-            <h3>{data.company?.history?.title}</h3>
-            <p>{data.company?.history?.subtitle}</p>
-            <div className="timeline">
-              {Object.entries(data.company?.history?.timeline || {})
-                .sort(([yearA], [yearB]) => yearB - yearA)
-                .map(([year, yearData]) => (
-                  <div key={year} className="year-section">
-                    <h4>{year}년</h4>
-                    <ul>
-                      {yearData.events &&
-                        yearData.events.map((event, index) => (
-                          <li key={index}>{event.content}</li>
-                        ))}
-                    </ul>
-                  </div>
-                ))}
+            <div className="section">
+              <div className="section-header">
+                <h3>{data.company?.history?.title || "회사연혁"}</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() =>
+                      handleEdit("history", data?.company?.history)
+                    }
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="items-grid">
+                {Object.entries(data.company?.history?.timeline || {})
+                  .sort(([yearA], [yearB]) => yearB - yearA)
+                  .map(([year, yearData]) => (
+                    <div key={year} className="item-card">
+                      <div className="item-header">
+                        <h4>{year}년</h4>
+                      </div>
+                      <div className="item-content">
+                        <ul>
+                          {yearData.events &&
+                            yearData.events.map((event, index) => (
+                              <li key={index}>{event.content}</li>
+                            ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
         );
       case "certification":
         return (
           <div className="view-mode">
-            <h3>{data.company?.certifications?.title}</h3>
-            <p>{data.company?.certifications?.subtitle}</p>
-            <div className="certifications-list">
-              {data.company?.certifications?.items?.map((cert) => (
-                <div key={cert.id} className="certification-item">
-                  <h4>{cert.title}</h4>
-                  {cert.image && (
-                    <div className="cert-image">
-                      <img src={cert.image} alt={cert.title} />
+            <div className="section">
+              <div className="section-header">
+                <h3>{data.company?.certifications?.title || "인증 및 특허"}</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() =>
+                      handleEdit("certification", data?.company?.certifications)
+                    }
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="items-grid">
+                {data.company?.certifications?.items?.map((cert) => (
+                  <div key={cert.id} className="item-card">
+                    <div className="item-header">
+                      <h4>{cert.title}</h4>
                     </div>
-                  )}
-                  <div className="description">
-                    {cert.description.map((desc, index) => (
-                      <p key={index}>{desc}</p>
-                    ))}
+                    <div className="item-content">
+                      {cert.image && (
+                        <div className="cert-image">
+                          <img
+                            src={cert.image}
+                            alt={cert.title}
+                            style={{
+                              maxWidth: "100%",
+                              height: "auto",
+                              marginBottom: "1rem",
+                            }}
+                          />
+                        </div>
+                      )}
+                      <div className="description">
+                        {cert.description.map((desc, index) => (
+                          <p key={index}>{desc}</p>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         );
@@ -440,31 +661,189 @@ const CollectionEditor = () => {
           </div>
         );
       case "solution":
-        return (
+        return isEditing ? (
           <div className="view-mode">
-            <div className="solutions">
-              {data?.company?.business?.si?.areas?.map((area, index) => (
-                <div key={index} className="solution-item">
-                  <h4>{area.title}</h4>
-                  <ul>
-                    {area.items.map((item, idx) => (
-                      <li key={idx}>{item}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-              {data?.company?.business?.consulting?.areas?.map(
-                (area, index) => (
-                  <div key={index} className="solution-item">
-                    <h4>{area.title}</h4>
-                    <ul>
-                      {area.items.map((item, idx) => (
-                        <li key={idx}>{item}</li>
-                      ))}
-                    </ul>
+            <div className="section">
+              <div className="section-header">
+                <h3>SI 컨설팅</h3>
+              </div>
+              <div className="items-grid">
+                {data?.company?.business?.si?.areas?.map((area, index) => (
+                  <div key={`si-${index}`} className="item-card">
+                    <div className="item-header">
+                      <input
+                        type="text"
+                        value={area.title}
+                        className="title-input"
+                        placeholder="제목을 입력하세요"
+                        onChange={(e) => {
+                          const newAreas = [...data.company.business.si.areas];
+                          newAreas[index] = { ...area, title: e.target.value };
+                          setEditData({
+                            ...editData,
+                            company: {
+                              ...editData.company,
+                              business: {
+                                ...editData.company.business,
+                                si: { areas: newAreas },
+                              },
+                            },
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="item-content">
+                      <textarea
+                        value={area.items.join("\n")}
+                        className="items-input"
+                        placeholder="항목을 입력하세요 (줄바꿈으로 구분)"
+                        onChange={(e) => {
+                          const newAreas = [...data.company.business.si.areas];
+                          newAreas[index] = {
+                            ...area,
+                            items: e.target.value.split("\n"),
+                          };
+                          setEditData({
+                            ...editData,
+                            company: {
+                              ...editData.company,
+                              business: {
+                                ...editData.company.business,
+                                si: { areas: newAreas },
+                              },
+                            },
+                          });
+                        }}
+                      />
+                    </div>
                   </div>
-                )
-              )}
+                ))}
+              </div>
+            </div>
+
+            <div className="section">
+              <div className="section-header">
+                <h3>컨설팅 솔루션</h3>
+              </div>
+              <div className="items-grid">
+                {data?.company?.business?.consulting?.areas?.map(
+                  (area, index) => (
+                    <div key={`consulting-${index}`} className="item-card">
+                      <div className="item-header">
+                        <input
+                          type="text"
+                          value={area.title}
+                          className="title-input"
+                          placeholder="제목을 입력하세요"
+                          onChange={(e) => {
+                            const newAreas = [
+                              ...data.company.business.consulting.areas,
+                            ];
+                            newAreas[index] = {
+                              ...area,
+                              title: e.target.value,
+                            };
+                            setEditData({
+                              ...editData,
+                              company: {
+                                ...editData.company,
+                                business: {
+                                  ...editData.company.business,
+                                  consulting: { areas: newAreas },
+                                },
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="item-content">
+                        <textarea
+                          value={area.items.join("\n")}
+                          className="items-input"
+                          placeholder="항목을 입력하세요 (줄바꿈으로 구분)"
+                          onChange={(e) => {
+                            const newAreas = [
+                              ...data.company.business.consulting.areas,
+                            ];
+                            newAreas[index] = {
+                              ...area,
+                              items: e.target.value.split("\n"),
+                            };
+                            setEditData({
+                              ...editData,
+                              company: {
+                                ...editData.company,
+                                business: {
+                                  ...editData.company.business,
+                                  consulting: { areas: newAreas },
+                                },
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="view-mode">
+            <div className="section">
+              <div className="section-header">
+                <h3>SI 컨설팅</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() =>
+                      handleEdit("solution", data?.company?.business)
+                    }
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="items-grid">
+                {data?.company?.business?.si?.areas?.map((area, index) => (
+                  <div key={`si-${index}`} className="item-card">
+                    <div className="item-header">
+                      <h4>{area.title}</h4>
+                    </div>
+                    <div className="item-content">
+                      <ul>
+                        {area.items.map((item, idx) => (
+                          <li key={idx}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="section">
+              <div className="section-header">
+                <h3>컨설팅 솔루션</h3>
+              </div>
+              <div className="items-grid">
+                {data?.company?.business?.consulting?.areas?.map(
+                  (area, index) => (
+                    <div key={`consulting-${index}`} className="item-card">
+                      <div className="item-header">
+                        <h4>{area.title}</h4>
+                      </div>
+                      <div className="item-content">
+                        <ul>
+                          {area.items.map((item, idx) => (
+                            <li key={idx}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
           </div>
         );
@@ -496,132 +875,458 @@ const CollectionEditor = () => {
       case "cases":
         return (
           <div className="view-mode">
-            <h3>수행사례</h3>
-            <div className="cases">
-              {data?.cases?.map((case_, index) => (
-                <div key={index} className="case-item">
-                  <h4>{case_.title}</h4>
-                  <p>{case_.description}</p>
+            <div className="performance-sections">
+              <div className="section">
+                <div className="section-header">
+                  <h3>수행실적</h3>
+                  <button
+                    className="add-button"
+                    onClick={() => handleEdit("cases", null)}
+                  >
+                    새 프로젝트 추가
+                  </button>
                 </div>
-              ))}
+                <div className="items-list">
+                  {[...(data.company?.performanceCases?.timeline || [])]
+                    ?.sort((a, b) => b.year - a.year)
+                    .map((yearData) => (
+                      <div key={yearData.year} className="year-section">
+                        <h4>{yearData.year}년</h4>
+                        <div className="projects">
+                          {yearData.projects.map((project) => (
+                            <div key={project.id} className="item">
+                              <div className="item-header">
+                                <h4>{project.category}</h4>
+                                <div className="button-group">
+                                  <button
+                                    className="edit-button"
+                                    onClick={() =>
+                                      handleEdit("cases", {
+                                        ...project,
+                                        year: yearData.year,
+                                      })
+                                    }
+                                  >
+                                    수정
+                                  </button>
+                                  <button
+                                    className="delete-button"
+                                    onClick={() =>
+                                      handleDelete("cases", {
+                                        ...project,
+                                        year: yearData.year,
+                                      })
+                                    }
+                                  >
+                                    삭제
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="item-content">
+                                <p>{project.title}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
             </div>
           </div>
         );
       case "recruitment":
         return (
           <div className="view-mode">
-            <h3>채용정보</h3>
-            <div className="recruitment-info">
-              {data?.recruitment?.map((info, index) => (
-                <div key={index} className="recruitment-item">
-                  <h4>{info.title}</h4>
-                  <p>{info.description}</p>
+            <div className="section">
+              <div className="section-header">
+                <h3>{data.company?.talent?.title || "인재상"}</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() =>
+                      handleEdit("recruitment", data?.company?.talent)
+                    }
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="recruitment-content">
+                <div className="talent-description">
+                  {data.company?.talent?.description?.map((line, index) => (
+                    <p key={index}>{line}</p>
+                  ))}
                 </div>
-              ))}
+                <div className="recruitment-url">
+                  <p>
+                    <strong>채용 공고 URL:</strong>{" "}
+                    {data.company?.talent?.recruitmentUrl}
+                  </p>
+                </div>
+                <div className="benefits-section">
+                  <h4>{data.company?.talent?.benefits?.title || "복리후생"}</h4>
+                  <div className="benefits-grid">
+                    {data.company?.talent?.benefits?.items?.map(
+                      (item, index) => (
+                        <div key={index} className="benefit-item">
+                          <h5>{item.name}</h5>
+                          <ul>
+                            {item.details.map((detail, i) => (
+                              <li key={i}>{detail}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         );
       case "benefits":
         return (
           <div className="view-mode">
-            <h3>복리후생</h3>
-            <div className="benefits">
-              {data?.benefits?.map((benefit, index) => (
-                <div key={index} className="benefit-item">
-                  <h4>{benefit.title}</h4>
-                  <p>{benefit.description}</p>
-                </div>
-              ))}
+            <div className="section">
+              <div className="section-header">
+                <h3>복리후생</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() => handleEdit("benefits", data?.benefits)}
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="benefits-content">
+                {data?.benefits?.map((item, index) => (
+                  <div key={index} className="benefit-item">
+                    <h4>{item.title}</h4>
+                    <div className="description">
+                      <p>{item.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         );
       case "RnD":
+        return isEditing ? (
+          <div className="view-mode">
+            <div className="section">
+              <div className="section-header">
+                <h3>누출탐지센서</h3>
+              </div>
+              <div className="items-grid">
+                {data?.leakDetection?.map((item, index) => (
+                  <div key={index} className="item-card">
+                    <div className="item-header">
+                      <input
+                        type="text"
+                        value={item.name}
+                        className="title-input"
+                        placeholder="제품명을 입력하세요"
+                        onChange={(e) => {
+                          const newItems = [...data.leakDetection];
+                          newItems[index] = { ...item, name: e.target.value };
+                          setEditData({
+                            ...editData,
+                            leakDetection: newItems,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="item-content">
+                      <div className="input-group">
+                        <label>제품 ID:</label>
+                        <input
+                          type="text"
+                          value={item.id}
+                          className="text-input"
+                          placeholder="제품 ID를 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.leakDetection];
+                            newItems[index] = { ...item, id: e.target.value };
+                            setEditData({
+                              ...editData,
+                              leakDetection: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>출시예정:</label>
+                        <input
+                          type="text"
+                          value={item.releaseDate}
+                          className="text-input"
+                          placeholder="출시예정일을 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.leakDetection];
+                            newItems[index] = {
+                              ...item,
+                              releaseDate: e.target.value,
+                            };
+                            setEditData({
+                              ...editData,
+                              leakDetection: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>제품 설명:</label>
+                        <textarea
+                          value={item.features?.description?.join("\n")}
+                          className="description-input"
+                          placeholder="제품 설명을 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.leakDetection];
+                            newItems[index] = {
+                              ...item,
+                              features: {
+                                ...item.features,
+                                description: e.target.value.split("\n"),
+                              },
+                            };
+                            setEditData({
+                              ...editData,
+                              leakDetection: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="section">
+              <div className="section-header">
+                <h3>보드제품</h3>
+              </div>
+              <div className="items-grid">
+                {data?.boardProducts?.map((item, index) => (
+                  <div key={index} className="item-card">
+                    <div className="item-header">
+                      <input
+                        type="text"
+                        value={item.name}
+                        className="title-input"
+                        placeholder="제품명을 입력하세요"
+                        onChange={(e) => {
+                          const newItems = [...data.boardProducts];
+                          newItems[index] = { ...item, name: e.target.value };
+                          setEditData({
+                            ...editData,
+                            boardProducts: newItems,
+                          });
+                        }}
+                      />
+                    </div>
+                    <div className="item-content">
+                      <div className="input-group">
+                        <label>제품 ID:</label>
+                        <input
+                          type="text"
+                          value={item.id}
+                          className="text-input"
+                          placeholder="제품 ID를 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.boardProducts];
+                            newItems[index] = { ...item, id: e.target.value };
+                            setEditData({
+                              ...editData,
+                              boardProducts: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>출시예정:</label>
+                        <input
+                          type="text"
+                          value={item.releaseDate}
+                          className="text-input"
+                          placeholder="출시예정일을 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.boardProducts];
+                            newItems[index] = {
+                              ...item,
+                              releaseDate: e.target.value,
+                            };
+                            setEditData({
+                              ...editData,
+                              boardProducts: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                      <div className="input-group">
+                        <label>제품 설명:</label>
+                        <textarea
+                          value={item.features?.description}
+                          className="description-input"
+                          placeholder="제품 설명을 입력하세요"
+                          onChange={(e) => {
+                            const newItems = [...data.boardProducts];
+                            newItems[index] = {
+                              ...item,
+                              features: {
+                                ...item.features,
+                                description: e.target.value,
+                              },
+                            };
+                            setEditData({
+                              ...editData,
+                              boardProducts: newItems,
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="view-mode">
+            <div className="section">
+              <div className="section-header">
+                <h3>누출탐지센서</h3>
+                {!isEditing && (
+                  <button
+                    className="edit-button"
+                    onClick={() => handleEdit("RnD", data)}
+                  >
+                    수정하기
+                  </button>
+                )}
+              </div>
+              <div className="items-grid">
+                {data?.leakDetection?.map((item, index) => (
+                  <div key={index} className="item-card">
+                    <div className="item-header">
+                      <h4>{item.name}</h4>
+                    </div>
+                    <div className="item-content">
+                      <p>
+                        <strong>ID:</strong> {item.id}
+                      </p>
+                      <p>
+                        <strong>출시예정:</strong> {item.releaseDate}
+                      </p>
+                      <div className="description">
+                        {item.features?.description?.map((desc, i) => (
+                          <p key={i}>{desc}</p>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="section">
+              <div className="section-header">
+                <h3>보드제품</h3>
+              </div>
+              <div className="items-grid">
+                {data?.boardProducts?.map((item, index) => (
+                  <div key={index} className="item-card">
+                    <div className="item-header">
+                      <h4>{item.name}</h4>
+                    </div>
+                    <div className="item-content">
+                      <p>
+                        <strong>ID:</strong> {item.id}
+                      </p>
+                      <p>
+                        <strong>출시예정:</strong> {item.releaseDate}
+                      </p>
+                      <div className="description">
+                        <p>{item.features?.description}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      case "performance":
         return (
           <div className="view-mode">
-            <div className="rnd-sections">
-              {/* 누출탐지센서 섹션 */}
+            <div className="performance-sections">
               <div className="section">
                 <div className="section-header">
-                  <h3>누출탐지센서</h3>
+                  <h3>
+                    {data.company?.performanceCases?.title || "구축 사례"}
+                  </h3>
                   <button
                     className="add-button"
-                    onClick={() => handleEdit("leakDetection", null)}
+                    onClick={() => handleEdit("performance", null)}
                   >
-                    새 누출탐지센서 추가
+                    새 프로젝트 추가
                   </button>
                 </div>
-                <div className="items-list">
-                  {data?.leakDetection?.map((item, index) => (
-                    <div key={index} className="item">
-                      <div className="item-header">
-                        <h4>{item.name}</h4>
-                        <div className="button-group">
-                          <button
-                            className="edit-button"
-                            onClick={() => handleEdit("leakDetection", index)}
-                          >
-                            수정
-                          </button>
-                          <button className="delete-button">삭제</button>
-                        </div>
-                      </div>
-                      <div className="item-content">
-                        <p>
-                          <strong>ID:</strong> {item.id}
-                        </p>
-                        <p>
-                          <strong>출시예정:</strong> {item.releaseDate}
-                        </p>
-                        <div className="description">
-                          {item.features?.description?.map((desc, i) => (
-                            <p key={i}>{desc}</p>
+                <div className="performance-grid">
+                  {[...(data.company?.performanceCases?.timeline || [])]
+                    ?.sort((a, b) => b.year - a.year)
+                    .map((yearData) => (
+                      <div key={yearData.year} className="year-group">
+                        <h4 className="year-label">{yearData.year}년</h4>
+                        <div className="cards-container">
+                          {yearData.projects.map((project) => (
+                            <div
+                              key={
+                                project.id ||
+                                `${yearData.year}-${project.title}`
+                              }
+                              className="performance-card"
+                            >
+                              <div className="card-header">
+                                <div className="card-title">
+                                  <h5>{project.category}</h5>
+                                </div>
+                                <div className="button-group">
+                                  <button
+                                    className="edit-button"
+                                    onClick={() =>
+                                      handleEdit("performance", {
+                                        ...project,
+                                        year: yearData.year,
+                                      })
+                                    }
+                                  >
+                                    수정
+                                  </button>
+                                  <button
+                                    className="delete-button"
+                                    onClick={() =>
+                                      handleDelete("performance", {
+                                        ...project,
+                                        year: yearData.year,
+                                      })
+                                    }
+                                  >
+                                    삭제
+                                  </button>
+                                </div>
+                              </div>
+                              <div className="card-content">
+                                <p>{project.title}</p>
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 보드제품 섹션 */}
-              <div className="section">
-                <div className="section-header">
-                  <h3>보드제품</h3>
-                  <button
-                    className="add-button"
-                    onClick={() => handleEdit("boardProducts", null)}
-                  >
-                    새 보드제품 추가
-                  </button>
-                </div>
-                <div className="items-list">
-                  {data?.boardProducts?.map((item, index) => (
-                    <div key={index} className="item">
-                      <div className="item-header">
-                        <h4>{item.name}</h4>
-                        <div className="button-group">
-                          <button
-                            className="edit-button"
-                            onClick={() => handleEdit("boardProducts", index)}
-                          >
-                            수정
-                          </button>
-                          <button className="delete-button">삭제</button>
-                        </div>
-                      </div>
-                      <div className="item-content">
-                        <p>
-                          <strong>ID:</strong> {item.id}
-                        </p>
-                        <p>
-                          <strong>출시예정:</strong> {item.releaseDate}
-                        </p>
-                        <div className="description">
-                          <p>{item.features?.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             </div>
@@ -660,6 +1365,10 @@ const CollectionEditor = () => {
         return <BenefitsForm editData={editData} setEditData={setEditData} />;
       case "RnD":
         return <RnDForm editData={editData} setEditData={setEditData} />;
+      case "performance":
+        return (
+          <PerformanceForm editData={editData} setEditData={setEditData} />
+        );
       default:
         return <div>해당 섹션의 수정 폼을 표시할 수 없습니다.</div>;
     }
@@ -709,7 +1418,7 @@ const CollectionEditor = () => {
         <div className="action-buttons">
           <button
             className="edit-button"
-            onClick={() => handleEdit("leakDetection", null)}
+            onClick={() => handleEdit(selectedSection, null)}
           >
             수정하기
           </button>
