@@ -38,9 +38,9 @@ function Post() {
         </button>
       </div>
       <div>
-        <div>
+        {/* <div>
           <Pagination />
-        </div>
+        </div> */}
       </div>
     </div>
   );

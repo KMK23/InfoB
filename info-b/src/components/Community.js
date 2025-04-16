@@ -2,14 +2,16 @@ import React, { useEffect, useState } from "react";
 import { getCurrentUser, getDatas, updateDatas } from "../pages/API/firebase";
 import { useNavigate } from "react-router-dom";
 import { FaLock, FaUnlock } from "react-icons/fa"; // 자물쇠 아이콘 추가
+import Pagination from "./Pagination";
 
 function Community({ search }) {
   const [posts, setPosts] = useState([]); // 게시글 상태
   const [loading, setLoading] = useState(true); // 로딩
   const [selectedPostId, setSelectedPostId] = useState(null); // 선택된 게시글 ID
   const [password, setPassword] = useState(""); // 비밀번호 상태
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
+  const itemsPerPage = 10; // 한 페이지당 게시글 수
   const navigate = useNavigate(); // navigate 변수 선언
-
   // 게시글 가져오기
   useEffect(() => {
     const fetchPosts = async () => {
@@ -17,7 +19,7 @@ function Community({ search }) {
         const queryOptions = {
           condition: [],
           orderBys: [{ field: "createdAt", direction: "desc" }],
-          limits: 10, // 예시로 10개의 게시글만 가져옴
+          // limits: 10, // 예시로 10개의 게시글만 가져옴
         };
         const data = await getDatas("posts", queryOptions);
         setPosts(data);
@@ -78,6 +80,9 @@ function Community({ search }) {
   const filteredPosts = posts.filter((post) =>
     (post.title || "").toLowerCase().includes((search || "").toLowerCase())
   );
+  const offset = currentPage * itemsPerPage;
+  const currentPagePosts = filteredPosts.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(filteredPosts.length / itemsPerPage);
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -106,25 +111,22 @@ function Community({ search }) {
         </div>
 
         {/* 게시글이 없을 경우 */}
-        {filteredPosts.length === 0 ? (
+        {currentPagePosts.length === 0 ? (
           <div className="flex border-b justify-center text-xl border-gray-200 py-4">
             No data.
           </div>
         ) : (
           // 필터링된 게시글 렌더링
-          filteredPosts.map((post, index) => (
+          currentPagePosts.map((post, index) => (
             <div key={post.docId} className="border-b border-gray-200">
               {/* 게시글 정보 행 */}
               <div className="flex py-4">
-                <div className="w-1/12">{index + 1}</div>
-                <div className="w-6/12 flex gap-2">
+                <div className="w-1/12">
+                  {" "}
+                  {filteredPosts.length - (currentPage * itemsPerPage + index)}
+                </div>
+                <div className="w-6/12 flex gap-2 pl-3">
                   <div className="flex items-center">
-                    {/* 공개/비공개 아이콘 */}
-                    {post.visibility === "private" ? (
-                      <FaLock className="text-red-600 mr-2" />
-                    ) : (
-                      <FaUnlock className="text-green-600 mr-2" />
-                    )}
                     <button
                       className="hover:text-blue-600 text-left "
                       onClick={() =>
@@ -164,6 +166,10 @@ function Community({ search }) {
             </div>
           ))
         )}
+        {/* 페이지네이션 렌더링 */}
+        <div className="flex justify-center mt-4">
+          <Pagination pageCount={pageCount} onPageChange={setCurrentPage} />
+        </div>
       </div>
     </div>
   );

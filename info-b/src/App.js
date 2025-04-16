@@ -36,6 +36,7 @@ import Accession from "./pages/recruitment/login/Accession";
 import NoticeDetail from "./pages/notices/NoticeDetail";
 import Admin from "./pages/admin/Admin";
 import CollectionEditor from "./pages/admin/CollectionEditor";
+import Business from "./pages/company/Business";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
               <Route path="company/ceo" element={<CeoMessage />} />
               <Route path="company/history" element={<History />} />
               <Route path="company/certification" element={<Certification />} />
+              <Route path="company/business" element={<Business />} />
               <Route path="company/location" element={<Location />} />
               <Route path="business/info" element={<BusinessInfo />} />
               <Route

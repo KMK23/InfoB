@@ -123,7 +123,48 @@ async function deleteDatas(collectionName, docId) {
 //     throw error;
 //   }
 // };
+// 게시글에 댓글 추가
+export const addComment = async (postId, commentData) => {
+  try {
+    const commentsRef = collection(db, "posts", postId, "comments");
+    const docRef = await addDoc(commentsRef, {
+      ...commentData,
+      createdAt: new Date(),
+    });
+    return {
+      id: docRef.id,
+      ...commentData,
+      createdAt: new Date(),
+    };
+  } catch (error) {
+    console.error("댓글 추가 실패:", error);
+    throw error;
+  }
+};
+// 게시글의 댓글 목록 조회
+export const getComments = async (postId) => {
+  try {
+    const commentsRef = collection(db, "posts", postId, "comments");
+    const commentsSnapshot = await getDocs(commentsRef);
+    return {
+      exists: !commentsSnapshot.empty,
+      data: commentsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })),
+    };
+  } catch (error) {
+    console.error("댓글 조회 실패:", error);
+    throw error;
+  }
+};
 
+export const getAdminAnswer = async (postId) => {
+  const q = query(collection(db, "answers"), where("postId", "==", postId));
+  const snapshot = await getDocs(q);
+  const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+  return data[0]; // 하나의 답변만 있다고 가정
+};
 async function updateDatas(collectionName, docId, updateObj) {
   try {
     const docRef = doc(db, collectionName, docId);
@@ -179,6 +220,22 @@ function getCurrentUser() {
     );
   });
 }
+// 사용자 역할 가져오기
+export const getUserRole = async (uid) => {
+  try {
+    const docRef = doc(db, "users", uid); // "users" 컬렉션에서 uid로 문서 참조
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data().role || "user"; // 기본값은 "user"
+    }
+    return "user"; // 문서가 없으면 기본적으로 "user"
+  } catch (error) {
+    console.error("사용자 역할 불러오기 실패:", error);
+    return "user"; // 에러 시 기본값은 "user"
+  }
+};
+
 // 회원가입
 
 async function signUp(email, password, username) {

@@ -4,8 +4,12 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { PiListDashesBold } from "react-icons/pi";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import {
+  addComment,
   addDatas,
   deleteDatas,
+  getAdminAnswer,
+  getComments,
+  getCurrentUser,
   getDatas,
   updateDatas,
 } from "../pages/API/firebase";
@@ -14,19 +18,14 @@ import Captcha from "../pages/community/Captcha";
 
 function Board() {
   const location = useLocation();
-  const [companyName, setCompanyName] = useState("");
-  const [authorName, setAuthorName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState({
     first: "",
     second: "",
     third: "",
   });
-  const [email, setEmail] = useState("");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState(""); // MyEditor 컴포넌트와 연결되는 content 상태
-  const [captchaVisible, setCaptchaVisible] = useState(true);
+  const [comments, setComments] = useState([]);
 
-  const [formData, setFormDate] = useState({
+  const [formData, setFormData] = useState({
     companyName: "",
     authorName: "",
     contact: "",
@@ -34,33 +33,58 @@ function Board() {
     title: "",
     content: "",
     phoneNumber: "",
+    replyContent: "", //댓글내용상태추가
   });
   const [isEditing, setIsEditing] = useState(false); //수정상태관리
 
   const { id } = useParams(); //URL에서 post ID 가져오기
   const [post, setPost] = useState(null);
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false); // 댓글 입력창 확장 여부
+  const [currentUser, setCurrentUser] = useState({
+    name: "사용자 이름", // 로그인한 사용자 이름 예시
+  });
+  const [editingCommentId, setEditingCommentId] = useState(null); // 수정 중인 댓글 ID
+  const [editContent, setEditContent] = useState(""); // 수정 중인 댓글 내용
+  const [adminAnswer, setAdminAnswer] = useState(null);
 
+  const canComment = currentUser && currentUser.email === formData.email;
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const isNotice = location.pathname.includes("/admin");
-        const collection = isNotice ? "notices" : "posts";
-
-        const data = await getDatas(collection, {
+        const data = await getDatas("posts", {
           condition: [["docId", "==", id]],
         });
         const post = data.find((item) => item.docId == id);
-        setFormDate(post);
+        setFormData(post);
       } catch (error) {
         console.error("게시글 불러오기 실패:", error);
       }
     };
+
+    const fetchUser = async () => {
+      const user = await getCurrentUser();
+      setCurrentUser(user);
+    };
+
+    const fetchAdminAnswer = async () => {
+      try {
+        const answerData = await getDatas(`posts/${id}/answers`, {});
+        if (answerData.length > 0) {
+          setAdminAnswer(answerData[0]); // 첫 번째 답변만 보여줄게
+        } else {
+          setAdminAnswer(null);
+        }
+      } catch (err) {
+        console.error("관리자 답변 불러오기 실패:", err);
+      }
+    };
+
     if (id) {
       fetchPost();
+      fetchUser();
+      fetchAdminAnswer(); // ✅ 답변 불러오기
     }
-  }, [id, location.pathname]);
+  }, [id]);
 
   //수정 가능 여부설정
   const handleEditClick = () => {
@@ -68,25 +92,24 @@ function Board() {
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormDate({
+    setFormData({
       ...formData,
       [name]: value,
     });
   };
 
-  const handlePhoneChange = (e) => {
-    const { value } = e.target;
-
-    // 전화번호를 "-"을 기준으로 3부분으로 나누기
-    const phoneParts = value.split("-");
-
-    // 전화번호가 3부분 이상이 되지 않도록 제한
-    if (phoneParts.length <= 3) {
-      setFormDate({
-        ...formData,
-        phoneNumber: value,
-      });
-    }
+  const handlePhonePartChange = (e, part) => {
+    setPhoneNumber((prev) => ({ ...prev, [part]: e.target.value }));
+    const fullNumber = [
+      phoneNumber.first,
+      phoneNumber.second,
+      phoneNumber.third,
+    ]
+      .map((val, idx) =>
+        part === ["first", "second", "third"][idx] ? e.target.value : val
+      )
+      .join("-");
+    setFormData({ ...formData, phoneNumber: fullNumber });
   };
 
   const handleUpdate = async () => {
@@ -179,6 +202,110 @@ function Board() {
     }
   };
 
+  const handleSaveReply = async () => {
+    if (!formData.replyContent.trim()) {
+      Swal.fire({
+        title: "Error",
+        text: "댓글 내용을 입력해주세요.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    try {
+      const reply = {
+        content: formData.replyContent,
+        author: currentUser ? currentUser.email : "Unknown User",
+        createdAt: new Date(),
+      };
+
+      // 댓글 추가 API 호출
+      await addComment(id, reply);
+
+      // 댓글 내용 초기화
+      setFormData({ ...formData, replyContent: "" });
+
+      // 댓글 추가 후 댓글 목록을 다시 가져오는 로직 추가
+      const { data } = await getComments(id); // 댓글 가져오기
+      setComments(data);
+
+      Swal.fire({
+        title: "Success",
+        text: "댓글이 등록되었습니다.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("댓글 저장 실패:", error);
+      Swal.fire({
+        title: "Error",
+        text: "댓글 저장에 실패했습니다.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+  // 댓글 수정삭제
+  const updateComment = async (commentId) => {
+    try {
+      await updateDatas("comments", commentId, {
+        content: editContent,
+        updatedAt: new Date(),
+      });
+
+      Swal.fire("수정 완료", "댓글이 수정되었습니다.", "success");
+
+      setEditingCommentId(null);
+      setEditContent("");
+
+      const { data } = await getComments(id);
+      setComments(data);
+    } catch (err) {
+      console.error("댓글 수정 실패:", err);
+      Swal.fire("오류", "댓글 수정 중 문제가 발생했습니다.", "error");
+    }
+  };
+
+  const deleteComment = async (commentId) => {
+    try {
+      const result = await Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "댓글은 복구되지 않습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      });
+
+      if (result.isConfirmed) {
+        await deleteDatas("comments", commentId);
+        Swal.fire("삭제 완료", "댓글이 삭제되었습니다.", "success");
+
+        const { data } = await getComments(id);
+        setComments(data);
+      }
+    } catch (err) {
+      console.error("댓글 삭제 실패:", err);
+      Swal.fire("오류", "댓글 삭제 중 문제가 발생했습니다.", "error");
+    }
+  };
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const { data } = await getComments(id); // 댓글 가져오기
+        setComments(data);
+      } catch (error) {
+        console.error("댓글 목록 조회 실패:", error);
+      }
+    };
+
+    if (id) {
+      fetchComments();
+    }
+  }, [id]);
+
   const navigate = useNavigate();
   const handleClick = () => {
     // 목록 버튼 클릭 시에도 적절한 페이지로 이동
@@ -241,7 +368,7 @@ function Board() {
                 type="text"
                 name="contact"
                 className="border-gray-400 border pl-2 rounded-sm w-2/12"
-                onChange={isEditing ? handlePhoneChange : null}
+                onChange={isEditing ? handlePhonePartChange : null}
                 value={(formData.phoneNumber || "").split("-")[0] || ""}
                 readOnly={!isEditing}
               />
@@ -250,7 +377,7 @@ function Board() {
                 type="text"
                 name="contact"
                 className="border-gray-400 border pl-2 rounded-sm w-2/12"
-                onChange={isEditing ? handlePhoneChange : null}
+                onChange={isEditing ? handlePhonePartChange : null}
                 value={(formData.phoneNumber || "").split("-")[1] || ""}
                 placeholder="xxxx"
                 readOnly={!isEditing}
@@ -260,7 +387,7 @@ function Board() {
                 type="text"
                 name="contact"
                 className="border-gray-400 border pl-2 rounded-sm w-2/12"
-                onChange={isEditing ? handlePhoneChange : null}
+                onChange={isEditing ? handlePhonePartChange : null}
                 value={(formData.phoneNumber || "").split("-")[2] || ""}
                 placeholder="xxxx"
                 readOnly={!isEditing}
@@ -312,7 +439,7 @@ function Board() {
                 content={formData.content}
                 isEditing={isEditing}
                 setContent={(value) =>
-                  setFormDate((prev) => ({ ...prev, content: value }))
+                  setFormData((prev) => ({ ...prev, content: value }))
                 }
               />
             ) : (
@@ -331,15 +458,7 @@ function Board() {
           </div>
           <div className="w-11/12 border-gray-300 border"></div>
         </div>
-        <div className="flex justify-between mt-6">
-          <div className="">
-            <button
-              className="flex items-center gap-1 bg-[#f6f6f6] px-4 py-2 rounded-md hover:bg-gray-300"
-              onClick={handleClick}
-            >
-              <PiListDashesBold /> <div>목록</div>
-            </button>
-          </div>
+        <div className="flex justify-end mt-6">
           <div>
             {isEditing ? (
               <>
@@ -376,6 +495,36 @@ function Board() {
               </>
             )}
           </div>
+        </div>
+
+        {/* 댓글 목록 출력 */}
+        {/* 댓글 목록 */}
+        <div className="my-10">
+          <h2 className="text-2xl font-bold text-start mb-2">📌 관리자 답변</h2>
+          {adminAnswer ? (
+            <div className="border p-4 rounded-md bg-gray-50">
+              <div
+                className="text-sm leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: adminAnswer.content }}
+              />
+              <div className="text-right text-xs text-gray-400 mt-2">
+                답변일:{" "}
+                {new Date(
+                  adminAnswer.createdAt?.seconds * 1000
+                ).toLocaleDateString()}
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-500">답변 없음</div>
+          )}
+        </div>
+        <div className="">
+          <button
+            className="flex items-center gap-1 bg-[#f6f6f6] px-4 py-2 rounded-md hover:bg-gray-300"
+            onClick={handleClick}
+          >
+            <PiListDashesBold /> <div>목록</div>
+          </button>
         </div>
       </div>
     </div>

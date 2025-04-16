@@ -9,7 +9,7 @@ import Swal from "sweetalert2"; // Import SweetAlert2
 import { signInWithPopup } from "firebase/auth";
 
 function Inquiry({ mode = "create" }) {
-  const [visibility, setVisibility] = useState("public"); // 기본값은 "public"
+  const [visibility] = useState("private"); // 항상 비공개
   const [password, setPassword] = useState(""); // 비밀번호 상태
   const [companyName, setCompanyName] = useState("");
   const [authorName, setAuthorName] = useState("");
@@ -51,15 +51,6 @@ function Inquiry({ mode = "create" }) {
       Swal.fire({
         title: "빈칸을 입력해주세요.",
         text: "모든 필드를 채워주세요.",
-        icon: "warning",
-        confirmButtonText: "확인",
-      });
-      return;
-    } // 비공개일 때 비밀번호 검사
-    if (visibility === "private" && !password) {
-      Swal.fire({
-        title: "비밀번호를 입력해주세요.",
-        text: "비공개 글에는 비밀번호가 필요합니다.",
         icon: "warning",
         confirmButtonText: "확인",
       });
@@ -110,8 +101,8 @@ function Inquiry({ mode = "create" }) {
       email,
       title,
       content,
-      visibility, //공개,비공개\
-      password, // 비공개 글의 비밀번호 추가
+      visibility: "private", // 고정값
+      password, // 필수
       createdAt: new Date(),
       check: false,
     };
@@ -158,9 +149,7 @@ function Inquiry({ mode = "create" }) {
       });
     }
   };
-  const handleVisibilityChange = (e) => {
-    setVisibility(e.target.value); // 라디오 버튼에서 선택한 값("public" 또는 "private")을 상태에 저장
-  };
+
   const handlePasswordChange = (e) => {
     setPassword(e.target.value); // 비밀번호 입력 값 업데이트
   };
@@ -304,47 +293,23 @@ function Inquiry({ mode = "create" }) {
 
         {/* 공개/비공개 설정 */}
         <div className="flex mt-5 items-center gap-2">
-          <input
-            type="radio"
-            id="public"
-            name="visibility"
-            value="public"
-            checked={visibility === "public"}
-            onChange={handleVisibilityChange}
-            className=""
-          />
-          <label htmlFor="public">공개</label>
-
-          <input
-            type="radio"
-            id="private"
-            name="visibility"
-            value="private"
-            checked={visibility === "private"}
-            onChange={handleVisibilityChange}
-          />
-          <label htmlFor="private">비공개</label>
-          {visibility === "private" && (
-            <div className="flex ml-10 ">
-              <div className="text-[14px] font-semibold   py-3 flex justify-end pr-2">
-                비밀번호
-                <span className="text-[#ff0000] text-[8px]">
-                  <FaStar />
-                </span>
-              </div>
-              <div className="p-2">
-                <input
-                  // type="password"
-                  value={password}
-                  onChange={handlePasswordChange}
-                  className="text-[14px] pl-1 py-1 border-b border-gray-300"
-                  placeholder="비밀번호를 입력하세요"
-                />
-              </div>
+          <div className="flex">
+            <div className="text-[14px] font-semibold py-3 flex justify-end pr-2">
+              비밀번호
+              <span className="text-[#ff0000] text-[8px]">
+                <FaStar />
+              </span>
             </div>
-          )}
+            <div className="p-2">
+              <input
+                value={password}
+                onChange={handlePasswordChange}
+                className="text-[14px] pl-1 py-1 border-b border-gray-300"
+                placeholder="비밀번호를 입력하세요"
+              />
+            </div>
+          </div>
         </div>
-        {/* 비공개 선택 시 비밀번호 입력 필드 */}
 
         {/* 버튼 */}
         <div className="flex justify-between mt-6">
