@@ -1,14 +1,50 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../resources/images/main/logo_t.png";
 import "../styles/components/_navbar.scss";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth, db } from "../pages/API/firebase";
+import { doc, getDoc } from "firebase/firestore";
 // import { MdLogin } from "react-icons/md";
 
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [fontSize, setFontSize] = useState("normal"); // 기본값을 'normal'로 변경
+  const [user, setUser] = useState(null); //로그인한 사용자 정보
   const navigate = useNavigate();
+
+  // 🔸 로그인 상태 체크
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const userDocRef = doc(db, "users", currentUser.uid); // users 컬렉션에서 UID로 문서 참조
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setUser({
+            ...currentUser,
+            name: userData.name, // 🔸 Firestore에 저장된 이름 사용
+          });
+        } else {
+          setUser(currentUser); // 문서가 없으면 기본 정보만 사용
+        }
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // 🔸 로그아웃
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      setUser(null);
+      navigate("/login/login");
+    });
+  };
 
   const menuItems = [
     {
@@ -51,11 +87,6 @@ function NavBar() {
         // { title: "1:1문의", path: "/community/inquiry" },
         { title: "게시판", path: "/community/post" },
       ],
-    },
-    {
-      title: "로그인",
-      path: "/login/login",
-      // icon: <MdLogin />,
     },
   ];
 
@@ -150,6 +181,22 @@ function NavBar() {
               )}
             </div>
           ))}
+          <div className="navbar__menu-item">
+            {user ? (
+              <div className="navbar__user-menu">
+                <span className="navbar__user-name">
+                  {user.displayName || user.name || user.email} 님
+                </span>
+                <button onClick={handleLogout} className="navbar__logout-btn">
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <Link to="/login/login" className="navbar__menu-link">
+                로그인
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </nav>

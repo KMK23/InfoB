@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { getDatas, updateDatas } from "../pages/API/firebase";
+import { getCurrentUser, getDatas, updateDatas } from "../pages/API/firebase";
 import { useNavigate } from "react-router-dom";
+import { FaLock, FaUnlock } from "react-icons/fa"; // 자물쇠 아이콘 추가
 
 function Community({ search }) {
   const [posts, setPosts] = useState([]); // 게시글 상태
   const [loading, setLoading] = useState(true); // 로딩
+  const [selectedPostId, setSelectedPostId] = useState(null); // 선택된 게시글 ID
+  const [password, setPassword] = useState(""); // 비밀번호 상태
   const navigate = useNavigate(); // navigate 변수 선언
 
   // 게시글 가져오기
@@ -28,23 +31,47 @@ function Community({ search }) {
   }, []);
 
   // 게시글 클릭 시 조회수 업데이트 후 상세보기로 이동
-  const handlePostClick = async (postId) => {
+  const handlePostClick = async (postId, visibility) => {
     try {
-      const clickedPost = posts.find((post) => post.docId === postId);
-      if (!clickedPost) return;
+      // 비공개 글일 경우 비밀번호 확인
+      if (visibility === "private") {
+        setSelectedPostId(postId); // 선택된 게시글 ID 설정
+        return; // 비밀번호 입력을 위해 클릭 후 아무 동작도 하지 않음
+      }
 
-      const currentViews = clickedPost.views || 0;
-
-      // 조회수 업데이트
-      await updateDatas("posts", postId, {
-        views: currentViews + 1,
-      });
-
-      // 상세 페이지로 이동
+      // 비공개가 아닐 경우 바로 상세 페이지로 이동
       navigate(`/community/inquiry/${postId}`);
     } catch (error) {
       console.error("조회수 업데이트 실패:", error);
     }
+  };
+
+  // 비밀번호 확인 후 상세 페이지로 이동
+  const handlePasswordSubmit = async () => {
+    if (!password) {
+      alert("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    const clickedPost = posts.find((post) => post.docId === selectedPostId);
+    if (!clickedPost) return;
+
+    // 비밀번호 검증
+    if (clickedPost.password !== password) {
+      alert("비밀번호가 틀렸습니다.");
+      return;
+    }
+
+    // 조회수 업데이트
+    const currentViews = clickedPost.views || 0;
+    await updateDatas("posts", selectedPostId, {
+      views: currentViews + 1,
+    });
+
+    // 비밀번호 초기화 후 이동
+    setPassword("");
+    setSelectedPostId(null);
+    navigate(`/community/inquiry/${selectedPostId}`);
   };
 
   // 검색된 게시글 필터링
@@ -86,22 +113,54 @@ function Community({ search }) {
         ) : (
           // 필터링된 게시글 렌더링
           filteredPosts.map((post, index) => (
-            <div
-              key={post.docId}
-              className="flex border-b border-gray-200 py-4"
-            >
-              <div className="w-1/12">{index + 1}</div>
-              <button
-                className="w-6/12 hover:text-blue-600"
-                onClick={() => handlePostClick(post.docId)}
-              >
-                {post.title}
-              </button>
-              <div className="w-2/12">{post.authorName}</div>
-              <div className="w-2/12">
-                {new Date(post.createdAt?.toDate()).toLocaleDateString()}
+            <div key={post.docId} className="border-b border-gray-200">
+              {/* 게시글 정보 행 */}
+              <div className="flex py-4">
+                <div className="w-1/12">{index + 1}</div>
+                <div className="w-6/12 flex gap-2">
+                  <div className="flex items-center">
+                    {/* 공개/비공개 아이콘 */}
+                    {post.visibility === "private" ? (
+                      <FaLock className="text-red-600 mr-2" />
+                    ) : (
+                      <FaUnlock className="text-green-600 mr-2" />
+                    )}
+                    <button
+                      className="hover:text-blue-600 text-left "
+                      onClick={() =>
+                        handlePostClick(post.docId, post.visibility)
+                      }
+                    >
+                      {post.title}
+                    </button>
+                  </div>
+
+                  {/* 비밀번호 입력창 - 제목 아래 표시 */}
+                  {selectedPostId === post.docId &&
+                    post.visibility === "private" && (
+                      <div className="mt-2">
+                        <input
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          placeholder="비밀번호를 입력하세요"
+                          className="border-b p-2  "
+                        />
+                        <button
+                          onClick={handlePasswordSubmit}
+                          className="bg-blue-500 p-2 ml-2 rounded border hover:text-red-400"
+                        >
+                          확인
+                        </button>
+                      </div>
+                    )}
+                </div>
+                <div className="w-2/12">{post.authorName}</div>
+                <div className="w-2/12">
+                  {new Date(post.createdAt?.toDate()).toLocaleDateString()}
+                </div>
+                <div className="w-1/12">{post.views || 0}</div>
               </div>
-              <div className="w-1/12">{post.views || 0}</div>
             </div>
           ))
         )}

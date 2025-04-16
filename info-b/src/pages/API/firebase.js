@@ -2,6 +2,12 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import {
+  fetchSignInMethodsForEmail,
+  sendPasswordResetEmail,
+  updateProfile,
+} from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -22,6 +28,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { useRef } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -43,7 +50,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
+export const db = getFirestore(app);
+export { auth };
 const storage = getStorage(app);
 
 async function addDatas(collectionName, userObj) {
@@ -171,6 +179,86 @@ function getCurrentUser() {
     );
   });
 }
+// 회원가입
+
+async function signUp(email, password, username) {
+  try {
+    // 이메일이 이미 사용 중인지 확인
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    if (signInMethods.length > 0) {
+      // 이메일이 이미 사용 중이면 에러 처리
+      throw new Error("이 이메일은 이미 사용 중입니다.");
+    }
+
+    // 이메일로 Firebase 사용자 생성
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    // username이 undefined라면 빈 문자열로 처리
+    const userNameToSet = username || ""; // username이 undefined일 경우 빈 문자열로 대체
+
+    // Firebase Auth에 사용자 이름 추가
+    await updateProfile(user, {
+      displayName: userNameToSet,
+    });
+
+    // Firestore에 사용자 이름 저장
+    await setDoc(doc(db, "users", user.uid), {
+      name: userNameToSet, // 'username' 대신 'name' 필드로 저장
+      email: user.email,
+    });
+
+    return user;
+  } catch (error) {
+    console.error("회원가입 실패:", error);
+    throw error;
+  }
+}
+
+export const getEmailByUsername = async (username) => {
+  const q = query(collection(db, "users"), where("username", "==", username));
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    return snapshot.docs[0].data().email;
+  }
+  return null;
+};
+
+//이메일 중복검사
+export const checkEmailExists = async (email) => {
+  const q = query(collection(db, "users"), where("email", "==", email));
+  const snapshot = await getDocs(q);
+  return !snapshot.empty;
+};
+// 사용자명+ 이메일로 아이디찾기
+// 사용자 검색 함수
+export const findUserByNameAndEmail = async (name, email) => {
+  const q = query(
+    collection(db, "users"),
+    where("name", "==", name.trim()), // 공백 제거
+    where("email", "==", email.trim()) // 공백 제거
+  );
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    return snapshot.docs[0].data(); // 일치하는 사용자 반환
+  }
+  return null; // 일치하는 사용자가 없으면 null 반환
+};
+
+// 임시비밀번호로 업데이트
+export const sendResetPasswordEmail = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return true;
+  } catch (error) {
+    console.error("비밀번호 재설정 이메일 전송 실패", error);
+    return false;
+  }
+};
 
 // 게시글의 답변 목록 조회
 export const getAnswers = async (postId) => {
@@ -259,4 +347,5 @@ export {
   signOutUser,
   getCurrentUser,
   deleteDatas,
+  signUp,
 };

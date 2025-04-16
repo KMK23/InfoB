@@ -26,45 +26,6 @@ function Board() {
   const [content, setContent] = useState(""); // MyEditor 컴포넌트와 연결되는 content 상태
   const [captchaVisible, setCaptchaVisible] = useState(true);
 
-  // const handlePhoneChange = (e, part) => {
-  //   setPhoneNumber((prev) => ({ ...prev, [part]: e.target.value }));
-  // };
-
-  // const handleSubmit = async () => {
-  //   const newPost = {
-  //     companyName,
-  //     authorName,
-  //     phoneNumber: `${phoneNumber.first}-${phoneNumber.second}-${phoneNumber.third}`,
-  //     email,
-  //     title,
-  //     content,
-  //     createdAt: new Date(),
-  //     check: false, // 기본적으로 '대기' 상태
-  //   };
-
-  // useEffect(() => {
-  //   if (mode === "inquiry") {
-  //     setTitle("1:1 문의"); // 문의하기 모드일 때
-  //   } else if (mode === "edit") {
-  //     setTitle("수정글"); // 수정 모드일 때
-  //   } else if (mode === "detail") {
-  //     setTitle(formData.title || ""); // 게시글 제목 (상세보기 모드)
-  //   }
-  // }, [mode, formData]);
-
-  //   try {
-  //     await addDatas("posts", newPost); // Firestore에 데이터 추가
-  //     alert("게시글이 등록되었습니다.");
-  //     navigate("/community/post"); // 게시글 등록 후 게시글 목록으로 이동
-  //   } catch (error) {
-  //     console.error("게시글 등록 실패:", error);
-  //     alert("게시글 등록에 실패했습니다.");
-  //   }
-  // };
-
-  // const handleClick = () => {
-  //   navigate("/community/post"); // 취소 버튼 클릭 시 게시글 목록으로 이동
-  // };
   const [formData, setFormDate] = useState({
     companyName: "",
     authorName: "",
