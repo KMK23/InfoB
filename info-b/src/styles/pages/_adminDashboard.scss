@@ -5,14 +5,13 @@
 
   h2 {
     margin-bottom: 2rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2d3748;
+    color: $primary-color;
+    font-size: 1.8rem;
   }
 
   .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
 
     @media (max-width: 768px) {
@@ -25,78 +24,53 @@
     border-radius: 8px;
     padding: 1.5rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
     &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     .card-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
+      font-size: 2rem;
       margin-bottom: 1rem;
-
-      i {
-        font-size: 1.5rem;
-      }
+      color: $primary-color;
     }
 
     h3 {
-      margin-bottom: 1rem;
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: #2d3748;
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
     }
 
     .card-content {
       .stat-item {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
+        margin-bottom: 0.8rem;
 
         .stat-label {
-          color: #718096;
-          font-size: 0.875rem;
+          color: #666;
         }
 
         .stat-value {
-          font-weight: 600;
-          color: #2d3748;
-
-          &.highlight {
-            color: #e53e3e;
-          }
-
-          &.success {
-            color: #48bb78;
-          }
+          color: $primary-color;
+          font-weight: bold;
         }
       }
     }
-  }
 
-  .notice-card {
-    .card-icon {
-      background-color: rgba(66, 153, 225, 0.1);
-      color: #4299e1;
+    &.notice-card {
+      border-left: 4px solid #4caf50;
     }
-  }
 
-  .post-card {
-    .card-icon {
-      background-color: rgba(72, 187, 120, 0.1);
-      color: #48bb78;
+    &.post-card {
+      border-left: 4px solid #2196f3;
+    }
+
+    &.collection-card {
+      border-left: 4px solid #9c27b0;
     }
   }
 
@@ -133,6 +107,16 @@
       &:hover {
         text-decoration: underline;
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 1rem;
+
+    .dashboard-grid {
+      grid-template-columns: 1fr;
     }
   }
 }

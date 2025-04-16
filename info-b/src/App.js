@@ -34,6 +34,8 @@ import LogIn from "./pages/recruitment/login/LogIn";
 import Find from "./pages/recruitment/login/Find";
 import Accession from "./pages/recruitment/login/Accession";
 import NoticeDetail from "./pages/notices/NoticeDetail";
+import Admin from "./pages/admin/Admin";
+import CollectionEditor from "./pages/admin/CollectionEditor";
 
 function App() {
   return (
@@ -76,42 +78,33 @@ function App() {
               <Route path="notice/detail/:id" element={<NoticeDetail />} />
             </Route>
 
+            {/* Auth routes */}
+            <Route
+              path="/admin"
+              element={<Navigate to="/admin/login" replace />}
+            />
+            <Route path="/admin/login" element={<Login />} />
+
             {/* Admin routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route
-                index
-                element={<Navigate to="/admin/dashboard" replace />}
-              />
-              <Route path="login" element={<Login />} />
-              <Route
-                path="dashboard"
-                element={
-                  <ProtectedRoute>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="contents"
-                element={
-                  <ProtectedRoute>
-                    <ContentManagement />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="settings"
-                element={
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="posts" element={<PostManagement />} />
-              <Route path="notices" element={<NoticeManagement />} />
-              <Route path="edit-post/:id" element={<EditPost />} />
-              <Route path="edit-notice/:id" element={<EditNotice />} />
-            </Route>
+            <Route
+              path="/admin/*"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <Routes>
+                      <Route
+                        path="/"
+                        element={<Navigate to="/admin/dashboard" replace />}
+                      />
+                      <Route path="dashboard" element={<AdminDashboard />} />
+                      <Route path="posts" element={<PostManagement />} />
+                      <Route path="notices" element={<NoticeManagement />} />
+                      <Route path="collection" element={<CollectionEditor />} />
+                    </Routes>
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </div>

@@ -11,6 +11,8 @@ import performanceReducer from "./slices/performanceSlice";
 import productsReducer from "./slices/productsSlice";
 import benefitsReducer from "./slices/benefitsSlice";
 import { talentReducer } from "./slices/talentSlice";
+import adminReducer from "./slices/adminSlice";
+import collectionReducer from "./slices/collectionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +28,8 @@ export const store = configureStore({
     products: productsReducer,
     benefits: benefitsReducer,
     talent: talentReducer,
+    admin: adminReducer,
+    collection: collectionReducer,
   },
 });
 

@@ -61,7 +61,7 @@ const AdminDashboard = () => {
       <div className="dashboard-grid">
         <div
           className="dashboard-card notice-card"
-          onClick={() => handleCardClick("/admin/contents", "notice")}
+          onClick={() => handleCardClick("/admin/notices")}
         >
           <div className="card-icon">
             <i className="fas fa-bullhorn"></i>
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
 
         <div
           className="dashboard-card post-card"
-          onClick={() => handleCardClick("/admin/contents", "inquiry")}
+          onClick={() => handleCardClick("/admin/posts")}
         >
           <div className="card-icon">
             <i className="fas fa-clipboard-list"></i>
@@ -95,6 +95,26 @@ const AdminDashboard = () => {
             <div className="stat-item">
               <span className="stat-label">최근 게시</span>
               <span className="stat-value">{getLatestUpdateTime(posts)}</span>
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="dashboard-card collection-card"
+          onClick={() => navigate("/admin/collection")}
+        >
+          <div className="card-icon">
+            <i className="fas fa-database"></i>
+          </div>
+          <h3>컬렉션 데이터 관리</h3>
+          <div className="card-content">
+            <div className="stat-item">
+              <span className="stat-label">데이터 관리</span>
+              <span className="stat-value">페이지 콘텐츠 수정</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">관리 항목</span>
+              <span className="stat-value">회사 소개, 사업 소개 등</span>
             </div>
           </div>
         </div>

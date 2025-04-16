@@ -6,9 +6,9 @@ import "../../styles/pages/_certification.scss";
 // 인증서 이미지 import
 import certification001 from "../../resources/images/certificate/certification-001.png";
 import certification002 from "../../resources/images/certificate/certification-002.png";
-import certification003 from "../../resources/images/certificate/certification-004.png";
-import certification004 from "../../resources/images/certificate/certification-005.png";
-import certification005 from "../../resources/images/certificate/certification-006.png";
+import certification004 from "../../resources/images/certificate/certification-004.png";
+import certification005 from "../../resources/images/certificate/certification-005.png";
+import certification006 from "../../resources/images/certificate/certification-006.png";
 
 // 특허 이미지 import
 import patent001 from "../../resources/images/patent/patent-001.png";
@@ -18,11 +18,11 @@ import patent004 from "../../resources/images/patent/patent-004.png";
 import patent005 from "../../resources/images/patent/patent-005.jpg";
 
 const certificationImages = {
-  "certification-001.png": certification001,
-  "certification-002.png": certification002,
-  "certification-004.png": certification003,
-  "certification-005.png": certification004,
-  "certification-006.png": certification005,
+  "certification-001.png": certification001, // 기업부설연구소
+  "certification-002.png": certification002, // 벤처기업확인서
+  "certification-004.png": certification004, // 소프트웨어사업자 신고확인서
+  "certification-005.png": certification005, // 중소기업확인서
+  "certification-006.png": certification006, // 직접생산확인증명서
 };
 
 const patentImages = {
