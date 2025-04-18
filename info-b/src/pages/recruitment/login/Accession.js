@@ -142,11 +142,9 @@ function Accession(props) {
     }
 
     try {
-      const user = await signUp(form.email, form.password, form.name);
       await addDatas("users", {
-        // uid: user.uid,
         email: form.email,
-        username: form.uid, // ✅ 여기가 핵심! 사용자 아이디 저장
+        username: form.uid,
         name: form.name,
         birth: form.birth,
         gender: form.gender,
