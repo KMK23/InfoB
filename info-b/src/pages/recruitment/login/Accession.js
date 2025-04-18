@@ -3,7 +3,12 @@ import { checkAuth } from "./../../../store/slices/authSlice";
 import { MdCheckBox } from "react-icons/md";
 import History from "./../../company/History";
 import { useNavigate } from "react-router-dom";
-import { addDatas, checkEmailExists, signUp } from "../../API/firebase";
+import {
+  addDatas,
+  checkEmailExists,
+  signUp,
+  updateDatas,
+} from "../../API/firebase";
 import { sendVerificationEmail } from "./email";
 
 function Accession(props) {
@@ -88,14 +93,19 @@ function Accession(props) {
           if (extraAddr !== "") {
             extraAddr = " (" + extraAddr + ")";
           }
-          document.getElementById("sample6_extraAddress").value = extraAddr;
-        } else {
-          document.getElementById("sample6_extraAddress").value = "";
         }
 
-        document.getElementById("sample6_postcode").value = data.zonecode;
-        document.getElementById("sample6_address").value = addr;
-        document.getElementById("sample6_detailAddress").focus();
+        // form state 직접 업데이트
+        setForm((prev) => ({
+          ...prev,
+          address: {
+            ...prev.address,
+            zonecode: data.zonecode,
+            address: addr,
+            extraAddress: extraAddr,
+            detailAddress: prev.address.detailAddress,
+          },
+        }));
       },
     }).open();
   };
@@ -137,16 +147,18 @@ function Accession(props) {
     }
     const exists = await checkEmailExists(form.email);
     if (exists) {
-      setEmailChecked(true); // 빨간색으로 표시되도록
+      setEmailChecked(true);
       setEmailMessage("이미 사용 중인 이메일입니다.");
       return;
     }
 
     try {
-      await addDatas("users", {
-        email: form.email,
+      // 1. 먼저 Authentication 생성 (이 과정에서 Firestore 문서도 생성됨)
+      const user = await signUp(form.email, form.password, form.name);
+
+      // 2. 생성된 문서에 추가 정보 업데이트
+      await updateDatas("users", user.uid, {
         username: form.uid,
-        name: form.name,
         birth: form.birth,
         gender: form.gender,
         phone: form.phone,
@@ -187,7 +199,7 @@ function Accession(props) {
       setEmailChecked(null);
     }
   };
-
+  console.log(form);
   return (
     <div className="mx-52">
       <div className="mt-10">
@@ -452,7 +464,7 @@ function Accession(props) {
             <div className="flex gap-1">
               <input
                 type="text"
-                id="sample6_postcode" // ✅ 우편번호
+                id="sample6_postcode"
                 className="border border-gray-300 py-2 px-2 rounded-md"
                 placeholder="우편주소"
                 value={form.address.zonecode}
@@ -469,25 +481,31 @@ function Accession(props) {
             <div>
               <input
                 type="text"
-                id="sample6_address" // ✅ 기본주소
+                id="sample6_address"
                 placeholder="주소"
                 className="border border-gray-300 py-2 px-2 w-full"
+                value={form.address.address}
+                onChange={handleAddressChange}
               />
             </div>
             <div>
               <input
                 type="text"
-                id="sample6_extraAddress" // ✅ 참고주소 (예: 건물명, 법정동 등)
+                id="sample6_extraAddress"
                 placeholder="참고항목"
                 className="border border-gray-300 w-full py-2 px-2"
+                value={form.address.extraAddress}
+                onChange={handleAddressChange}
               />
             </div>
             <div>
               <input
                 type="text"
-                id="sample6_detailAddress" // ✅ 상세주소
+                id="sample6_detailAddress"
                 placeholder="상세주소"
                 className="border border-gray-300 w-full py-2 px-2"
+                value={form.address.detailAddress}
+                onChange={handleAddressChange}
               />
             </div>
           </div>
