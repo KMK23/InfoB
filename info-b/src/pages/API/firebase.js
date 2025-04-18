@@ -284,12 +284,23 @@ export const getEmailByUsername = async (username) => {
   }
   return null;
 };
-
-//이메일 중복검사
+// 이메일 중복 검사 함수
 export const checkEmailExists = async (email) => {
+  const auth = getAuth();
+
+  // Auth 확인
+  const methods = await fetchSignInMethodsForEmail(auth, email);
+  if (methods.length > 0) return true; // ✅ 로그인 가능한 이메일 → 사용 중
+
+  // Firestore에만 있는 이메일도 걸러냄
   const q = query(collection(db, "users"), where("email", "==", email));
   const snapshot = await getDocs(q);
-  return !snapshot.empty;
+
+  if (!snapshot.empty) {
+    return true; // ✅ 이미 유저 데이터에 있음
+  }
+
+  return false; // 🔓 진짜 완전히 새로운 이메일
 };
 // 사용자명+ 이메일로 아이디찾기
 // 사용자 검색 함수
