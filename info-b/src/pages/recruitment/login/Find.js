@@ -33,7 +33,7 @@ function Find() {
           email: trimmedEmail, // idEmail 사용
           name: trimmedName, // idName 사용
           type: "아이디 찾기",
-          message: `회원님의 아이디는 ${user.email} 입니다.`,
+          message: `회원님의 아이디는 ${user.username} 입니다.`,
         });
         alert("아이디가 이메일로 전송되었습니다.");
       } else {

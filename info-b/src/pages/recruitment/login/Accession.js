@@ -137,7 +137,8 @@ function Accession(props) {
     }
     const exists = await checkEmailExists(form.email);
     if (exists) {
-      alert("이미 사용 중인 이메일입니다.");
+      setEmailChecked(true); // 빨간색으로 표시되도록
+      setEmailMessage("이미 사용 중인 이메일입니다.");
       return;
     }
 
