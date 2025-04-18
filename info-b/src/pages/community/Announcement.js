@@ -13,6 +13,7 @@ function Announcement() {
     <div className="recruitment-announcement">
       <div>
         <h1 className="text-3xl font-semibold">공지사항</h1>
+        <p>인포비정보기술 공지사항입니다.</p>
       </div>
       <div>
         <Search onClick={handleSearch} />
