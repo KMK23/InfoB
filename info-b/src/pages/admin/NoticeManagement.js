@@ -119,11 +119,12 @@ const NoticeManagement = () => {
       await dispatch(
         updateNotice({
           collectionName: "notices",
-          id: notice.docId,
+          docId: notice.docId,
           data: updatedNotice,
         })
       ).unwrap();
       // 상태 변경 후 목록 새로고침
+      alert("상태 변경에 성공했습니다.");
       fetchNoticesData();
     } catch (error) {
       console.error("공지사항 상태 변경 실패:", error);

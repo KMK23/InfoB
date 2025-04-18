@@ -10,8 +10,8 @@ import { doc, getDoc } from "firebase/firestore";
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [fontSize, setFontSize] = useState("normal"); // 기본값을 'normal'로 변경
-  const [user, setUser] = useState(null); //로그인한 사용자 정보
+  const [fontSize, setFontSize] = useState("normal");
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   // 🔸 로그인 상태 체크

@@ -130,7 +130,13 @@ function LeakDetection() {
                 </FadeInSection>
                 <FadeInSection>
                   <div className="product-content">
-                    <div className="features">
+                    <div
+                      className={`features ${
+                        location.pathname === "/business/board-products"
+                          ? "board-features"
+                          : "leak-features"
+                      }`}
+                    >
                       <h4>제품 특징</h4>
                       <ul>
                         {product.features.description.map((desc, index) => (
@@ -143,6 +149,107 @@ function LeakDetection() {
                         ))}
                       </ul>
                     </div>
+                    {product.specifications && (
+                      <div className="specifications">
+                        <table className="spec-table">
+                          <tbody>
+                            {/* 입력 사양 */}
+                            <tr>
+                              <td
+                                className="section-header"
+                                rowSpan={
+                                  product.specifications.input?.length || 1
+                                }
+                              >
+                                입력
+                              </td>
+                              {product.specifications.input?.map(
+                                (spec, index) => (
+                                  <React.Fragment key={index}>
+                                    {index === 0 ? (
+                                      <>
+                                        <td>{spec.name}</td>
+                                        <td>{spec.value}</td>
+                                      </>
+                                    ) : (
+                                      <tr>
+                                        <td>{spec.name}</td>
+                                        <td>{spec.value}</td>
+                                      </tr>
+                                    )}
+                                  </React.Fragment>
+                                )
+                              )}
+                            </tr>
+
+                            {/* 전원 사양 */}
+                            <tr>
+                              <td className="section-header" rowSpan={3}>
+                                전원
+                              </td>
+                              <td>출력1</td>
+                              <td>
+                                <ul>
+                                  <li>전압: DC24V</li>
+                                  <li>Ripple & Noise: 80mVp-p</li>
+                                  <li>Line Regulation: ±0.5%</li>
+                                  <li>Load Regulation: ±0.5%</li>
+                                </ul>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>출력2</td>
+                              <td>
+                                <ul>
+                                  <li>전압: DC24V</li>
+                                  <li>Ripple & Noise: 120mVp-p</li>
+                                  <li>Line Regulation: ±1%</li>
+                                  <li>Load Regulation: ±2%</li>
+                                </ul>
+                              </td>
+                            </tr>
+
+                            {/* 무선 사양 */}
+                            <tr>
+                              <td className="section-header" rowSpan={3}>
+                                무선
+                              </td>
+                              <td>주파수</td>
+                              <td>
+                                <ul>
+                                  <li>송신: 920.9MHz ~ 922.9MHz</li>
+                                  <li>주파수 범위: 47~63Hz</li>
+                                </ul>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>안테나</td>
+                              <td>
+                                <ul>
+                                  <li>type: 유효방사, Dipole Antenna</li>
+                                  <li>gain: 안테나 이득: 3.83 dBi(925MHz)</li>
+                                  <li>
+                                    polarization: 공중선의 편파성: 수직, 수평
+                                    편파
+                                  </li>
+                                  <li>size: 크기: 102.2 x 108.1 mm</li>
+                                </ul>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>출력</td>
+                              <td>10mW이하</td>
+                            </tr>
+
+                            {/* 사용온도 */}
+                            <tr>
+                              <td className="section-header">사용온도</td>
+                              <td colSpan={2}>-20℃ ~ +50℃</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
                 </FadeInSection>
               </div>

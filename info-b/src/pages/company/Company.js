@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
@@ -11,28 +11,10 @@ import "../../styles/pages/_company.scss";
 function Company() {
   const dispatch = useDispatch();
   const { about, status, error } = useSelector((state) => state.about);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    console.log("Fetching about data...");
     dispatch(fetchAbout({ collectionName: "aboutCompany", queryOptions: {} }));
   }, [dispatch]);
-
-  useEffect(() => {
-    if (about?.[0]?.company?.about?.slides) {
-      const timer = setTimeout(() => {
-        setCurrentSlide((prev) =>
-          prev === about[0].company.about.slides.length - 1 ? 0 : prev + 1
-        );
-      }, 3000); // 3초마다 슬라이드 변경
-
-      return () => clearTimeout(timer);
-    }
-  }, [currentSlide, about]);
-
-  console.log("Status:", status);
-  console.log("Error:", error);
-  console.log("About data:", about);
 
   if (status === "loading") {
     return <div>Loading...</div>;

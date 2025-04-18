@@ -6,7 +6,7 @@ import store from "./store/store";
 import Layout from "./components/Layout";
 import AdminLayout from "./components/AdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./pages/auth/Login";
+// import Login from "./pages/auth/Login";
 import CeoMessage from "./pages/company/CeoMessage";
 import History from "./pages/company/History";
 import Certification from "./pages/company/Certification";
@@ -77,9 +77,8 @@ function App() {
             {/* Auth routes */}
             <Route
               path="/admin"
-              element={<Navigate to="/admin/login" replace />}
+              element={<Navigate to="/admin/dashboard" replace />}
             />
-            <Route path="/admin/login" element={<Login />} />
 
             {/* Admin routes */}
             <Route
@@ -88,10 +87,6 @@ function App() {
                 <ProtectedRoute>
                   <AdminLayout>
                     <Routes>
-                      <Route
-                        path="/"
-                        element={<Navigate to="/admin/dashboard" replace />}
-                      />
                       <Route path="dashboard" element={<AdminDashboard />} />
                       <Route path="posts" element={<PostManagement />} />
                       <Route path="notices" element={<NoticeManagement />} />

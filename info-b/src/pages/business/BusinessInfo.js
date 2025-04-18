@@ -13,6 +13,7 @@ import {
   FaLightbulb,
   FaCogs,
   FaMicrochip,
+  FaCubes,
 } from "react-icons/fa";
 
 const icons = {
@@ -23,6 +24,11 @@ const icons = {
   "Solution Consulting": <FaLightbulb />,
   "Specialization Consulting": <FaShieldAlt />,
   "Business Consulting": <FaBriefcase />,
+  default: <FaCubes />,
+};
+
+const getIcon = (title) => {
+  return icons[title] || icons.default;
 };
 
 const BusinessInfo = () => {
@@ -87,7 +93,7 @@ const BusinessInfo = () => {
           <div className="business-info__card-grid si-grid">
             {si.areas.map((area, index) => (
               <div key={index} className="business-info__card">
-                <div className="card-icon">{icons[area.title]}</div>
+                <div className="card-icon">{getIcon(area.title)}</div>
                 <h3>{area.title}</h3>
                 <ul>
                   {area.items.map((item, index) => (
@@ -101,7 +107,7 @@ const BusinessInfo = () => {
           <div className="business-info__card-grid consulting-grid">
             {consulting.areas.map((area) => (
               <div key={area.id} className="business-info__card">
-                <div className="card-icon">{icons[area.title]}</div>
+                <div className="card-icon">{getIcon(area.title)}</div>
                 <h3>{area.title}</h3>
                 <ul>
                   {area.items.map((item, index) => (

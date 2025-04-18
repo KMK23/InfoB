@@ -12,18 +12,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import MyEditor from "../community/MyEditor";
+import Pagination from "../../components/Pagination";
 
 const PostManagement = () => {
   const posts = useSelector((state) => state.posts.posts);
   const answers = useSelector((state) => state.posts.answers);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [selectedPost, setSelectedPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");
   const [showReplyForm, setShowReplyForm] = useState(false);
+  const itemsPerPage = 10; // 한 페이지당 게시글 수
+
+  // 페이지네이션을 위한 게시글 필터링
+  const offset = currentPage * itemsPerPage;
+  const currentPagePosts = posts.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(posts.length / itemsPerPage);
+
+  const handlePageChange = (selectedPage) => {
+    setCurrentPage(selectedPage);
+  };
 
   useEffect(() => {
-    dispatch(fetchPosts({ collectionName: "posts", queryOptions: {} }));
+    const queryOptions = {
+      condition: [],
+      orderBys: [{ field: "createdAt", direction: "desc" }],
+    };
+    dispatch(fetchPosts({ collectionName: "posts", queryOptions }));
   }, [dispatch]);
 
   // 게시글 목록이 로드되면 각 게시글의 답변 상태를 가져옴
@@ -215,71 +231,82 @@ const PostManagement = () => {
           </div>
         </div>
       ) : (
-        <div className="post-list">
-          <table>
-            <thead>
-              <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자/회사</th>
-                <th>연락처</th>
-                <th>작성일</th>
-                <th>답변상태</th>
-                <th>관리</th>
-              </tr>
-            </thead>
-            <tbody>
-              {posts && posts.length > 0 ? (
-                posts.map((post, index) => (
-                  <tr key={post.docId}>
-                    <td>{index + 1}</td>
-                    <td>{post.title}</td>
-                    <td>
-                      {post.authorName}
-                      <br />
-                      <small>{post.companyName}</small>
-                    </td>
-                    <td>
-                      {post.phoneNumber}
-                      <br />
-                      <small>{post.email}</small>
-                    </td>
-                    <td>{formatDate(post.createdAt)}</td>
-                    <td className="post-status-cell">
-                      <span
-                        className={`post-status ${
-                          answers[post.docId]?.exists ? "answered" : "waiting"
-                        }`}
-                      >
-                        {answers[post.docId]?.exists ? "답변완료" : "답변대기"}
-                      </span>
-                    </td>
-                    <td className="post-actions">
-                      <button
-                        className="post-reply-btn"
-                        onClick={() => handleReply(post)}
-                      >
-                        {answers[post.docId]?.exists ? "답변수정" : "답변작성"}
-                      </button>
-                      <button
-                        className="post-delete-btn"
-                        onClick={() => handleDelete(post.docId)}
-                      >
-                        삭제
-                      </button>
+        <>
+          <div className="post-list">
+            <table>
+              <thead>
+                <tr>
+                  <th>번호</th>
+                  <th>제목</th>
+                  <th>작성자/회사</th>
+                  <th>연락처</th>
+                  <th>작성일</th>
+                  <th>답변상태</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentPagePosts && currentPagePosts.length > 0 ? (
+                  currentPagePosts.map((post, index) => (
+                    <tr key={post.docId}>
+                      <td>
+                        {posts.length - (currentPage * itemsPerPage + index)}
+                      </td>
+                      <td>{post.title}</td>
+                      <td>
+                        {post.authorName}
+                        <br />
+                        <small>{post.companyName}</small>
+                      </td>
+                      <td>
+                        {post.phoneNumber}
+                        <br />
+                        <small>{post.email}</small>
+                      </td>
+                      <td>{formatDate(post.createdAt)}</td>
+                      <td className="post-status-cell">
+                        <span
+                          className={`post-status ${
+                            answers[post.docId]?.exists ? "answered" : "waiting"
+                          }`}
+                        >
+                          {answers[post.docId]?.exists
+                            ? "답변완료"
+                            : "답변대기"}
+                        </span>
+                      </td>
+                      <td className="post-actions">
+                        <button
+                          className="post-reply-btn"
+                          onClick={() => handleReply(post)}
+                        >
+                          {answers[post.docId]?.exists
+                            ? "답변수정"
+                            : "답변작성"}
+                        </button>
+                        <button
+                          className="post-delete-btn"
+                          onClick={() => handleDelete(post.docId)}
+                        >
+                          삭제
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="post-no-data">
+                      등록된 게시글이 없습니다.
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="7" className="post-no-data">
-                    등록된 게시글이 없습니다.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center mt-4">
+            <Pagination pageCount={pageCount} onPageChange={handlePageChange} />
+          </div>
+        </>
       )}
     </div>
   );

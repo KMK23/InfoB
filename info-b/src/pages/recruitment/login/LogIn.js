@@ -42,13 +42,13 @@ function LogIn(props) {
         alert("임시 비밀번호로 로그인되었습니다. 비밀번호를 변경해주세요.");
       }
 
-      // 사용자 역할 가져오기
-      const role = await getUserRole(userCredential.user.uid);
-
-      if (role === "admin") {
-        navigate("/admin/dashboard"); // 관리자는 관리자 페이지로
+      // admin 있으면 admin 페이지로
+      if (userCredential.user.email.includes("admin")) {
+        console.log("관리자 계정으로 로그인");
+        navigate("/admin");
       } else {
-        navigate("/"); // 일반 사용자는 홈 페이지로
+        console.log("일반 사용자 계정으로 로그인");
+        navigate("/");
       }
     } catch (error) {
       console.error("로그인 실패:", error.message);

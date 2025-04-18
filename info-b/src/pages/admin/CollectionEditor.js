@@ -23,6 +23,7 @@ import RecruitmentForm from "../../components/admin/forms/RecruitmentForm";
 import BenefitsForm from "../../components/admin/forms/BenefitsForm";
 import RnDForm from "../../components/admin/forms/RnDForm";
 import PerformanceForm from "../../components/admin/forms/PerformanceForm";
+import Swal from "sweetalert2";
 
 const COLLECTIONS = {
   company: {
@@ -453,10 +454,19 @@ const CollectionEditor = () => {
         })
       );
 
-      alert("성공적으로 저장되었습니다.");
+      Swal.fire({
+        title: "저장되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+      });
     } catch (error) {
       console.error("저장 중 오류:", error);
-      alert("저장 중 오류가 발생했습니다: " + error.message);
+      Swal.fire({
+        title: "저장 실패",
+        text: "저장 중 오류가 발생했습니다: " + error.message,
+        icon: "error",
+        confirmButtonText: "확인",
+      });
     }
   };
 
@@ -466,52 +476,76 @@ const CollectionEditor = () => {
   };
 
   const handleDelete = async (section, item) => {
-    if (!products || !products[0]) return;
-
-    const updatedData = JSON.parse(JSON.stringify(products[0]));
-    const currentSection = COLLECTIONS[selectedCollection].sections.find(
-      (section) => section.id === selectedSection
-    );
-
-    switch (section) {
-      case "recruitment":
-        if (!updatedData.recruitment) return;
-        updatedData.recruitment = updatedData.recruitment.filter(
-          (_, index) => index !== item
-        );
-        break;
-
-      case "benefits":
-        if (!updatedData.benefits) return;
-        updatedData.benefits = updatedData.benefits.filter(
-          (_, index) => index !== item
-        );
-        break;
-
-      case "cases":
-      case "performance":
-        if (!updatedData.company) return;
-
-        const yearData = updatedData.company.performanceCases.timeline.find(
-          (t) => t.year === item.year
-        );
-
-        if (yearData) {
-          yearData.projects = yearData.projects.filter((p) => p.id !== item.id);
-
-          if (yearData.projects.length === 0) {
-            updatedData.company.performanceCases.timeline =
-              updatedData.company.performanceCases.timeline.filter(
-                (t) => t.year !== item.year
-              );
-          }
-        }
-        break;
-      default:
-        break;
-    }
-
     try {
+      const result = await Swal.fire({
+        title: "삭제하시겠습니까?",
+        text: "삭제된 데이터는 복구할 수 없습니다.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "예",
+        cancelButtonText: "아니오",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+      });
+
+      if (!result.isConfirmed) {
+        return;
+      }
+
+      if (!products || !products[0]) return;
+
+      const updatedData = JSON.parse(JSON.stringify(products[0]));
+      const currentSection = COLLECTIONS[selectedCollection].sections.find(
+        (section) => section.id === selectedSection
+      );
+
+      switch (section) {
+        case "recruitment":
+          if (!updatedData.recruitment) return;
+          updatedData.recruitment = updatedData.recruitment.filter(
+            (_, index) => index !== item
+          );
+          break;
+
+        case "benefits":
+          if (!updatedData.benefits) return;
+          updatedData.benefits = updatedData.benefits.filter(
+            (_, index) => index !== item
+          );
+          break;
+
+        case "cases":
+        case "performance":
+          if (!updatedData.company) return;
+
+          const yearData = updatedData.company.performanceCases.timeline.find(
+            (t) => t.year === item.year
+          );
+
+          if (yearData) {
+            yearData.projects = yearData.projects.filter(
+              (p) => p.id !== item.id
+            );
+
+            if (yearData.projects.length === 0) {
+              updatedData.company.performanceCases.timeline =
+                updatedData.company.performanceCases.timeline.filter(
+                  (t) => t.year !== item.year
+                );
+            }
+          }
+          break;
+        case "certification":
+          if (!updatedData.company?.certifications?.items) return;
+          updatedData.company.certifications.items =
+            updatedData.company.certifications.items.filter(
+              (cert) => cert.id !== item.id
+            );
+          break;
+        default:
+          break;
+      }
+
       await dispatch(
         updateCollection({
           collectionName: currentSection.collection,
@@ -527,10 +561,84 @@ const CollectionEditor = () => {
         })
       );
 
-      alert("성공적으로 삭제되었습니다.");
+      Swal.fire({
+        title: "삭제되었습니다.",
+        icon: "success",
+        confirmButtonText: "확인",
+      });
     } catch (error) {
       console.error("삭제 중 오류:", error);
-      alert("삭제 중 오류가 발생했습니다: " + error.message);
+      Swal.fire({
+        title: "삭제 실패",
+        text: "삭제 중 오류가 발생했습니다: " + error.message,
+        icon: "error",
+        confirmButtonText: "확인",
+      });
+    }
+  };
+
+  const handleDeleteAll = async (section) => {
+    const result = await Swal.fire({
+      title: "전체 삭제하시겠습니까?",
+      text: "삭제된 데이터는 복구할 수 없습니다.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        if (!products || !products[0]) return;
+
+        const updatedData = JSON.parse(JSON.stringify(products[0]));
+        const currentSection = COLLECTIONS[selectedCollection].sections.find(
+          (section) => section.id === selectedSection
+        );
+
+        switch (section) {
+          case "certification":
+            if (updatedData.company?.certifications?.items) {
+              updatedData.company.certifications.items = [];
+              setEditData(updatedData.company.certifications);
+              handleSave();
+            }
+            break;
+          default:
+            break;
+        }
+
+        await dispatch(
+          updateCollection({
+            collectionName: currentSection.collection,
+            docId: products[0].docId,
+            data: updatedData,
+          })
+        ).unwrap();
+
+        dispatch(
+          fetchProducts({
+            collectionName: currentSection.collection,
+            queryOptions: {},
+          })
+        );
+
+        await Swal.fire(
+          "삭제 완료",
+          "모든 데이터가 삭제되었습니다.",
+          "success"
+        );
+      } catch (error) {
+        console.error("전체 삭제 중 오류:", error);
+        await Swal.fire({
+          title: "삭제 실패",
+          text: "삭제 중 오류가 발생했습니다: " + error.message,
+          icon: "error",
+          confirmButtonText: "확인",
+        });
+      }
     }
   };
 
@@ -615,6 +723,20 @@ const CollectionEditor = () => {
                         {cert.description.map((desc, index) => (
                           <p key={index}>{desc}</p>
                         ))}
+                      </div>
+                      <div className="certification__actions">
+                        <button
+                          className="edit-button"
+                          onClick={() => handleEdit("certification", cert)}
+                        >
+                          수정
+                        </button>
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDelete("certification", cert)}
+                        >
+                          삭제
+                        </button>
                       </div>
                     </div>
                   </div>
