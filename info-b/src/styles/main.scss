@@ -16,12 +16,17 @@ body {
 @import "components/navbar";
 @import "components/footer";
 @import "components/layout";
+@import "components/noticeList";
+@import "components/noticeDetail";
 
 // Import page styles
 @import "pages/company";
 @import "pages/certification";
 @import "pages/history";
 @import "pages/admin/collectionEditor";
+@import "pages/contentManagement";
+@import "pages/adminDashboard";
+@import "pages/announcement";
 
 // Import admin forms
 

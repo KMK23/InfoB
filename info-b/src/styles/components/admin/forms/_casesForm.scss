@@ -1,86 +1,230 @@
 @import "../../../variables";
 
 .cases-form {
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: $spacing-xl;
+  background-color: $bg-light;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
 
   .form-group {
-    margin-bottom: 2rem;
+    margin-bottom: $spacing-xl;
+  }
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid #eee;
+  label[for="year"],
+  label[for="category"],
+  label[for="title"] {
+    display: block;
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $primary-navy;
+    margin-bottom: $spacing-md;
+    letter-spacing: 0.5px;
+  }
 
-      label {
-        font-size: 1.2rem;
-        font-weight: 500;
-        color: #333;
-      }
+  .form-group {
+    border: 1px solid $border-gray;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    margin-bottom: $spacing-lg;
+  }
 
-      .add-button {
-        padding: 0.5rem 1rem;
-        background-color: #28a745;
-        color: white;
+  input[type="text"] {
+    width: 100%;
+    padding: $spacing-md;
+    border: 2px solid $border-gray;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+    background-color: white;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $primary-navy;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-navy;
+      box-shadow: 0 0 0 3px rgba($primary-navy, 0.1);
+    }
+
+    &::placeholder {
+      color: $text-gray;
+    }
+  }
+
+  .editor-buttons {
+    display: flex;
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+
+    button {
+      padding: $spacing-sm $spacing-md;
+      border-radius: $border-radius-md;
+      font-weight: 500;
+      cursor: pointer;
+      transition: $transition-base;
+
+      &.save {
+        background-color: $primary-navy;
+        color: $text-light;
         border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 500;
 
         &:hover {
-          background-color: #218838;
+          background-color: darken($primary-navy, 10%);
+        }
+      }
+
+      &.delete {
+        background-color: $bg-light;
+        color: $primary-coral;
+        border: 1px solid $primary-coral;
+
+        &:hover {
+          background-color: $primary-coral;
+          color: $text-light;
         }
       }
     }
+  }
 
-    .cases-list {
-      .case-item {
-        background: #f8f9fa;
-        padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-xl;
+    padding-bottom: $spacing-md;
+    border-bottom: 2px solid $border-color;
 
-        .input-group {
+    h3 {
+      font-size: $font-size-h4;
+      font-weight: 600;
+      color: $primary-navy;
+      margin: 0;
+    }
+
+    .add-button {
+      padding: $spacing-sm $spacing-md;
+      background-color: $primary-navy;
+      color: $text-light;
+      border: none;
+      border-radius: $border-radius-md;
+      cursor: pointer;
+      font-weight: 500;
+      transition: $transition-base;
+
+      &:hover {
+        background-color: darken($primary-navy, 10%);
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .cases-list {
+    .case-item {
+      background: $bg-light;
+      padding: $spacing-xl;
+      border-radius: $border-radius-lg;
+      margin-bottom: $spacing-lg;
+      box-shadow: $shadow-sm;
+      border: 1px solid $border-color;
+      transition: $transition-base;
+
+      &:hover {
+        box-shadow: $shadow-lg;
+        transform: translateY(-2px);
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-lg;
+        margin-bottom: $spacing-lg;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        label {
           display: flex;
-          flex-direction: column;
-          gap: 1rem;
+          align-items: center;
+          gap: $spacing-xs;
+          color: $text-primary;
+          font-size: $font-size-base;
+          font-weight: 500;
+          margin-bottom: $spacing-xs;
 
-          input,
-          textarea {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
+          .required {
+            color: $primary-gold;
+            font-weight: bold;
+          }
+        }
 
-            &:focus {
-              outline: none;
-              border-color: #17a2b8;
-              box-shadow: 0 0 0 2px rgba(23, 162, 184, 0.1);
+        input,
+        textarea {
+          width: 100%;
+          padding: $spacing-sm $spacing-md;
+          border: 2px solid $border-gray;
+          border-radius: $border-radius-md;
+          font-size: $font-size-base;
+          transition: $transition-base;
+          background-color: $bg-light;
+          color: $text-primary;
+
+          &:hover {
+            border-color: $primary-navy;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: $primary-navy;
+            box-shadow: 0 0 0 3px rgba($primary-navy, 0.1);
+          }
+
+          &::placeholder {
+            color: $text-gray;
+          }
+        }
+
+        textarea {
+          min-height: 120px;
+          resize: vertical;
+          line-height: 1.6;
+        }
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: flex-end;
+        gap: $spacing-md;
+        margin-top: $spacing-lg;
+        padding-top: $spacing-lg;
+        border-top: 1px solid $border-color;
+
+        button {
+          padding: $spacing-sm $spacing-md;
+          border-radius: $border-radius-md;
+          font-weight: 500;
+          cursor: pointer;
+          transition: $transition-base;
+
+          &.save-button {
+            background-color: $primary-navy;
+            color: $text-light;
+            border: none;
+
+            &:hover {
+              background-color: darken($primary-navy, 10%);
             }
           }
 
-          textarea {
-            min-height: 100px;
-            resize: vertical;
-          }
-
-          .delete-button {
-            padding: 0.3rem 0.5rem;
-            background: none;
-            color: #ff0000;
-            border: none;
-            cursor: pointer;
-            font-weight: 500;
+          &.delete-button {
+            background-color: $bg-light;
+            color: $primary-coral;
+            border: 1px solid $primary-coral;
 
             &:hover {
-              text-decoration: underline;
+              background-color: $primary-coral;
+              color: $text-light;
             }
           }
         }
@@ -89,14 +233,12 @@
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: $mobile) {
   .cases-form {
-    padding: 1rem;
+    padding: $spacing-lg;
 
     .form-group {
-      .case-item {
-        padding: 1rem;
-      }
+      margin-bottom: $spacing-lg;
     }
   }
 }

@@ -34,7 +34,6 @@ import LogIn from "./pages/recruitment/login/LogIn";
 import Find from "./pages/recruitment/login/Find";
 import Accession from "./pages/recruitment/login/Accession";
 import NoticeDetail from "./pages/notices/NoticeDetail";
-import Admin from "./pages/admin/Admin";
 import CollectionEditor from "./pages/admin/CollectionEditor";
 import Business from "./pages/company/Business";
 

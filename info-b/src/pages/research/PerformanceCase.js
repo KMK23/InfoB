@@ -126,7 +126,7 @@ function PerformanceCase() {
             }`}
             onClick={() => setSelectedYear(String(item.year))}
           >
-            {item.year}년
+            {item.year}
           </button>
         ))}
       </div>

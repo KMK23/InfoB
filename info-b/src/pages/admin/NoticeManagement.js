@@ -1,6 +1,6 @@
 // src/pages/admin/NoticeManagement.js
 import React, { useEffect, useState } from "react";
-import "../../styles/pages/_contentManagement.scss";
+import "../../styles/pages/_noticeManagement.scss";
 import {
   deleteNotice,
   fetchNotices,
@@ -143,10 +143,10 @@ const NoticeManagement = () => {
 
   return (
     <div className="notice-management">
-      <div className="management-header">
+      <div className="notice-header">
         <h2>공지사항 관리</h2>
       </div>
-      <button className="new-notice-button" onClick={handleNewNotice}>
+      <button className="notice-create-button" onClick={handleNewNotice}>
         새 공지사항 작성
       </button>
 
@@ -170,16 +170,26 @@ const NoticeManagement = () => {
               dangerouslySetInnerHTML={{ __html: selectedNotice.content }}
             />
             <div className="notice-actions">
-              <button onClick={() => handleEdit(selectedNotice)}>수정</button>
-              <button onClick={() => handleDelete(selectedNotice.docId)}>
+              <button
+                className="notice-edit-btn"
+                onClick={() => handleEdit(selectedNotice)}
+              >
+                수정
+              </button>
+              <button
+                className="notice-delete-btn"
+                onClick={() => handleDelete(selectedNotice.docId)}
+              >
                 삭제
               </button>
-              <button onClick={handleCloseDetail}>닫기</button>
+              <button className="notice-close-btn" onClick={handleCloseDetail}>
+                닫기
+              </button>
             </div>
           </div>
         </div>
       ) : (
-        <div className="content-list">
+        <div className="notice-list">
           <table>
             <thead>
               <tr>
@@ -210,22 +220,22 @@ const NoticeManagement = () => {
                     <td>
                       <button
                         onClick={() => handleTogglePublish(notice)}
-                        className={`status-toggle ${
+                        className={`notice-status-toggle ${
                           notice.check ? "active" : "pending"
                         }`}
                       >
                         {notice.check ? "게시중" : "비공개"}
                       </button>
                     </td>
-                    <td>
+                    <td className="notice-actions">
                       <button
-                        className="edit-button"
+                        className="notice-edit-btn"
                         onClick={() => handleEdit(notice)}
                       >
                         수정
                       </button>
                       <button
-                        className="delete-button"
+                        className="notice-delete-btn"
                         onClick={() => handleDelete(notice.docId)}
                       >
                         삭제
@@ -235,7 +245,7 @@ const NoticeManagement = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="no-data">
+                  <td colSpan="6" className="notice-no-data">
                     등록된 공지사항이 없습니다.
                   </td>
                 </tr>

@@ -72,71 +72,239 @@
   }
 
   .view-mode {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
     margin-top: 1rem;
+    position: relative;
 
-    h3 {
-      font-size: 1.8rem;
-      color: $primary-navy;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
-      border-bottom: 2px solid $primary-gold;
-      font-weight: 600;
-      position: relative;
+    &.ceo-message-admin {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 80px;
-        height: 2px;
-        background-color: $primary-navy;
-      }
-    }
-
-    .content {
-      background-color: #f8f9fa;
-      padding: 2rem;
-      border-radius: 8px;
-      border: 1px solid #e2e8f0;
-      margin-top: 1rem;
-      font-size: 1rem;
-      line-height: 1.8;
-      color: #2d3748;
-      min-height: 200px;
-      position: relative;
-      transition: all 0.3s ease;
-
-      &:hover {
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      p {
-        margin-bottom: 1rem;
-        word-break: keep-all;
-      }
-    }
-
-    .ceo-info {
-      margin-top: 2rem;
-      text-align: right;
-      padding-top: 1.5rem;
-      border-top: 1px solid #e2e8f0;
-
-      .position {
-        font-size: 1rem;
-        color: #666;
-        margin-bottom: 0.5rem;
-      }
-
-      .name {
-        font-size: 1.3rem;
-        font-weight: 700;
+      h3 {
+        font-size: 2.2rem;
         color: $primary-navy;
+        margin-bottom: 2rem;
+        text-align: center;
+        font-weight: 700;
+        position: relative;
+        padding-bottom: 1.5rem;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 120px;
+          height: 3px;
+          background: linear-gradient(to right, $primary-navy, $primary-gold);
+        }
+      }
+
+      .content {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #2d3748;
+        position: relative;
+
+        &::before {
+          content: '"';
+          position: absolute;
+          top: -20px;
+          left: 20px;
+          font-size: 5rem;
+          color: $primary-gold;
+          opacity: 0.2;
+          font-family: serif;
+        }
+
+        p {
+          margin-bottom: 1.5rem;
+          word-break: keep-all;
+          padding-left: 1rem;
+          border-left: 3px solid rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .ceo-info {
+        margin-top: 3rem;
+        text-align: right;
+        padding: 2rem;
+        background: $primary-navy;
+        border-radius: 15px;
+        color: white;
+
+        .position {
+          font-size: 1.1rem;
+          color: $primary-gold;
+          margin-bottom: 0.5rem;
+        }
+
+        .name {
+          font-size: 1.8rem;
+          font-weight: 700;
+          letter-spacing: 2px;
+        }
+      }
+    }
+
+    &.history-admin {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+
+      h3 {
+        font-size: 2rem;
+        color: $primary-navy;
+        margin-bottom: 3rem;
+        padding-left: 2rem;
+        border-left: 5px solid $primary-gold;
+        line-height: 1.4;
+      }
+
+      .content {
+        background: transparent;
+        padding: 0;
+        border: none;
+
+        .year-section {
+          margin-bottom: 3rem;
+          position: relative;
+          padding-left: 7rem;
+
+          &::before {
+            content: attr(data-year);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: $primary-navy;
+            opacity: 0.1;
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            left: 4rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(0, 0, 0, 0.1);
+          }
+
+          .event {
+            position: relative;
+            background: #f8f9fa;
+            padding: 1.5rem 2rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+
+            &::before {
+              content: "";
+              position: absolute;
+              left: -3rem;
+              top: 50%;
+              width: 1rem;
+              height: 1rem;
+              background: $primary-gold;
+              border-radius: 50%;
+              transform: translateY(-50%);
+              border: 3px solid white;
+              box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+            }
+
+            &:hover {
+              transform: translateX(10px);
+              background: white;
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+          }
+        }
+      }
+    }
+
+    &.location-admin {
+      background: #ffffff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+
+      h3 {
+        background: $primary-navy;
+        color: white;
+        margin: 0;
+        padding: 2rem 3rem;
+        font-size: 2rem;
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 3rem;
+          width: 50px;
+          height: 4px;
+          background: $primary-gold;
+        }
+      }
+
+      .content {
+        padding: 3rem;
+        background: white;
+        border: none;
+
+        .location-info {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 2rem;
+
+          .info-block {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            h4 {
+              color: $primary-navy;
+              font-size: 1.3rem;
+              margin-bottom: 1rem;
+              display: flex;
+              align-items: center;
+
+              i {
+                color: $primary-gold;
+                margin-right: 0.8rem;
+              }
+            }
+
+            p {
+              color: #666;
+              line-height: 1.6;
+              margin: 0;
+            }
+          }
+        }
+
+        .map-container {
+          margin-top: 2rem;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
       }
     }
   }
@@ -168,15 +336,93 @@
 
 @media (max-width: 768px) {
   .collection-editor {
-    .performance-grid {
-      padding: 10px;
+    padding: 1rem;
 
-      .cards-container {
-        grid-template-columns: 1fr;
+    .editor-header {
+      margin-bottom: 1.5rem;
+
+      .selector-group {
+        flex-direction: column;
+        gap: 1rem;
+
+        select {
+          width: 100%;
+          height: 40px;
+        }
       }
 
-      .performance-card {
-        padding: 15px;
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .action-buttons {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem;
+
+      button {
+        width: 100%;
+        height: 40px;
+        font-size: 0.875rem;
+      }
+    }
+
+    .view-mode {
+      padding: 1rem;
+
+      &.ceo-message-admin,
+      &.history-admin,
+      &.location-admin {
+        padding: 1rem;
+
+        h3 {
+          font-size: 1.25rem;
+          margin-bottom: 1rem;
+        }
+
+        .content {
+          padding: 1rem;
+        }
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+
+        label {
+          font-size: 0.875rem;
+          margin-bottom: 0.5rem;
+        }
+
+        input,
+        textarea {
+          font-size: 0.875rem;
+          padding: 0.75rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .collection-editor {
+    .view-mode {
+      .content {
+        .grid-layout {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .info-block {
+          padding: 1rem;
+
+          .icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.25rem;
+          }
+        }
       }
     }
   }
@@ -397,245 +643,6 @@
   }
 }
 
-// 회사소개 - CEO 인사말
-.admin-ceo-greeting {
-  background: linear-gradient(45deg, #1a365d 0%, #2c5282 100%);
-  padding: 5rem 2rem;
-  color: white;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-
-  .ceo-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-
-    .ceo-title {
-      font-size: 3.5rem;
-      font-weight: 700;
-      margin-bottom: 3rem;
-      position: relative;
-      padding-bottom: 2rem;
-      font-family: "Noto Serif KR", serif;
-
-      &::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 3px;
-        background: $primary-gold;
-      }
-    }
-
-    .ceo-message {
-      max-width: 800px;
-      margin: 0 auto;
-      font-size: 1.2rem;
-      line-height: 2;
-      margin-bottom: 4rem;
-      word-break: keep-all;
-      color: rgba(255, 255, 255, 0.9);
-
-      p {
-        margin-bottom: 2rem;
-        text-align: justify;
-      }
-    }
-
-    .ceo-image {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin-bottom: 2rem;
-      border: 4px solid $primary-gold;
-      position: relative;
-
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-
-    .signature-area {
-      text-align: center;
-
-      .position {
-        font-size: 1.1rem;
-        color: $primary-gold;
-        margin-bottom: 0.5rem;
-      }
-
-      .name {
-        font-size: 2rem;
-        font-weight: 600;
-        font-family: "Nanum Myeongjo", serif;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    padding: 3rem 1.5rem;
-
-    .ceo-content {
-      .ceo-title {
-        font-size: 2.5rem;
-      }
-
-      .ceo-message {
-        font-size: 1.1rem;
-      }
-    }
-  }
-}
-
-// 회사소개 - 연혁
-.admin-history {
-  background: #f8f9fa;
-  padding: 4rem 0;
-
-  .history-header {
-    text-align: center;
-    margin-bottom: 5rem;
-    background: $primary-navy;
-    padding: 3rem 0;
-    color: white;
-
-    h2 {
-      font-size: 3rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1.2rem;
-      opacity: 0.8;
-    }
-  }
-
-  .history-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-
-    .year-block {
-      display: flex;
-      margin-bottom: 4rem;
-
-      .year {
-        flex: 0 0 200px;
-        padding-right: 2rem;
-
-        span {
-          font-size: 4rem;
-          font-weight: 800;
-          color: $primary-navy;
-          opacity: 0.1;
-          position: sticky;
-          top: 2rem;
-          display: block;
-        }
-      }
-
-      .events {
-        flex: 1;
-        border-left: 2px solid rgba(0, 0, 0, 0.1);
-        padding-left: 2rem;
-
-        .event {
-          position: relative;
-          padding: 2rem;
-          background: white;
-          border-radius: 0 20px 20px 20px;
-          margin-bottom: 2rem;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-          transition: all 0.3s ease;
-
-          &:hover {
-            transform: translateX(10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-          }
-
-          &::before {
-            content: "";
-            position: absolute;
-            left: -2.5rem;
-            top: 2rem;
-            width: 1rem;
-            height: 1rem;
-            background: $primary-gold;
-            border-radius: 50%;
-            border: 3px solid white;
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-          }
-
-          .month {
-            font-size: 0.9rem;
-            color: $primary-gold;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-          }
-
-          .title {
-            font-size: 1.3rem;
-            color: $primary-navy;
-            margin-bottom: 1rem;
-            font-weight: 600;
-          }
-
-          .description {
-            font-size: 1rem;
-            color: #666;
-            line-height: 1.6;
-          }
-        }
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    .history-container {
-      padding: 0 1rem;
-
-      .year-block {
-        flex-direction: column;
-
-        .year {
-          flex: none;
-          padding-right: 0;
-          margin-bottom: 2rem;
-
-          span {
-            font-size: 3rem;
-            position: static;
-          }
-        }
-
-        .events {
-          border-left: none;
-          padding-left: 0;
-
-          .event {
-            margin-left: 2rem;
-
-            &::before {
-              left: -1.5rem;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
 // 회사소개 - 인증 및 특허
 .admin-certification {
   padding: 4rem 2rem;
@@ -696,99 +703,6 @@
           font-size: 1rem;
           color: #444;
           line-height: 1.6;
-        }
-      }
-    }
-  }
-}
-
-// 회사소개 - 오시는 길
-.admin-location {
-  padding: 0;
-  background: white;
-
-  .location-container {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 0;
-
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-    }
-
-    .map-container {
-      height: 600px;
-      position: relative;
-
-      .map {
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    .location-info {
-      padding: 4rem;
-      background: $primary-navy;
-      color: white;
-
-      h2 {
-        font-size: 2.5rem;
-        margin-bottom: 3rem;
-        font-weight: 600;
-        position: relative;
-
-        &::after {
-          content: "";
-          position: absolute;
-          bottom: -10px;
-          left: 0;
-          width: 60px;
-          height: 3px;
-          background: $primary-gold;
-        }
-      }
-
-      .info-item {
-        margin-bottom: 2.5rem;
-
-        h3 {
-          font-size: 1.3rem;
-          color: $primary-gold;
-          margin-bottom: 1rem;
-        }
-
-        p {
-          font-size: 1.1rem;
-          line-height: 1.8;
-          opacity: 0.9;
-        }
-
-        &.transport {
-          .transport-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-
-            i {
-              color: $primary-gold;
-              margin-right: 1rem;
-              margin-top: 0.3rem;
-              font-size: 1.2rem;
-            }
-
-            .transport-details {
-              h4 {
-                font-size: 1.1rem;
-                color: $primary-gold;
-                margin-bottom: 0.5rem;
-              }
-
-              p {
-                font-size: 1rem;
-                opacity: 0.8;
-              }
-            }
-          }
         }
       }
     }

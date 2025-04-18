@@ -1,6 +1,6 @@
 // src/pages/admin/PostManagement.js
 import React, { useEffect, useState } from "react";
-import "../../styles/pages/_contentManagement.scss";
+import "../../styles/pages/_postManagement.scss";
 import {
   deletePost,
   fetchPosts,
@@ -153,9 +153,11 @@ const PostManagement = () => {
 
   return (
     <div className="post-management">
-      <h2>게시판 관리</h2>
+      <div className="post-header">
+        <h2>게시판 관리</h2>
+      </div>
       {showReplyForm ? (
-        <div className="reply-form">
+        <div className="post-reply-form">
           <h3>답변 작성</h3>
           <div className="post-info">
             <p>
@@ -183,7 +185,7 @@ const PostManagement = () => {
             <p>
               <strong>내용</strong>
               <div
-                className="content-html"
+                className="post-content-html"
                 dangerouslySetInnerHTML={{
                   __html:
                     selectedPost.contentType === "html"
@@ -193,27 +195,27 @@ const PostManagement = () => {
               />
             </p>
           </div>
-          <div className="reply-editor">
+          <div className="post-reply-editor">
             <MyEditor
               content={replyContent}
               setContent={setReplyContent}
               isEditing={true}
             />
           </div>
-          <div className="button-group">
+          <div className="post-button-group">
             <button
-              className="cancel-button"
+              className="post-cancel-btn"
               onClick={() => setShowReplyForm(false)}
             >
               취소
             </button>
-            <button className="save-button" onClick={handleSaveReply}>
+            <button className="post-save-btn" onClick={handleSaveReply}>
               답변 등록
             </button>
           </div>
         </div>
       ) : (
-        <div className="content-list">
+        <div className="post-list">
           <table>
             <thead>
               <tr>
@@ -243,24 +245,24 @@ const PostManagement = () => {
                       <small>{post.email}</small>
                     </td>
                     <td>{formatDate(post.createdAt)}</td>
-                    <td>
+                    <td className="post-status-cell">
                       <span
-                        className={`status ${
+                        className={`post-status ${
                           answers[post.docId]?.exists ? "answered" : "waiting"
                         }`}
                       >
                         {answers[post.docId]?.exists ? "답변완료" : "답변대기"}
                       </span>
                     </td>
-                    <td>
+                    <td className="post-actions">
                       <button
-                        className="reply-button"
+                        className="post-reply-btn"
                         onClick={() => handleReply(post)}
                       >
                         {answers[post.docId]?.exists ? "답변수정" : "답변작성"}
                       </button>
                       <button
-                        className="delete-button"
+                        className="post-delete-btn"
                         onClick={() => handleDelete(post.docId)}
                       >
                         삭제
@@ -270,7 +272,7 @@ const PostManagement = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="no-data">
+                  <td colSpan="7" className="post-no-data">
                     등록된 게시글이 없습니다.
                   </td>
                 </tr>
