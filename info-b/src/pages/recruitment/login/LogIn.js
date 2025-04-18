@@ -67,7 +67,7 @@ function LogIn(props) {
   return (
     <div>
       <div>
-        <h1 className="text-3xl font-bold">로그인</h1>
+        <h1 className="text-3xl font-bold mt-10">로그인</h1>
       </div>
       <div className="flex flex-col justify-center items-center mt-14">
         <div className="">
