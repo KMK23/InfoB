@@ -190,9 +190,9 @@ function NavBar() {
                     {user.displayName || user.name || user.email} 님
                   </button>
                 </span>
-                {/* <button onClick={handleLogout} className="navbar__logout-btn">
+                <button onClick={handleLogout} className="navbar__logout-btn">
                   로그아웃
-                </button> */}
+                </button>
               </div>
             ) : (
               <Link to="/login/login" className="navbar__menu-link">
