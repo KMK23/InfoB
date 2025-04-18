@@ -8,6 +8,7 @@ import { sendVerificationEmail } from "./email";
 
 function Accession(props) {
   const [form, setForm] = useState({
+    uid: "",
     email: "",
     password: "",
     passwordCheck: "",
@@ -31,6 +32,8 @@ function Accession(props) {
   const [userInputCode, setUserInputCode] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [emailStep, setEmailStep] = useState("check");
+  const [passwordError, setPasswordError] = useState(false); //비밀번호 확인
+  const [isPasswordCheckTouched, setIsPasswordCheckTouched] = useState(false);
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -91,7 +94,19 @@ function Accession(props) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  };
+
+    if (name === "passwordCheck") {
+      setIsPasswordCheckTouched(true);
+      setPasswordError(form.password !== value);
+    }
+
+    if (name === "password") {
+      // 비밀번호 변경 시에도 일치 여부 다시 확인 (확인 필드를 이미 건드렸을 경우)
+      if (isPasswordCheckTouched) {
+        setPasswordError(value !== form.passwordCheck);
+      }
+    }
+  }; // 비밀번호를 수정했을 때도 같이 검사
   const handleAddressChange = (e) => {
     const { id, value } = e.target;
     setForm((prev) => ({
@@ -116,7 +131,7 @@ function Accession(props) {
     try {
       const user = await signUp(form.email, form.password, form.name);
       await addDatas("users", {
-        uid: user.uid,
+        // uid: user.uid,
         email: form.email,
         username: form.uid, // ✅ 여기가 핵심! 사용자 아이디 저장
         name: form.name,
@@ -206,7 +221,7 @@ function Accession(props) {
           <div className="font-bold w-1/5">비밀번호</div>
           <div className="w-4/5 pr-2">
             <input
-              type="text"
+              type="password"
               name="password"
               value={form.password}
               onChange={handleChange}
@@ -218,12 +233,23 @@ function Accession(props) {
           <div className="font-bold w-1/5">비밀번호 확인</div>
           <div className="w-4/5 pr-2">
             <input
-              type="text"
+              type="password"
               name="passwordCheck"
               value={form.passwordCheck}
               onChange={handleChange}
               className="border border-gray-300 py-2 px-2 rounded-md w-full"
             />
+            {isPasswordCheckTouched && (
+              <p
+                className={`text-sm flex ${
+                  passwordError ? "text-red-500" : "text-green-600"
+                }`}
+              >
+                {passwordError
+                  ? "비밀번호가 일치하지 않습니다."
+                  : "비밀번호가 일치합니다."}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex gap-2 w-full">
@@ -374,9 +400,7 @@ function Accession(props) {
               value={form.department}
               onChange={handleChange}
             >
-              <option value="" disabled selected hidden>
-                부서를 선택해주세요
-              </option>
+              <option value="부서선택">부서를 선택해주세요</option>
               <option value="기업부설연구소">기업부설연구소</option>
               <option value="사업관리부">사업관리부</option>
               <option value="경영지원팀">경영지원팀</option>
@@ -393,9 +417,7 @@ function Accession(props) {
               name="position"
               onChange={handleChange}
             >
-              <option value="" disabled selected hidden>
-                직급을 선택해주세요
-              </option>
+              <option value="직급">직급을 선택해주세요</option>
               <option value="사장">사장</option>
               <option value="이사">이사</option>
               <option value="부장">부장</option>
@@ -416,9 +438,7 @@ function Accession(props) {
               name="project"
               onChange={handleChange}
             >
-              <option value="" disabled selected hidden>
-                프로젝트를 선택해주세요
-              </option>
+              <option value="프로젝트">프로젝트를 선택해주세요</option>
               <option value="본사">본사</option>
               <option value="프로젝트_1">프로젝트_1</option>
               <option value="프로젝트_2">프로젝트_2</option>

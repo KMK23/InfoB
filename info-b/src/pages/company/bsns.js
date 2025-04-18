@@ -10,7 +10,7 @@ import img9 from "../../resources/images/clients/소방청.png";
 import img10 from "../../resources/images/clients/국가철도공단.png";
 import img11 from "../../resources/images/clients/조이디자인.png";
 import img12 from "../../resources/images/clients/엔텔스.png";
-import img13 from "../../resources/images/clients/화인시스템.png";
+import img13 from "../../resources/images/clients/화인시스템1.png";
 import img14 from "../../resources/images/clients/세림티에스지.png";
 import img15 from "../../resources/images/clients/소프트아이텍.png";
 import img16 from "../../resources/images/clients/안랩.png";
@@ -22,6 +22,20 @@ import img21 from "../../resources/images/clients/한국무역.png";
 import img22 from "../../resources/images/clients/한국원자력.png";
 import img23 from "../../resources/images/clients/행정안전부.png";
 import img24 from "../../resources/images/clients/ktg.png";
+import img25 from "../../resources/images/clients/공감아이티.png";
+import img26 from "../../resources/images/clients/대전대학교.png";
+import img27 from "../../resources/images/clients/무한정보기술.png";
+import img28 from "../../resources/images/clients/아이티센.png";
+import img29 from "../../resources/images/clients/앤솔루션.png";
+import img30 from "../../resources/images/clients/에이텍.png";
+import img31 from "../../resources/images/clients/오티아이.png";
+import img32 from "../../resources/images/clients/웨이버스.png";
+import img33 from "../../resources/images/clients/유플러스.png";
+import img34 from "../../resources/images/clients/이노인크.png";
+import img35 from "../../resources/images/clients/이데아인포.png";
+import img36 from "../../resources/images/clients/지노시스템.png";
+import img37 from "../../resources/images/clients/포에시스.png";
+import img38 from "../../resources/images/clients/sj정보통신.png";
 export const business = [
   {
     id: 1,
@@ -136,41 +150,41 @@ export const partner = [
   },
   { id: 3, img: img15, href: "http://www.sit21c.com/", name: "소프트아이텍" },
   { id: 4, img: img14, href: "http://www.selim.co.kr/", name: "세림티에스지" },
-  { id: 5, img: img11, href: "http://www.wavus.co.kr/", name: "웨이버스" },
+  { id: 5, img: img32, href: "http://www.wavus.co.kr/", name: "웨이버스" },
   { id: 6, img: img11, href: "http://www.djoy.co.kr/", name: "조이디자인" },
-  { id: 7, img: img11, href: "http://www.iinnoinc.com/", name: "이노인크" },
+  { id: 7, img: img34, href: "http://www.iinnoinc.com/", name: "이노인크" },
   {
     id: 8,
-    img: img11,
+    img: img25,
     href: "http://www.kongam.co.kr/index.do",
     name: "공감아이티",
   },
-  { id: 9, img: img11, href: "https://www.poesis.dev/", name: "포에시스" },
-  { id: 10, img: img11, href: "http://www.uplusit.com/", name: "유플러스" },
-  { id: 11, img: img11, href: "http://www.atek21.com/", name: "에이텍" },
-  { id: 12, img: img11, href: "https://www.g-inno.com/", name: "지노시스템" },
+  { id: 9, img: img37, href: "https://www.poesis.dev/", name: "포에시스" },
+  { id: 10, img: img33, href: "http://www.uplusit.com/", name: "유플러스" },
+  { id: 11, img: img30, href: "http://www.atek21.com/", name: "에이텍" },
+  { id: 12, img: img36, href: "https://www.g-inno.com/", name: "지노시스템" },
   {
     id: 13,
-    img: img11,
+    img: img13,
     href: "http://www.telepower.co.kr/",
     name: "화인시스템",
   },
-  { id: 14, img: img11, href: "https://www.muhanit.kr/", name: "무한정보기술" },
-  { id: 15, img: img11, href: "https://sjinfo.co.kr/", name: "sj정보통신" },
-  { id: 16, img: img11, href: "http://www.oti.co.kr/", name: "오티아이" },
-  { id: 17, img: img11, href: "http://www.nsolution.kr/", name: "앤솔루션" },
-  { id: 18, img: img11, href: "https://itcenglobal.com/", name: "아이티센" },
+  { id: 14, img: img27, href: "https://www.muhanit.kr/", name: "무한정보기술" },
+  { id: 15, img: img38, href: "https://sjinfo.co.kr/", name: "sj정보통신" },
+  { id: 16, img: img31, href: "http://www.oti.co.kr/", name: "오티아이" },
+  { id: 17, img: img29, href: "http://www.nsolution.kr/", name: "앤솔루션" },
+  { id: 18, img: img28, href: "https://itcenglobal.com/", name: "아이티센" },
   {
     id: 19,
-    img: img11,
+    img: img26,
     href: "https://www.dju.ac.kr/intro/intro.html",
     name: "대전대",
   },
   {
     id: 20,
-    img: img11,
+    img: img35,
     href: "http://www.ideainfo.kr/pbc/main.do;jsessionid=604BE74B4F69980F4C36B4967F054BBE",
     name: "이데아인포",
   },
-  { id: 21, img: img11, href: "http://oneunder.co.kr/", name: "원언더스탠드" },
+  { id: 21, img: img20, href: "http://oneunder.co.kr/", name: "원언더스탠드" },
 ];
