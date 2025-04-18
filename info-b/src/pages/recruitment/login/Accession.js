@@ -28,12 +28,15 @@ function Accession(props) {
   });
   const [emailChecked, setEmailChecked] = useState(null); // true, false, null
   const [emailMessage, setEmailMessage] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [userInputCode, setUserInputCode] = useState("");
-  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  // const [verificationCode, setVerificationCode] = useState("");
+  // const [userInputCode, setUserInputCode] = useState("");
+  // const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [emailStep, setEmailStep] = useState("check");
   const [passwordError, setPasswordError] = useState(false); //비밀번호 확인
   const [isPasswordCheckTouched, setIsPasswordCheckTouched] = useState(false);
+  const [uidError, setUidError] = useState("");
+  const [passwordValidError, setPasswordValidError] = useState("");
+
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
@@ -45,6 +48,16 @@ function Accession(props) {
       document.body.removeChild(script);
     };
   }, []);
+  // 유효성 검사
+  const validateUid = (uid) => {
+    const regex = /^[a-z0-9_-]{5,20}$/;
+    return regex.test(uid);
+  };
+  const validatePassword = (pw) => {
+    const regex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':",.<>?\\|`~\-=/]).{8,16}$/;
+    return regex.test(pw);
+  };
 
   // 📌 주소 팝업 열기
   const sample6_execDaumPostcode = () => {
@@ -122,9 +135,9 @@ function Accession(props) {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
-
-    if (!isEmailVerified) {
-      alert("이메일 인증을 완료해주세요.");
+    const exists = await checkEmailExists(form.email);
+    if (exists) {
+      alert("이미 사용 중인 이메일입니다.");
       return;
     }
 
@@ -160,14 +173,14 @@ function Accession(props) {
     }
 
     try {
-      const exists = await checkEmailExists(form.email);
+      const exists = await checkEmailExists(form.email); // 🔍 여기가 핵심 연결
       if (exists) {
         setEmailChecked(true);
         setEmailMessage("이미 사용 중인 이메일입니다.");
       } else {
         setEmailChecked(false);
         setEmailMessage("사용 가능한 이메일입니다.");
-        setEmailStep("send"); // 사용 가능 → 인증번호 전송 버튼으로 변경
+        setEmailStep("send"); // 👉 인증번호 전송 가능 상태
       }
     } catch (error) {
       console.error("이메일 중복 검사 실패:", error);
@@ -176,32 +189,9 @@ function Accession(props) {
     }
   };
 
-  const handleSendVerificationCode = async () => {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    setVerificationCode(code);
-
-    try {
-      await sendVerificationEmail(form.email, code, form.name);
-      alert("이메일로 인증번호를 보냈습니다.");
-      setEmailStep("verify"); // 인증번호 입력단계로 전환
-    } catch (error) {
-      console.error(error);
-      alert("이메일 전송 실패");
-    }
-  };
-
-  const handleVerifyCode = () => {
-    if (userInputCode === verificationCode) {
-      setIsEmailVerified(true);
-      alert("이메일 인증이 완료되었습니다.");
-    } else {
-      alert("인증번호가 일치하지 않습니다.");
-    }
-  };
-
   return (
     <div className="mx-52">
-      <div>
+      <div className="mt-10">
         <h1 className="text-3xl font-bold text-start">회원가입</h1>
       </div>
       <div className="flex  justify-center flex-col gap-2 mt-10 py-4 mx-40 border-t border-gray-300 ">
@@ -213,8 +203,28 @@ function Accession(props) {
               name="uid"
               value={form.uid}
               onChange={handleChange}
+              onBlur={() => {
+                if (!validateUid(form.uid)) {
+                  setUidError(
+                    "아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다."
+                  );
+                } else {
+                  setUidError("사용 가능합니다");
+                }
+              }}
               className="border border-gray-300 py-2 px-2 rounded-md w-full"
             />
+            {uidError && (
+              <p
+                className={`text-sm mt-1 flex ${
+                  uidError === "사용 가능합니다"
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+                {uidError}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex gap-2 w-full">
@@ -225,8 +235,28 @@ function Accession(props) {
               name="password"
               value={form.password}
               onChange={handleChange}
+              onBlur={() => {
+                if (!validatePassword(form.password)) {
+                  setPasswordValidError(
+                    "비밀번호는 8~16자 영문 대소문자, 숫자, 특수문자를 사용하세요."
+                  );
+                } else {
+                  setPasswordValidError("사용 가능합니다");
+                }
+              }}
               className="border border-gray-300 py-2 px-2 rounded-md w-full"
             />
+            {passwordValidError && (
+              <p
+                className={`text-sm mt-1 flex ${
+                  passwordValidError === "사용 가능합니다"
+                    ? "text-green-600"
+                    : "text-red-500"
+                }`}
+              >
+                {passwordValidError}
+              </p>
+            )}
           </div>
         </div>
         <div className="flex gap-2 w-full">
@@ -345,16 +375,7 @@ function Accession(props) {
                   중복검사
                 </button>
               )}
-              {emailStep === "send" && (
-                <button
-                  onClick={handleSendVerificationCode}
-                  className="bg-green-500 text-white rounded-md px-4 "
-                >
-                  인증번호 전송
-                </button>
-              )}
             </div>
-
             {/* 👉 중복검사 결과 메시지 */}
             {emailMessage && (
               <p
@@ -368,25 +389,6 @@ function Accession(props) {
               >
                 {emailMessage}
               </p>
-            )}
-
-            {/* 👉 인증번호 입력 영역 */}
-            {emailStep === "verify" && (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="border border-gray-300 py-2 px-2 rounded-md "
-                  value={userInputCode}
-                  onChange={(e) => setUserInputCode(e.target.value)}
-                  placeholder="인증번호 입력"
-                />
-                <button
-                  onClick={handleVerifyCode}
-                  className="bg-red-500 text-white rounded-md px-4 "
-                >
-                  인증번호 확인
-                </button>
-              </div>
             )}
           </div>
         </div>

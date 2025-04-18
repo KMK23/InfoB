@@ -73,7 +73,14 @@ function LogIn(props) {
         <div className="">
           <img src={img} alt="Logo" />
         </div>
-        <div className="flex flex-col items-center gap-1">
+
+        <form
+          className="flex flex-col items-center gap-1"
+          onSubmit={(e) => {
+            e.preventDefault(); // 폼 제출 시 새로고침 방지
+            handleLogin(); // 로그인 함수 호출
+          }}
+        >
           <div className="flex mt-10 items-center gap-2 ml-4">
             <div>아이디 :</div>
             <div className="">
@@ -97,38 +104,43 @@ function LogIn(props) {
               />
             </div>
           </div>
-        </div>
-        <div className="flex flex-col gap-1 mt-10 items-center">
-          <div className="flex">
-            <div className="mr-2">
+
+          {/* 버튼들 */}
+          <div className="flex flex-col gap-1 mt-10 items-center">
+            <div className="flex">
+              <div className="mr-2">
+                <button
+                  type="submit" // ✅ 엔터로 submit 작동
+                  className="bg-[#404040] py-2 px-20 text-white text-lg rounded-md hover:bg-black"
+                >
+                  로그인
+                </button>
+              </div>
+              <div className="">
+                <button
+                  type="button"
+                  className="bg-[#404040] px-2 py-2 w-full text-white text-lg rounded-md hover:bg-black"
+                  onClick={handleFind}
+                >
+                  아이디/비밀번호 찾기
+                </button>
+              </div>
+            </div>
+            <div className="w-full">
               <button
-                className="bg-[#404040] py-2 px-20 text-white text-lg rounded-md hover:bg-black"
-                onClick={handleLogin}
+                type="button"
+                className="bg-[#404040] w-full px-20 py-2 text-white text-lg rounded-md hover:bg-black"
+                onClick={handleAcc}
               >
-                로그인
+                회원가입
               </button>
             </div>
-            <div className="">
-              <button
-                className="bg-[#404040] px-2 py-2 w-full text-white text-lg rounded-md hover:bg-black"
-                onClick={handleFind}
-              >
-                아이디/비밀번호 찾기
-              </button>
+            <div className="w-full">
+              <GoogleLoginButton />
             </div>
           </div>
-          <div className="w-full">
-            <button
-              className="bg-[#404040] w-full px-20 py-2 text-white text-lg rounded-md hover:bg-black"
-              onClick={handleAcc}
-            >
-              회원가입
-            </button>
-          </div>
-          <div className="w-full">
-            <GoogleLoginButton />
-          </div>
-        </div>
+        </form>
+        {/* ✅ form 끝 */}
       </div>
     </div>
   );
