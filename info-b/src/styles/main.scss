@@ -11,7 +11,9 @@ body {
   color: $text-color;
   background-color: $background-color;
 }
-
+* {
+  box-sizing: border-box;
+}
 // Import component styles
 @import "components/navbar";
 @import "components/footer";

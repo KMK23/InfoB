@@ -30,7 +30,7 @@ const SolutionForm = ({ editData, setEditData }) => {
           ...editData.company.business,
           si: {
             ...editData.company.business.si,
-            areas: [...editData.company.business.si.areas, newArea],
+            areas: [newArea, ...editData.company.business.si.areas],
           },
         },
       },
@@ -51,7 +51,7 @@ const SolutionForm = ({ editData, setEditData }) => {
           ...editData.company.business,
           consulting: {
             ...editData.company.business.consulting,
-            areas: [...editData.company.business.consulting.areas, newArea],
+            areas: [newArea, ...editData.company.business.consulting.areas],
           },
         },
       },
@@ -146,7 +146,7 @@ const SolutionForm = ({ editData, setEditData }) => {
     const newAreas = [...editData.company.business.si.areas];
     newAreas[areaIndex] = {
       ...newAreas[areaIndex],
-      items: [...newAreas[areaIndex].items, ""],
+      items: ["", ...newAreas[areaIndex].items],
     };
     setEditData({
       ...editData,
@@ -167,7 +167,7 @@ const SolutionForm = ({ editData, setEditData }) => {
     const newAreas = [...editData.company.business.consulting.areas];
     newAreas[areaIndex] = {
       ...newAreas[areaIndex],
-      items: [...newAreas[areaIndex].items, ""],
+      items: ["", ...newAreas[areaIndex].items],
     };
     setEditData({
       ...editData,

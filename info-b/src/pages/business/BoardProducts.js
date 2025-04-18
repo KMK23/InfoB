@@ -120,7 +120,7 @@ function BoardProducts() {
                     </div>
                     {product.features.specifications && (
                       <div className="specifications">
-                        <h4 className="content-title">제품 사양</h4>
+                        <h4 className="content-title">규격</h4>
                         <table className="spec-table">
                           <tbody>
                             {Object.entries(
