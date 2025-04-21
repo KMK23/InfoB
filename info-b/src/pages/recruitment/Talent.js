@@ -9,18 +9,14 @@ import icon5 from "../../resources/images/main/monitor.png";
 import icon3 from "../../resources/images/main/smile.png";
 import icon1 from "../../resources/images/main/time.png";
 import icon2 from "../../resources/images/main/growth.png";
-import { useNavigate } from "react-router-dom";
 
 const Talent = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { talent, status, error } = useSelector((state) => state.talent);
 
   useEffect(() => {
     dispatch(fetchTalent({ collectionName: "talent", queryOptions: {} }));
   }, [dispatch]);
-
-  console.log("Talent data:", talent);
 
   if (status === "loading") {
     return <div>Loading...</div>;

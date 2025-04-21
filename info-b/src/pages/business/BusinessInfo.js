@@ -40,8 +40,6 @@ const BusinessInfo = () => {
     dispatch(fetchBusiness({ collectionName: "business", queryOptions: {} }));
   }, [dispatch]);
 
-  console.log("Business data:", business);
-
   if (status === "loading") {
     return <div>데이터를 불러오는 중입니다...</div>;
   }
@@ -91,13 +89,13 @@ const BusinessInfo = () => {
       <div className="business-info__cards">
         {activeTab === "SI" ? (
           <div className="business-info__card-grid si-grid">
-            {si.areas.map((area, index) => (
-              <div key={index} className="business-info__card">
+            {si.areas.map((area) => (
+              <div key={area.title} className="business-info__card">
                 <div className="card-icon">{getIcon(area.title)}</div>
                 <h3>{area.title}</h3>
                 <ul>
-                  {area.items.map((item, index) => (
-                    <li key={index}>{item}</li>
+                  {area.items.map((item, itemIndex) => (
+                    <li key={`${area.title}-${itemIndex}`}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -106,12 +104,12 @@ const BusinessInfo = () => {
         ) : (
           <div className="business-info__card-grid consulting-grid">
             {consulting.areas.map((area) => (
-              <div key={area.id} className="business-info__card">
+              <div key={area.title} className="business-info__card">
                 <div className="card-icon">{getIcon(area.title)}</div>
                 <h3>{area.title}</h3>
                 <ul>
-                  {area.items.map((item, index) => (
-                    <li key={index}>{item}</li>
+                  {area.items.map((item, itemIndex) => (
+                    <li key={`${area.title}-${itemIndex}`}>{item}</li>
                   ))}
                 </ul>
               </div>
@@ -119,17 +117,6 @@ const BusinessInfo = () => {
           </div>
         )}
       </div>
-
-      {/* <div className="business-info__footer">
-        <div className="business-info__stats">
-          {centerInfo.subItems.map((item, index) => (
-            <div key={index} className="business-info__stat-item">
-              <h4>{item.title}</h4>
-              <p>{item.value}</p>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };

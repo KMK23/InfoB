@@ -104,8 +104,6 @@ const CollectionEditor = () => {
       (section) => section.id === selectedSection
     );
     if (currentSection) {
-      console.log("현재 섹션:", currentSection);
-      console.log("컬렉션 이름:", currentSection.collection);
       dispatch(
         fetchProducts({
           collectionName: currentSection.collection,
@@ -648,8 +646,6 @@ const CollectionEditor = () => {
     }
 
     const data = products[0];
-    console.log("전체 데이터 확인:", data);
-    console.log("현재 선택된 섹션:", selectedSection);
 
     switch (selectedSection) {
       case "ceo":

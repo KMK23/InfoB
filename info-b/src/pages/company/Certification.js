@@ -53,8 +53,6 @@ const Certification = () => {
     );
   }, [dispatch]);
 
-  console.log("Certification data:", certData);
-
   const openModal = (image) => {
     setSelectedImage(image);
     setModalOpen(true);
@@ -95,13 +93,13 @@ const Certification = () => {
             {certificationData.company.certifications.subtitle ||
               "INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다"}
           </p>
-          <p className="intro">
+          <div className="intro">
             {certificationData.company.certifications.intro.map(
               (item, index) => (
                 <p key={index}>{item}</p>
               )
             )}
-          </p>
+          </div>
         </div>
 
         <div className="certification__tabs">
