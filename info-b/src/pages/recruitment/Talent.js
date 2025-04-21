@@ -75,7 +75,7 @@ const Talent = () => {
       </div>
       <div className="recruitment-benefits">
         <div className="">
-          <h1 className="text-4xl mb-20">{benefitsTitle}</h1>
+          <h1 className="text-4xl mb-20 font-bold">{benefitsTitle}</h1>
         </div>
         <div className="grid grid-cols-3 gap-8 text-white place-items-center">
           {benefitsData.map((item, i) => (
@@ -91,7 +91,7 @@ const Talent = () => {
                 />
               </div>
               <div className="">
-                <h2 className="text-2xl">{item.name}</h2>
+                <h2 className="text-2xl font-bold">{item.name}</h2>
                 <ul className="text-start list-disc text-xl">
                   {item.details.map((detail, i) => (
                     <li key={i}>{detail}</li>

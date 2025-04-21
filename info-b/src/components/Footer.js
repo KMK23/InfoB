@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/components/_footer.scss";
 import logo from "../resources/images/main/logo_t.png";
+import { fetchBasicInfo } from "../store/slices/basicInfoSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function Footer() {
+  const { basicInfo, status } = useSelector((state) => state.basicInfo);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchBasicInfo({ collectionName: "basicInfo", queryOptions: {} }));
+  }, [dispatch]);
+
+  if (status === "loading") {
+    return <div>데이터를 불러오는 중입니다...</div>;
+  }
+
+  if (!basicInfo || !Array.isArray(basicInfo) || basicInfo.length === 0) {
+    return <div>주소 또는 연락처 정보가 없습니다.</div>;
+  }
+
+  const basicData = basicInfo[0];
+  if (!basicData?.company?.address || !basicData?.company?.contact) {
+    return <div>주소 또는 연락처 정보가 없습니다.</div>;
+  }
+  console.log(basicData);
+  const { address, contact } = basicData.company;
+  console.log(contact);
   return (
     <footer className="footer">
       <div className="footer__container">
@@ -13,11 +36,11 @@ function Footer() {
         <div className="footer__info">
           <div className="flex  flex-col">
             <div className="flex">
-              <p>
-                대전광역시 서구 둔산대로 117번길 66, 3층 306호(만년동, 골드밸리)
-              </p>
+              <p>{address.old && <span>{address.old}</span>}</p>
               <p className="px-2">|</p>
-              <p>Tel : 042-483-6572 | Fax : 042-484-6572</p>
+              <p>
+                Tel : {contact.tel} | Fax : {contact.fax}
+              </p>
             </div>
             <div className="flex justify-center mt-2">
               <p>Copyright © 2024 INFOB Company. All rights reserved.</p>
