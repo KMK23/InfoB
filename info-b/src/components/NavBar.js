@@ -186,7 +186,9 @@ function NavBar() {
             {user ? (
               <div className="navbar__user-menu">
                 <span className="navbar__user-name">
-                  {user.displayName || user.name || user.email} 님
+                  <button className="hover:border-b border-gray-500">
+                    {user.displayName || user.name || user.email} 님
+                  </button>
                 </span>
                 <button onClick={handleLogout} className="navbar__logout-btn">
                   로그아웃
