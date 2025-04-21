@@ -35,9 +35,9 @@
     }
 
     .subtitle {
-      font-size: calc(1.2rem * var(--font-size-multiplier));
-      color: $text-light;
-      margin: 0;
+      font-size: calc(2rem * var(--font-size-multiplier));
+      color: $text-dark;
+      margin: 0 0 2rem 0;
     }
     .intro p {
       font-size: calc(1.2rem * var(--font-size-multiplier));

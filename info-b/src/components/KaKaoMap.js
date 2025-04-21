@@ -42,6 +42,19 @@ function KakaoMap() {
             infowindow.close();
           });
 
+          // window.kakao.maps.event.addListener(marker, "click", function () {
+          //   window.open(
+          //     "https://map.kakao.com/?map_type=TYPE_MAP&itemId=534109997&q=인포비정보기술&urlLevel=3&urlX=585840&urlY=797298",
+          //     "_blank"
+          //   );
+          // });
+          window.kakao.maps.event.addListener(marker, "click", function () {
+            window.open(
+              "https://map.kakao.com/?map_type=TYPE_MAP&itemId=534109997&q=인포비정보기술&urlLevel=3&urlX=585840&urlY=797298",
+              "_blank"
+            );
+          });
+
           // 지도의 중심을 결과값으로 받은 위치로 이동
           map.setCenter(coords);
         }

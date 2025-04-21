@@ -12,8 +12,6 @@ const CeoMessage = () => {
     dispatch(fetchBasicInfo({ collectionName: "basicInfo", queryOptions: {} }));
   }, [dispatch]);
 
-  console.log("BasicInfo data:", basicInfo);
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }

@@ -12,8 +12,6 @@ function Location() {
     dispatch(fetchBasicInfo({ collectionName: "basicInfo", queryOptions: {} }));
   }, [dispatch]);
 
-  console.log("Location data:", basicInfo);
-
   if (status === "loading") {
     return <div>데이터를 불러오는 중입니다...</div>;
   }

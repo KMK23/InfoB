@@ -24,9 +24,7 @@ function Footer() {
   if (!basicData?.company?.address || !basicData?.company?.contact) {
     return <div>주소 또는 연락처 정보가 없습니다.</div>;
   }
-  console.log(basicData);
   const { address, contact } = basicData.company;
-  console.log(contact);
   return (
     <footer className="footer">
       <div className="footer__container">
