@@ -10,9 +10,9 @@ function Announcement() {
     setSearchTerm(searchTerm); // 검색어 상태 업데이트
   };
   return (
-    <div className="recruitment-announcement  ">
+    <div className="recruitment-announcement">
       <div>
-        <h1 className="text-3xl font-semibold mt-10">공지사항</h1>
+        <h1 className="text-3xl font-semibold">공지사항</h1>
         <p>인포비정보기술 공지사항입니다.</p>
       </div>
       <div>

@@ -40,7 +40,7 @@ function Location() {
         <KakaoMap />
       </div>
 
-      <div className="location-info">
+      {/* <div className="location-info">
         <div className="address">
           <h3>주소</h3>
           <p>{address.main}</p>
@@ -59,7 +59,7 @@ function Location() {
         <div className="copyright">
           <p>© {new Date().getFullYear()} INFOB. All rights reserved.</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

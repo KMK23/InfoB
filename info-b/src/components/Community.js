@@ -90,29 +90,29 @@ function Community({ search }) {
 
   return (
     <div className="community">
-      <div className="my-6">
+      <div className="my-0 xl:my-6">
         {/* 게시글 리스트 헤더 */}
-        <div className="flex border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center">
-          <div className="w-1/12">
+        <div className="flex text-sm  xl:flex border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center text-[18px]">
+          <div className="w-1/12 xl:w-1/12">
             <p className="border-r border-gray-300 m-0">번호</p>
           </div>
-          <div className="w-6/12">
+          <div className="w-4/12 xl:w-6/12">
             <p className="border-r border-gray-300 m-0">제목</p>
           </div>
-          <div className="w-2/12">
+          <div className="w-2/12 xl:w-2/12">
             <p className="border-r border-gray-300 m-0">등록자명</p>
           </div>
-          <div className="w-2/12">
+          <div className="w-3/12 xl:w-2/12">
             <p className="border-r border-gray-300 m-0 ">등록일</p>
           </div>
-          <div className="w-1/12">
+          <div className="w-2/12 xl:w-1/12">
             <p className="m-0">조회수</p>
           </div>
         </div>
 
         {/* 게시글이 없을 경우 */}
         {currentPagePosts.length === 0 ? (
-          <div className="flex border-b justify-center text-xl border-gray-200 py-4">
+          <div className=" flex border-b justify-center text-xl border-gray-200 py-4">
             No data.
           </div>
         ) : (
@@ -120,12 +120,12 @@ function Community({ search }) {
           currentPagePosts.map((post, index) => (
             <div key={post.docId} className="border-b border-gray-200">
               {/* 게시글 정보 행 */}
-              <div className="flex py-4">
-                <div className="w-1/12">
+              <div className=" flex text-[12px] xl:flex py-4">
+                <div className="w-1/12 xl:w-1/12">
                   {" "}
                   {filteredPosts.length - (currentPage * itemsPerPage + index)}
                 </div>
-                <div className="w-6/12 flex gap-2 pl-3">
+                <div className="w-4/12 flex flex-col xl:w-6/12 flex gap-2 pl-3">
                   <div className="flex items-center">
                     <button
                       className="hover:text-blue-600 text-left "
@@ -140,28 +140,28 @@ function Community({ search }) {
                   {/* 비밀번호 입력창 - 제목 아래 표시 */}
                   {selectedPostId === post.docId &&
                     post.visibility === "private" && (
-                      <div className="mt-2">
+                      <div className="flex  xl:mt-2 ">
                         <input
                           type="password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                           placeholder="비밀번호를 입력하세요"
-                          className="border-b p-2  "
+                          className="w-3/4  xl:border-b p-2  "
                         />
                         <button
                           onClick={handlePasswordSubmit}
-                          className="bg-blue-500 p-2 ml-2 rounded border hover:text-red-400"
+                          className="w-1/4 text-[10px] ml xl:bg-blue-500 p-2 ml-2 rounded border hover:text-red-400"
                         >
                           확인
                         </button>
                       </div>
                     )}
                 </div>
-                <div className="w-2/12">{post.authorName}</div>
-                <div className="w-2/12">
+                <div className="w-2/12 xl:w-2/12">{post.authorName}</div>
+                <div className="w-3/12 xl:w-2/12">
                   {new Date(post.createdAt?.toDate()).toLocaleDateString()}
                 </div>
-                <div className="w-1/12">{post.views || 0}</div>
+                <div className="w-2/12 xl:w-1/12">{post.views || 0}</div>
               </div>
             </div>
           ))
