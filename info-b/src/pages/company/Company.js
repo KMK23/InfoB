@@ -72,9 +72,11 @@ function Company() {
       </div>
 
       <div className="sec2">
-        <p className="sec_title about">
-          <b>About</b>
-        </p>
+        <div className="title">
+          <p className="sec_title about">
+            <span>About</span>
+          </p>
+        </div>
         <span>
           {description?.split("<br />").map((line, index) => (
             <React.Fragment key={index}>

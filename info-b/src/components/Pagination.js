@@ -2,10 +2,8 @@ import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import "../styles/components/_pagination.scss"; // 스타일 적용 (선택)
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { MdKeyboardDoubleArrowRight } from "react-icons/md";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { MdOutlineKeyboardDoubleArrowLeft } from "react-icons/md";
-const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 수
+// const itemsPerPage = 10; // 한 페이지당 보여줄 아이템 수
 
 const Pagination = ({ pageCount, onPageChange }) => {
   const handlePageClick = ({ selected }) => {
