@@ -25,13 +25,15 @@
       position: relative;
 
       &::after {
+        position: absolute;
+        transform: translateX(-50%);
         content: "";
         position: absolute;
         bottom: -10px;
-        left: 0;
-        width: 50px;
+        left: 50%;
+        width: 10%;
         height: 3px;
-        background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+        background: linear-gradient(45deg, $primary-navy, $primary-gold);
       }
     }
 

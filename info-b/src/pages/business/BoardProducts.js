@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
 import FadeInSection from "../../components/FadeInSection";
+import ImageModal from "../../components/ImageModal";
 
 // 이미지 import
 import InfoEMU from "../../resources/images/rnd/INFO-EMU.png";
@@ -20,6 +21,7 @@ function BoardProducts() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     dispatch(
@@ -57,6 +59,14 @@ function BoardProducts() {
 
   return (
     <div className="rn-business">
+      {selectedImage && (
+        <ImageModal
+          image={selectedImage.src}
+          alt={selectedImage.alt}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
+
       <div className="product-navigation">
         <Link
           to="/business/leak-detection"
@@ -93,6 +103,13 @@ function BoardProducts() {
                       <img
                         src={productImages[product.image]}
                         alt={`${product.name} 이미지`}
+                        onClick={() =>
+                          setSelectedImage({
+                            src: productImages[product.image],
+                            alt: `${product.name} 이미지`,
+                          })
+                        }
+                        style={{ cursor: "pointer" }}
                       />
                     </div>
                   </div>

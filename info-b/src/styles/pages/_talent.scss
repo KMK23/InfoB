@@ -3,6 +3,8 @@
 .recruitment-talent {
   padding: $spacing-xl 0;
   .talent-header {
+    font-size: calc(2.5rem * var(--font-size-multiplier));
+    font-weight: 600;
     text-align: center;
     margin-bottom: $spacing-xl;
 

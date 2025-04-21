@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCertifications } from "../../store/slices/certificationsSlice";
 import "../../styles/pages/_certification.scss";
+import icon_search from "../../resources/images/main/icon_search.png";
 
 // 인증서 이미지 import
 import certification001 from "../../resources/images/certificate/certification-001.png";
@@ -94,6 +95,13 @@ const Certification = () => {
             {certificationData.company.certifications.subtitle ||
               "INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다"}
           </p>
+          <p className="intro">
+            {certificationData.company.certifications.intro.map(
+              (item, index) => (
+                <p key={index}>{item}</p>
+              )
+            )}
+          </p>
         </div>
 
         <div className="certification__tabs">
@@ -129,7 +137,13 @@ const Certification = () => {
                       alt={cert.title}
                     />
                     <div className="certification__overlay">
-                      <span className="certification__zoom">확대보기</span>
+                      <div className="certification__zoom">
+                        <img
+                          src={icon_search}
+                          alt="확대보기"
+                          className="certification__zoom-icon"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="certification__content">
@@ -157,7 +171,13 @@ const Certification = () => {
                   >
                     <img src={patentImages[patent.image]} alt={patent.title} />
                     <div className="certification__overlay">
-                      <span className="certification__zoom">확대보기</span>
+                      <div className="certification__zoom">
+                        <img
+                          src={icon_search}
+                          alt="확대보기"
+                          className="certification__zoom-icon"
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="certification__content">

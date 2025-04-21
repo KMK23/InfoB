@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
 import FadeInSection from "../../components/FadeInSection";
+import ImageModal from "../../components/ImageModal";
 
 // 이미지 import
 import RnD1 from "../../resources/images/rnd/RnD1.jpg";
@@ -24,6 +25,7 @@ function LeakDetection() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     dispatch(
@@ -61,6 +63,14 @@ function LeakDetection() {
 
   return (
     <div className="rn-business">
+      {selectedImage && (
+        <ImageModal
+          image={selectedImage.src}
+          alt={selectedImage.alt}
+          onClose={() => setSelectedImage(null)}
+        />
+      )}
+
       <div className="product-navigation">
         <Link
           to="/business/leak-detection"
@@ -103,6 +113,13 @@ function LeakDetection() {
                           <img
                             src={productImages[product.images[0]]}
                             alt={`${product.name} 이미지 1`}
+                            onClick={() =>
+                              setSelectedImage({
+                                src: productImages[product.images[0]],
+                                alt: `${product.name} 이미지 1`,
+                              })
+                            }
+                            style={{ cursor: "pointer" }}
                           />
                         </div>
                         <div className="image-container vertical-stack">
@@ -111,6 +128,13 @@ function LeakDetection() {
                               <img
                                 src={productImages[image]}
                                 alt={`${product.name} 이미지 ${index + 2}`}
+                                onClick={() =>
+                                  setSelectedImage({
+                                    src: productImages[image],
+                                    alt: `${product.name} 이미지 ${index + 2}`,
+                                  })
+                                }
+                                style={{ cursor: "pointer" }}
                               />
                             </div>
                           ))}
@@ -122,6 +146,13 @@ function LeakDetection() {
                           <img
                             src={productImages[image]}
                             alt={`${product.name} 이미지 ${index + 1}`}
+                            onClick={() =>
+                              setSelectedImage({
+                                src: productImages[image],
+                                alt: `${product.name} 이미지 ${index + 1}`,
+                              })
+                            }
+                            style={{ cursor: "pointer" }}
                           />
                         </div>
                       ))

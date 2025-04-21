@@ -44,11 +44,11 @@ function Location() {
         <div className="address">
           <h3>주소</h3>
           <p>{address.main}</p>
-          {address.old && (
+          {/* {address.old && (
             <p className="old-address">
               <small>(구주소: {address.old})</small>
             </p>
-          )}
+          )} */}
         </div>
         <div className="contact">
           <h3>연락처</h3>
