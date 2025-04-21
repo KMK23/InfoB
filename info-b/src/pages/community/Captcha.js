@@ -76,8 +76,13 @@ const Captcha = forwardRef(({ onValidate }, ref) => {
   }, [inputValue, captchaText]);
 
   return (
-    <div className="space-y-4 flex gap-2 items-center pl-2 pb-2">
-      <canvas ref={canvasRef} width={140} height={50} />
+    <div className="flex gap-0 md:space-y-4 md:gap-2 items-center pl-2 pb-2">
+      <canvas
+        ref={canvasRef}
+        width={140}
+        height={50}
+        className="w-[100px] h-[36px] md:w-[140px] md:h-[50px]"
+      />
       <input
         type="text"
         className="border rounded w-28 p-1"
@@ -86,7 +91,7 @@ const Captcha = forwardRef(({ onValidate }, ref) => {
       />
       <button
         onClick={refreshCaptcha}
-        className="text-blue-500 text-sm underline"
+        className="text-blue-500 text-xs md:text-sm underline"
       >
         이미지 새로고침
       </button>

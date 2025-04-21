@@ -92,7 +92,7 @@ function Community({ search }) {
     <div className="community">
       <div className="my-0 xl:my-6">
         {/* 게시글 리스트 헤더 */}
-        <div className="flex text-sm  xl:flex border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center text-[18px]">
+        <div className="flex text-sm  sm:text-sm md:text-xl xl:text-[18px] border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center">
           <div className="w-1/12 xl:w-1/12">
             <p className="border-r border-gray-300 m-0">번호</p>
           </div>
@@ -118,9 +118,9 @@ function Community({ search }) {
         ) : (
           // 필터링된 게시글 렌더링
           currentPagePosts.map((post, index) => (
-            <div key={post.docId} className="border-b border-gray-200">
+            <div key={post.docId} className="border-b border-gray-200 ">
               {/* 게시글 정보 행 */}
-              <div className=" flex text-[12px] xl:flex py-4">
+              <div className=" flex  text-xs    sm:text-xs md:text-xl xl:text-[18px]  py-4 ">
                 <div className="w-1/12 xl:w-1/12">
                   {" "}
                   {filteredPosts.length - (currentPage * itemsPerPage + index)}
@@ -140,21 +140,28 @@ function Community({ search }) {
                   {/* 비밀번호 입력창 - 제목 아래 표시 */}
                   {selectedPostId === post.docId &&
                     post.visibility === "private" && (
-                      <div className="flex  xl:mt-2 ">
-                        <input
-                          type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="비밀번호를 입력하세요"
-                          className="w-3/4  xl:border-b p-2  "
-                        />
-                        <button
-                          onClick={handlePasswordSubmit}
-                          className="w-1/4 text-[10px] ml xl:bg-blue-500 p-2 ml-2 rounded border hover:text-red-400"
-                        >
-                          확인
-                        </button>
-                      </div>
+                      <form
+                        action=""
+                        onSubmit={(e) => {
+                          e.preventDefault(); // 폼 제출 시 새로고침 방지
+                        }}
+                      >
+                        <div className="flex  xl:mt-2 ">
+                          <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="비밀번호를 입력하세요"
+                            className="w-3/4  xl:border-b p-2  "
+                          />
+                          <button
+                            onClick={handlePasswordSubmit}
+                            className="w-1/4 text-[10px] ml xl:bg-blue-500 p-2 ml-2 rounded border hover:text-red-400"
+                          >
+                            확인
+                          </button>
+                        </div>
+                      </form>
                     )}
                 </div>
                 <div className="w-2/12 xl:w-2/12">{post.authorName}</div>
