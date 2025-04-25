@@ -31,8 +31,18 @@ import Accession from "./pages/recruitment/login/Accession";
 import NoticeDetail from "./pages/notices/NoticeDetail";
 import CollectionEditor from "./pages/admin/CollectionEditor";
 import Business from "./pages/company/Business";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
+import DomesticChart from "./pages/research/DomesticChart";
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 800, // 애니메이션 지속 시간 (ms)
+      once: true, // 한 번만 실행 (false면 스크롤할 때마다 실행)
+    });
+  }, []);
   return (
     <Provider store={store}>
       <div className="App">
@@ -61,6 +71,10 @@ function App() {
                 element={<BoardProducts />}
               />
               <Route path="performance/cases" element={<PerformanceCase />} />
+              <Route
+                path="performance/domesticChart"
+                element={<DomesticChart />}
+              />
               <Route path="recruitment/talent" element={<Talent />} />
               {/* <Route path="recruitment/benefits" element={<Benefits />} /> */}
               <Route path="community/announcement" element={<Announcement />} />

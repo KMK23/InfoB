@@ -125,7 +125,7 @@ function Community({ search }) {
                   {" "}
                   {filteredPosts.length - (currentPage * itemsPerPage + index)}
                 </div>
-                <div className="w-4/12 flex flex-col xl:w-6/12 flex gap-2 pl-3">
+                <div className="w-4/12 flex flex-col xl:w-6/12  gap-2 pl-3">
                   <div className="flex items-center">
                     <button
                       className="hover:text-blue-600 text-left "

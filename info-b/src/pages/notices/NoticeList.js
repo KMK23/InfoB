@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotices, updateNotice } from "../../store/slices/noticesSlice";
-import "../../styles/components/_noticeList.scss";
+// import "../../styles/components/_noticeList.scss";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/Pagination"; // Pagination 컴포넌트 추가
 
@@ -87,21 +87,21 @@ const NoticeList = ({ searchTerm }) => {
   return (
     <div className="notice-list">
       {/* 게시글 리스트 헤더 */}
-      <div className="list-header">
-        <div className="col number">
-          <p>번호</p>
+      <div className="flex text-sm  sm:text-sm md:text-xl xl:text-[18px] border border-[#f9f9f9] py-4 bg-gray-100 justify-center items-center">
+        <div className="w-1/12 xl:w-1/12">
+          <p className="border-r border-gray-300 m-0">번호</p>
         </div>
-        <div className="col title">
-          <p>제목</p>
+        <div className="w-4/12 xl:w-6/12">
+          <p className="border-r border-gray-300 m-0">제목</p>
         </div>
-        <div className="col author">
-          <p>등록자명</p>
+        <div className="w-2/12 xl:w-2/12">
+          <p className="border-r border-gray-300 m-0">등록자명</p>
         </div>
-        <div className="col date">
-          <p>등록일</p>
+        <div className="w-3/12 xl:w-2/12">
+          <p className="border-r border-gray-300 m-0 ">등록일</p>
         </div>
-        <div className="col views">
-          <p>조회수</p>
+        <div className="w-2/12 xl:w-1/12">
+          <p className="m-0">조회수</p>
         </div>
       </div>
 
