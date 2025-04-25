@@ -122,7 +122,6 @@ function Community({ search }) {
               {/* 게시글 정보 행 */}
               <div className=" flex  text-xs    sm:text-xs md:text-xl xl:text-[18px]  py-4 ">
                 <div className="w-1/12 xl:w-1/12">
-                  {" "}
                   {filteredPosts.length - (currentPage * itemsPerPage + index)}
                 </div>
                 <div className="w-4/12 flex flex-col xl:w-6/12  gap-2 pl-3">

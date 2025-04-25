@@ -111,16 +111,26 @@ const NoticeList = ({ searchTerm }) => {
       ) : (
         // 공지사항 목록 렌더링
         publicNotices.map((notice, index) => (
-          <div key={notice.docId} className="list-item">
-            <div className="col number">{index + 1}</div>
-            <div className="col title">
-              <button onClick={() => handleNoticeClick(notice.docId)}>
+          <div
+            key={notice.docId}
+            className="flex text-sm md:text-xl border-gray-300 border-b py-3"
+          >
+            <div className="w-1/12 xl:w-1/12">{index + 1}</div>
+            <div className="w-4/12 flex flex-col xl:w-6/12 gap-2 pl-3">
+              <button
+                onClick={() => handleNoticeClick(notice.docId)}
+                className="block truncate text-left max-w-full"
+              >
                 {notice.title}
               </button>
             </div>
-            <div className="col author">{notice.authorName || "관리자"}</div>
-            <div className="col date">{formatDate(notice.createdAt)}</div>
-            <div className="col views">{notice.views || 0}</div>
+            <div className="w-2/12 xl:w-2/12">
+              {notice.authorName || "관리자"}
+            </div>
+            <div className="w-3/12 xl:w-2/12">
+              {formatDate(notice.createdAt)}
+            </div>
+            <div className="w-2/12 xl:w-1/12">{notice.views || 0}</div>
           </div>
         ))
       )}
