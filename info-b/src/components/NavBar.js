@@ -189,7 +189,9 @@ function NavBar() {
               href={brochurePdf}
               download="infob_brochure.pdf"
               className="navbar__menu-link navbar__brochure-btn"
-            ></a>
+            >
+              Brochure
+            </a>
           </div>
           <div className="navbar__menu-item">
             {user ? (
