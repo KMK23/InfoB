@@ -721,7 +721,7 @@ const CollectionEditor = () => {
                         ))}
                       </div>
                       <div className="certification__actions">
-                        <button
+                        {/* <button
                           className="edit-button"
                           onClick={() => handleEdit("certification", cert)}
                         >
@@ -732,7 +732,7 @@ const CollectionEditor = () => {
                           onClick={() => handleDelete("certification", cert)}
                         >
                           삭제
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

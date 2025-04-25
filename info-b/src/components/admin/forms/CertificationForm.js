@@ -3,49 +3,11 @@ import "../../../styles/components/admin/forms/_certificationForm.scss";
 
 const CertificationForm = ({ editData, setEditData }) => {
   if (!editData?.items) {
-    const initialItems = [
-      {
-        id: 1,
-        type: "certification",
-        title: "기업부설연구소",
-        image: "certification-001.png",
-        description: [""],
-      },
-      {
-        id: 2,
-        type: "certification",
-        title: "벤처기업확인서",
-        image: "certification-002.png",
-        description: [""],
-      },
-      {
-        id: 4,
-        type: "certification",
-        title: "소프트웨어사업자 신고확인서",
-        image: "certification-004.png",
-        description: [""],
-      },
-      {
-        id: 5,
-        type: "certification",
-        title: "중소기업확인서",
-        image: "certification-005.png",
-        description: [""],
-      },
-      {
-        id: 6,
-        type: "certification",
-        title: "직접생산확인증명서",
-        image: "certification-006.png",
-        description: [""],
-      },
-    ];
-
     setEditData({
       ...editData,
       title: "",
       subtitle: "",
-      items: initialItems,
+      items: [],
     });
     return null;
   }
@@ -56,7 +18,7 @@ const CertificationForm = ({ editData, setEditData }) => {
       id: maxId + 1,
       type: "certification",
       title: "",
-      image: `certification-${String(maxId + 1).padStart(3, "0")}.png`,
+      image: "",
       description: [""],
     };
     setEditData({

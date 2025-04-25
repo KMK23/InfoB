@@ -980,3 +980,27 @@
     }
   }
 }
+.certification__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+  }
+  .edit-button {
+    background-color: $primary-navy;
+    color: white;
+    &:hover {
+      background-color: darken($primary-navy, 10%);
+    }
+  }
+  .delete-button {
+    background-color: $primary-gold;
+    color: white;
+    &:hover {
+      background-color: darken($primary-gold, 10%);
+    }
+  }
+}

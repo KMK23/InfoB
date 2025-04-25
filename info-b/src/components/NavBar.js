@@ -5,6 +5,7 @@ import "../styles/components/_navbar.scss";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../pages/API/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import brochurePdf from "../resources/documents/infob_brochure.pdf";
 // import { MdLogin } from "react-icons/md";
 
 function NavBar() {
@@ -182,6 +183,13 @@ function NavBar() {
               )}
             </div>
           ))}
+          <div className="navbar__menu-item">
+            <a
+              href={brochurePdf}
+              download="infob_brochure.pdf"
+              className="navbar__menu-link navbar__brochure-btn"
+            ></a>
+          </div>
           <div className="navbar__menu-item">
             {user ? (
               <div className="navbar__user-menu">

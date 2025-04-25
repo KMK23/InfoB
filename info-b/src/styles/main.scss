@@ -10,6 +10,7 @@ body {
   line-height: 1.5;
   color: $text-color;
   background-color: $background-color;
+  word-break: keep-all;
 }
 * {
   box-sizing: border-box;

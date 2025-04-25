@@ -5,11 +5,16 @@ import "../../styles/pages/_certification.scss";
 import icon_search from "../../resources/images/main/icon_search.png";
 
 // 인증서 이미지 import
-import certification001 from "../../resources/images/certificate/certification-001.png";
-import certification002 from "../../resources/images/certificate/certification-002.png";
-import certification004 from "../../resources/images/certificate/certification-004.png";
-import certification005 from "../../resources/images/certificate/certification-005.png";
-import certification006 from "../../resources/images/certificate/certification-006.png";
+import Corporate_Research_Institute_Certificate from "../../resources/images/certificate/Corporate_Research_Institute_Certificate.png";
+import Venture_Business_Certificate from "../../resources/images/certificate/Venture_Business_Certificate.png";
+import Software_Business_Registration_Certificate from "../../resources/images/certificate/Software_Business_Registration_Certificate.png";
+import SME_Confirmation_Certificate from "../../resources/images/certificate/SME_Confirmation_Certificate.png";
+import Direct_Production_Certification from "../../resources/images/certificate/Direct_Production_Certification.png";
+import Affiliated_Factory_Establishment_Certificate from "../../resources/images/certificate/Affiliated_Factory_Establishment_Certificate.png";
+import Promising_SME_Certificate from "../../resources/images/certificate/Promising_SME_Certificate.jpg";
+import Information_Communication_Construction_Registration from "../../resources/images/certificate/Information_Communication_Construction_Registration.jpg";
+import Innovative_Product_Designation_Certificate from "../../resources/images/certificate/Innovative_Product_Designation_Certificate.png";
+// import testImage from "../../resources/images/certificate/testImage.jpg";
 
 // 특허 이미지 import
 import patent001 from "../../resources/images/patent/patent-001.png";
@@ -17,13 +22,24 @@ import patent002 from "../../resources/images/patent/patent-002.png";
 import patent003 from "../../resources/images/patent/patent-003.png";
 import patent004 from "../../resources/images/patent/patent-004.png";
 import patent005 from "../../resources/images/patent/patent-005.jpg";
+import patent006 from "../../resources/images/patent/patent-006.jpg";
 
 const certificationImages = {
-  "certification-001.png": certification001, // 기업부설연구소
-  "certification-002.png": certification002, // 벤처기업확인서
-  "certification-004.png": certification004, // 소프트웨어사업자 신고확인서
-  "certification-005.png": certification005, // 중소기업확인서
-  "certification-006.png": certification006, // 직접생산확인증명서
+  "Corporate_Research_Institute_Certificate.png":
+    Corporate_Research_Institute_Certificate, // 기업부설연구소
+  "Venture_Business_Certificate.png": Venture_Business_Certificate, // 벤처기업확인서
+  "Software_Business_Registration_Certificate.png":
+    Software_Business_Registration_Certificate, // 소프트웨어사업자 신고확인서
+  "SME_Confirmation_Certificate.png": SME_Confirmation_Certificate, // 중소기업확인서
+  "Direct_Production_Certification.png": Direct_Production_Certification, // 직접생산확인증명서
+  "Affiliated_Factory_Establishment_Certificate.png":
+    Affiliated_Factory_Establishment_Certificate, //부설공장인증설립
+  "Promising_SME_Certificate.jpg": Promising_SME_Certificate, // 유망중소기업인증서
+  "Information_Communication_Construction_Registration.jpg":
+    Information_Communication_Construction_Registration, // 정보통신공사업등록증
+  "Innovative_Product_Designation_Certificate.png":
+    Innovative_Product_Designation_Certificate, //혁신제품 지정 인증서
+  // "testImage.jpg": testImage,
 };
 
 const patentImages = {
@@ -32,6 +48,7 @@ const patentImages = {
   "patent-003.png": patent003,
   "patent-004.png": patent004,
   "patent-005.jpg": patent005,
+  "patent-006.jpg": patent006,
 };
 
 const Certification = () => {
@@ -78,27 +95,27 @@ const Certification = () => {
     return <div>데이터 구조가 올바르지 않습니다.</div>;
   }
 
-  const items = certificationData.company.certifications.items;
-  const certifications = items.filter((item) => item.type === "certification");
-  const patents = items.filter((item) => item.type === "patent");
+  const items = certificationData.company.certifications.items || [];
+  const certifications =
+    items.filter((item) => item.type === "certification") || [];
+  const patents = items.filter((item) => item.type === "patent") || [];
 
   return (
     <div className="certification">
       <div className="certification__container">
         <div className="certification__header">
           <h1 className="title">
-            {certificationData.company.certifications.title || "인증 및 특허"}
+            {certificationData?.company?.certifications?.title ||
+              "인증 및 특허"}
           </h1>
           <p className="subtitle">
-            {certificationData.company.certifications.subtitle ||
+            {certificationData?.company?.certifications?.subtitle ||
               "INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다"}
           </p>
           <div className="intro">
-            {certificationData.company.certifications.intro.map(
-              (item, index) => (
-                <p key={index}>{item}</p>
-              )
-            )}
+            {certificationData?.company?.certifications?.intro?.map(
+              (item, index) => <p key={index}>{item}</p>
+            ) || []}
           </div>
         </div>
 
@@ -147,9 +164,9 @@ const Certification = () => {
                   <div className="certification__content">
                     <h3 className="certification__title">{cert.title}</h3>
                     <ul className="certification__description">
-                      {cert.description.map((item, index) => (
+                      {cert.description?.map((item, index) => (
                         <li key={index}>{item}</li>
-                      ))}
+                      )) || []}
                     </ul>
                   </div>
                 </div>
@@ -181,9 +198,9 @@ const Certification = () => {
                   <div className="certification__content">
                     <h3 className="certification__title">{patent.title}</h3>
                     <ul className="certification__description">
-                      {patent.description.map((item, index) => (
+                      {patent.description?.map((item, index) => (
                         <li key={index}>{item}</li>
-                      ))}
+                      )) || []}
                     </ul>
                   </div>
                 </div>
