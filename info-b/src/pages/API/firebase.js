@@ -88,15 +88,37 @@ function getQuery(collectionName, queryOptions) {
   return q;
 }
 
-async function getDatas(collectionName, queryOptions) {
-  const q = getQuery(collectionName, queryOptions);
-  const snapshot = await getDocs(q);
-  const docs = snapshot.docs;
-  const resultData = docs.map((doc) => ({
-    ...doc.data(),
-    docId: doc.id,
-  }));
-  return resultData;
+// async function getDatas(collectionName, queryOptions) {
+//   const q = getQuery(collectionName, queryOptions);
+//   const snapshot = await getDocs(q);
+//   const docs = snapshot.docs;
+//   const resultData = docs.map((doc) => ({
+//     ...doc.data(),
+//     docId: doc.id,
+//   }));
+//   return resultData;
+// }
+async function getDatas(collectionName, queryOptions = {}) {
+  try {
+    const q = getQuery(collectionName, queryOptions);
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      // 문서가 하나도 없으면 빈 배열 반환
+      return [];
+    }
+
+    const docs = snapshot.docs;
+    const resultData = docs.map((doc) => ({
+      ...doc.data(),
+      docId: doc.id,
+    }));
+
+    return resultData;
+  } catch (error) {
+    console.error(`Error getting documents from ${collectionName}:`, error);
+    return []; // 실패해도 빈 배열 반환해서 차트가 깨지지 않게
+  }
 }
 
 async function deleteDatas(collectionName, docId) {
