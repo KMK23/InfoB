@@ -5,23 +5,14 @@ import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
 import FadeInSection from "../../components/FadeInSection";
 import ImageModal from "../../components/ImageModal";
-
-// 이미지 import
-import InfoEMU from "../../resources/images/rnd/INFO-EMU.png";
-import InfoPCU from "../../resources/images/rnd/INFO-PCU.png";
-import InfoMDU from "../../resources/images/rnd/INFO-MDU.png";
-
-const productImages = {
-  "INFO-EMU.png": InfoEMU,
-  "INFO-PCU.png": InfoPCU,
-  "INFO-MDU.png": InfoMDU,
-};
+import { fetchImage } from "../API/firebase";
 
 function BoardProducts() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrls, setImageUrls] = useState({});
 
   useEffect(() => {
     dispatch(
@@ -29,7 +20,24 @@ function BoardProducts() {
     );
   }, [dispatch]);
 
-  console.log("Products data:", products);
+  // 이미지 URL을 storage에서 불러오기
+  useEffect(() => {
+    if (!products || !products[0]?.boardProducts) return;
+    const allImages = products[0].boardProducts
+      .map((product) => product.image)
+      .filter(Boolean);
+    const uniqueImages = Array.from(new Set(allImages));
+    Promise.all(
+      uniqueImages.map(async (img) => {
+        const url = await fetchImage(`rnd/${img}`);
+        return [img, url];
+      })
+    ).then((entries) => {
+      setImageUrls(Object.fromEntries(entries));
+    });
+  }, [products]);
+
+  // console.log("Products data:", products);
 
   if (status === "loading") {
     return <div>데이터를 불러오는 중입니다...</div>;
@@ -50,7 +58,7 @@ function BoardProducts() {
   }
 
   const boardProducts = productsData.boardProducts;
-  console.log("Board products:", boardProducts);
+  // console.log("Board products:", boardProducts);
 
   if (!Array.isArray(boardProducts)) {
     console.error("boardProducts is not an array:", boardProducts);
@@ -101,11 +109,11 @@ function BoardProducts() {
                   <div className="image-grid">
                     <div className="image-container">
                       <img
-                        src={productImages[product.image]}
+                        src={imageUrls[product.image] || ""}
                         alt={`${product.name} 이미지`}
                         onClick={() =>
                           setSelectedImage({
-                            src: productImages[product.image],
+                            src: imageUrls[product.image] || "",
                             alt: `${product.name} 이미지`,
                           })
                         }

@@ -4,39 +4,14 @@ import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_performanceCase.scss";
 import FadeInSection from "../../components/FadeInSection";
 import noImage from "../../resources/images/clients/no_img2.png";
+import { fetchImage } from "../API/firebase";
 
-// 카테고리와 이미지 파일명 매핑
-const categoryToImage = {
-  국세청: "국세청",
-  조달청: "조달청",
-  포스코: "포스코",
-  한국산업기술평가관리원: "한국산업기술기획평가원",
-  KISTI: "KISTI",
-  관세청: "관세청",
-  국토부: "국토교통부",
-  "Joy 디자인": "조이디자인",
-  국가철도공단연구원: "국가철도공단",
-  국가철도공단: "국가철도공단",
-  "소방청/국가정보자원관리원": "소방청",
-  전자통신연구소: "한국전자통신연구원",
-  울트라엔지니어링: "화인시스템",
-  보건복지부: "보건복지부",
-  국가정보자원관리원: "정부통합전산센터",
-  한국산업기술평가관리원: "한국산업기술기획평가원",
-  KEIT: "KEIT",
-  엔텔스: "엔텔스",
-  특허청: "특허청",
-  인사혁신처: "인사혁신처",
-  국민권익위원회: "국민권익위원회",
-  소방청: "소방청",
-  화인시스템: "화인시스템",
-  정부통합전산센터: "정부통합전산센터",
-  한국우편사업진흥원: "한국우편사업진흥원",
-  한국전자통신연구원: "한국전자통신연구원",
-};
+// 카테고리와 이미지 파일명 매핑 하드코딩 부분 주석처리
+// const categoryToImage = { ... };
 
 function PerformanceCase() {
   const [selectedYear, setSelectedYear] = useState("2021");
+  const [imageUrls, setImageUrls] = useState({});
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
 
@@ -45,6 +20,32 @@ function PerformanceCase() {
       fetchProducts({ collectionName: "performance", queryOptions: {} })
     );
   }, [dispatch]);
+
+  // 연도별 프로젝트의 모든 카테고리명(기관명) 수집 및 Storage에서 이미지 동적 fetch
+  useEffect(() => {
+    if (!products || !Array.isArray(products) || products.length === 0) return;
+    const performanceData = products[0]?.company?.performanceCases;
+    if (!performanceData) return;
+    const timelineData = performanceData.timeline || [];
+    const allCategories = timelineData
+      .flatMap((item) => item.projects.map((project) => project.category))
+      .filter(Boolean);
+    const uniqueCategories = Array.from(new Set(allCategories));
+    Promise.all(
+      uniqueCategories.map(async (category) => {
+        // '/'가 있으면 앞부분만 사용
+        const mainCategory = category.split("/")[0];
+        try {
+          const url = await fetchImage(`clients/${mainCategory}.png`);
+          return [category, url];
+        } catch (e) {
+          return [category, ""];
+        }
+      })
+    ).then((entries) => {
+      setImageUrls(Object.fromEntries(entries));
+    });
+  }, [products]);
 
   if (status === "loading") {
     return <div>데이터를 불러오는 중입니다...</div>;
@@ -72,43 +73,9 @@ function PerformanceCase() {
     return <div>해당 연도의 데이터를 찾을 수 없습니다.</div>;
   }
 
-  // 이미지 파일명 가져오기
-  const getImageFileName = (category) => {
-    const mappedName = categoryToImage[category];
-    return mappedName || null; // 매핑된 이름이 없으면 null 반환
-  };
-
-  const getImageSource = (category) => {
-    try {
-      const fileName = getImageFileName(category);
-      if (!fileName) {
-        return noImage; // 매핑된 이름이 없을 때만 no_img2.png 사용
-      }
-      return require(`../../resources/images/clients/${fileName}.png`);
-    } catch (error) {
-      return noImage;
-    }
-  };
-
-  // 기관명의 첫 글자 가져오기
-  const getInitial = (name) => {
-    return name.charAt(0);
-  };
-
-  // 랜덤 배경색 생성
-  const getRandomColor = (text) => {
-    const colors = [
-      "#4CAF50", // 초록
-      "#2196F3", // 파랑
-      "#9C27B0", // 보라
-      "#FF9800", // 주황
-      "#607D8B", // 회색
-      "#795548", // 갈색
-    ];
-    // 텍스트를 기반으로 고정된 색상 선택
-    const index = text.charCodeAt(0) % colors.length;
-    return colors[index];
-  };
+  // getImageFileName, getImageSource 등 하드코딩 함수 주석처리
+  // const getImageFileName = ...
+  // const getImageSource = ...
 
   return (
     <div className="performance-case">
@@ -139,7 +106,7 @@ function PerformanceCase() {
                 <div className="performance-case__item-header">
                   <div className="logo">
                     <img
-                      src={getImageSource(project.category)}
+                      src={imageUrls[project.category] || noImage}
                       alt={`${project.category} 로고`}
                     />
                   </div>

@@ -423,6 +423,11 @@ export const deletePostWithAnswers = async (postId) => {
     throw error;
   }
 };
+async function fetchImage(path, file) {
+  const storage = getStorage();
+  const imageRef = ref(storage, path);
+  return await getDownloadURL(imageRef);
+}
 
 export {
   getDatas,
@@ -433,4 +438,5 @@ export {
   getCurrentUser,
   deleteDatas,
   signUp,
+  fetchImage,
 };

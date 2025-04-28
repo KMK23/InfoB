@@ -3,58 +3,60 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCertifications } from "../../store/slices/certificationsSlice";
 import "../../styles/pages/_certification.scss";
 import icon_search from "../../resources/images/main/icon_search.png";
+import { fetchImage } from "../API/firebase";
 
 // 인증서 이미지 import
-import Corporate_Research_Institute_Certificate from "../../resources/images/certificate/Corporate_Research_Institute_Certificate.png";
-import Venture_Business_Certificate from "../../resources/images/certificate/Venture_Business_Certificate.png";
-import Software_Business_Registration_Certificate from "../../resources/images/certificate/Software_Business_Registration_Certificate.png";
-import SME_Confirmation_Certificate from "../../resources/images/certificate/SME_Confirmation_Certificate.png";
-import Direct_Production_Certification from "../../resources/images/certificate/Direct_Production_Certification.png";
-import Affiliated_Factory_Establishment_Certificate from "../../resources/images/certificate/Affiliated_Factory_Establishment_Certificate.png";
-import Promising_SME_Certificate from "../../resources/images/certificate/Promising_SME_Certificate.jpg";
-import Information_Communication_Construction_Registration from "../../resources/images/certificate/Information_Communication_Construction_Registration.jpg";
-import Innovative_Product_Designation_Certificate from "../../resources/images/certificate/Innovative_Product_Designation_Certificate.png";
+// import Corporate_Research_Institute_Certificate from "../../resources/images/certificate/Corporate_Research_Institute_Certificate.png";
+// import Venture_Business_Certificate from "../../resources/images/certificate/Venture_Business_Certificate.png";
+// import Software_Business_Registration_Certificate from "../../resources/images/certificate/Software_Business_Registration_Certificate.png";
+// import SME_Confirmation_Certificate from "../../resources/images/certificate/SME_Confirmation_Certificate.png";
+// import Direct_Production_Certification from "../../resources/images/certificate/Direct_Production_Certification.png";
+// import Affiliated_Factory_Establishment_Certificate from "../../resources/images/certificate/Affiliated_Factory_Establishment_Certificate.png";
+// import Promising_SME_Certificate from "../../resources/images/certificate/Promising_SME_Certificate.jpg";
+// import Information_Communication_Construction_Registration from "../../resources/images/certificate/Information_Communication_Construction_Registration.jpg";
+// import Innovative_Product_Designation_Certificate from "../../resources/images/certificate/Innovative_Product_Designation_Certificate.png";
 // import testImage from "../../resources/images/certificate/testImage.jpg";
 
 // 특허 이미지 import
-import patent001 from "../../resources/images/patent/patent-001.png";
-import patent002 from "../../resources/images/patent/patent-002.png";
-import patent003 from "../../resources/images/patent/patent-003.png";
-import patent004 from "../../resources/images/patent/patent-004.png";
-import patent005 from "../../resources/images/patent/patent-005.jpg";
-import patent006 from "../../resources/images/patent/patent-006.jpg";
+// import patent001 from "../../resources/images/patent/patent-001.png";
+// import patent002 from "../../resources/images/patent/patent-002.png";
+// import patent003 from "../../resources/images/patent/patent-003.png";
+// import patent004 from "../../resources/images/patent/patent-004.png";
+// import patent005 from "../../resources/images/patent/patent-005.jpg";
+// import patent006 from "../../resources/images/patent/patent-006.jpg";
 
-const certificationImages = {
-  "Corporate_Research_Institute_Certificate.png":
-    Corporate_Research_Institute_Certificate, // 기업부설연구소
-  "Venture_Business_Certificate.png": Venture_Business_Certificate, // 벤처기업확인서
-  "Software_Business_Registration_Certificate.png":
-    Software_Business_Registration_Certificate, // 소프트웨어사업자 신고확인서
-  "SME_Confirmation_Certificate.png": SME_Confirmation_Certificate, // 중소기업확인서
-  "Direct_Production_Certification.png": Direct_Production_Certification, // 직접생산확인증명서
-  "Affiliated_Factory_Establishment_Certificate.png":
-    Affiliated_Factory_Establishment_Certificate, //부설공장인증설립
-  "Promising_SME_Certificate.jpg": Promising_SME_Certificate, // 유망중소기업인증서
-  "Information_Communication_Construction_Registration.jpg":
-    Information_Communication_Construction_Registration, // 정보통신공사업등록증
-  "Innovative_Product_Designation_Certificate.png":
-    Innovative_Product_Designation_Certificate, //혁신제품 지정 인증서
-  // "testImage.jpg": testImage,
-};
+// const certificationImages = {
+//   "Corporate_Research_Institute_Certificate.png":
+//     Corporate_Research_Institute_Certificate, // 기업부설연구소
+//   "Venture_Business_Certificate.png": Venture_Business_Certificate, // 벤처기업확인서
+//   "Software_Business_Registration_Certificate.png":
+//     Software_Business_Registration_Certificate, // 소프트웨어사업자 신고확인서
+//   "SME_Confirmation_Certificate.png": SME_Confirmation_Certificate, // 중소기업확인서
+//   "Direct_Production_Certification.png": Direct_Production_Certification, // 직접생산확인증명서
+//   "Affiliated_Factory_Establishment_Certificate.png":
+//     Affiliated_Factory_Establishment_Certificate, //부설공장인증설립
+//   "Promising_SME_Certificate.jpg": Promising_SME_Certificate, // 유망중소기업인증서
+//   "Information_Communication_Construction_Registration.jpg":
+//     Information_Communication_Construction_Registration, // 정보통신공사업등록증
+//   "Innovative_Product_Designation_Certificate.png":
+//     Innovative_Product_Designation_Certificate, //혁신제품 지정 인증서
+//   // "testImage.jpg": testImage,
+// };
 
-const patentImages = {
-  "patent-001.png": patent001,
-  "patent-002.png": patent002,
-  "patent-003.png": patent003,
-  "patent-004.png": patent004,
-  "patent-005.jpg": patent005,
-  "patent-006.jpg": patent006,
-};
+// const patentImages = {
+//   "patent-001.png": patent001,
+//   "patent-002.png": patent002,
+//   "patent-003.png": patent003,
+//   "patent-004.png": patent004,
+//   "patent-005.jpg": patent005,
+//   "patent-006.jpg": patent006,
+// };
 
 const Certification = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("certification"); // "certification" or "patent"
+  const [activeTab, setActiveTab] = useState("certification");
+  const [imageUrls, setImageUrls] = useState({});
 
   const dispatch = useDispatch();
   const { certifications: certData, status } = useSelector(
@@ -69,6 +71,44 @@ const Certification = () => {
       })
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!certData || !Array.isArray(certData) || certData.length === 0) return;
+    const certificationData = certData[0];
+    if (!certificationData?.company?.certifications?.items) return;
+
+    const items = certificationData.company.certifications.items || [];
+    const allImages = items.map((item) => ({
+      type: item.type,
+      filename: item.image,
+    }));
+
+    // 중복 제거
+    const uniqueImages = Array.from(
+      new Set(allImages.map((img) => img.type + "/" + img.filename))
+    ).map((key) => {
+      const [type, filename] = key.split("/");
+      return { type, filename };
+    });
+
+    Promise.all(
+      uniqueImages.map(async ({ type, filename }) => {
+        if (!filename) return [filename, ""];
+        let path = "";
+        if (type === "certification") path = `certificate/${filename}`;
+        else if (type === "patent") path = `patent/${filename}`;
+        else return [filename, ""];
+        try {
+          const url = await fetchImage(path);
+          return [filename, url];
+        } catch (e) {
+          return [filename, ""];
+        }
+      })
+    ).then((entries) => {
+      setImageUrls(Object.fromEntries(entries));
+    });
+  }, [certData]);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -145,12 +185,9 @@ const Certification = () => {
                 <div key={cert.id} className="certification__card">
                   <div
                     className="certification__image"
-                    onClick={() => openModal(certificationImages[cert.image])}
+                    onClick={() => openModal(imageUrls[cert.image])}
                   >
-                    <img
-                      src={certificationImages[cert.image]}
-                      alt={cert.title}
-                    />
+                    <img src={imageUrls[cert.image] || ""} alt={cert.title} />
                     <div className="certification__overlay">
                       <div className="certification__zoom">
                         <img
@@ -182,9 +219,12 @@ const Certification = () => {
                 <div key={patent.id} className="certification__card">
                   <div
                     className="certification__image"
-                    onClick={() => openModal(patentImages[patent.image])}
+                    onClick={() => openModal(imageUrls[patent.image])}
                   >
-                    <img src={patentImages[patent.image]} alt={patent.title} />
+                    <img
+                      src={imageUrls[patent.image] || ""}
+                      alt={patent.title}
+                    />
                     <div className="certification__overlay">
                       <div className="certification__zoom">
                         <img

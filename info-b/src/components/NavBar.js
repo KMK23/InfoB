@@ -70,8 +70,10 @@ function NavBar() {
     {
       title: "수행실적",
       path: "/performance/cases",
-      submenu: [{ title: "구축사례", path: "/performance/cases" }],
-      submenu: [{ title: "국내실적", path: "/performance/domesticChart" }],
+      submenu: [
+        { title: "구축사례", path: "/performance/cases" },
+        { title: "국내실적", path: "/performance/domesticChart" },
+      ],
     },
     {
       title: "채용",

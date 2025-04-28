@@ -5,27 +5,14 @@ import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
 import FadeInSection from "../../components/FadeInSection";
 import ImageModal from "../../components/ImageModal";
-
-// 이미지 import
-import RnD1 from "../../resources/images/rnd/RnD1.jpg";
-import RnD2 from "../../resources/images/rnd/RnD2.png";
-import LoRa1 from "../../resources/images/rnd/LoRa1.jpg";
-import LoRa2 from "../../resources/images/rnd/LoRa2.jpg";
-import LoRa3 from "../../resources/images/rnd/LoRa3.jpg";
-
-const productImages = {
-  "RnD1.jpg": RnD1,
-  "RnD2.png": RnD2,
-  "LoRa1.jpg": LoRa1,
-  "LoRa2.jpg": LoRa2,
-  "LoRa3.jpg": LoRa3,
-};
+import { fetchImage } from "../API/firebase";
 
 function LeakDetection() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imageUrls, setImageUrls] = useState({});
 
   useEffect(() => {
     dispatch(
@@ -33,7 +20,24 @@ function LeakDetection() {
     );
   }, [dispatch]);
 
-  console.log("Products data:", products);
+  // 이미지 URL을 storage에서 불러오기
+  useEffect(() => {
+    if (!products || !products[0]?.leakDetection) return;
+    const allImages = products[0].leakDetection.flatMap(
+      (product) => product.images || []
+    );
+    const uniqueImages = Array.from(new Set(allImages));
+    Promise.all(
+      uniqueImages.map(async (img) => {
+        const url = await fetchImage(`rnd/${img}`);
+        return [img, url];
+      })
+    ).then((entries) => {
+      setImageUrls(Object.fromEntries(entries));
+    });
+  }, [products]);
+
+  // console.log("Products data:", products);
 
   if (status === "loading") {
     return <div>데이터를 불러오는 중입니다...</div>;
@@ -54,7 +58,7 @@ function LeakDetection() {
   }
 
   const leakDetection = productsData.leakDetection;
-  console.log("Leak detection products:", leakDetection);
+  // console.log("Leak detection products:", leakDetection);
 
   if (!Array.isArray(leakDetection)) {
     console.error("leakDetection is not an array:", leakDetection);
@@ -111,11 +115,11 @@ function LeakDetection() {
                       <>
                         <div className="image-container main-image">
                           <img
-                            src={productImages[product.images[0]]}
+                            src={imageUrls[product.images[0]] || ""}
                             alt={`${product.name} 이미지 1`}
                             onClick={() =>
                               setSelectedImage({
-                                src: productImages[product.images[0]],
+                                src: imageUrls[product.images[0]] || "",
                                 alt: `${product.name} 이미지 1`,
                               })
                             }
@@ -126,11 +130,11 @@ function LeakDetection() {
                           {product.images.slice(1).map((image, index) => (
                             <div key={index} className="stack-item">
                               <img
-                                src={productImages[image]}
+                                src={imageUrls[image] || ""}
                                 alt={`${product.name} 이미지 ${index + 2}`}
                                 onClick={() =>
                                   setSelectedImage({
-                                    src: productImages[image],
+                                    src: imageUrls[image] || "",
                                     alt: `${product.name} 이미지 ${index + 2}`,
                                   })
                                 }
@@ -144,11 +148,11 @@ function LeakDetection() {
                       product.images.map((image, index) => (
                         <div key={index} className="image-container">
                           <img
-                            src={productImages[image]}
+                            src={imageUrls[image] || ""}
                             alt={`${product.name} 이미지 ${index + 1}`}
                             onClick={() =>
                               setSelectedImage({
-                                src: productImages[image],
+                                src: imageUrls[image] || "",
                                 alt: `${product.name} 이미지 ${index + 1}`,
                               })
                             }

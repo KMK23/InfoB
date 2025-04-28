@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchCollection,
-  updateCollection,
-  clearError,
-} from "../../store/slices/collectionSlice";
-import {
-  fetchCollectionData,
-  updateCollectionData,
-} from "../../store/slices/adminSlice";
+import { updateCollection } from "../../store/slices/collectionSlice";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/admin/_collectionEditor.scss";
 import KakaoMap from "../../components/KaKaoMap";
@@ -24,6 +16,7 @@ import BenefitsForm from "../../components/admin/forms/BenefitsForm";
 import RnDForm from "../../components/admin/forms/RnDForm";
 import PerformanceForm from "../../components/admin/forms/PerformanceForm";
 import Swal from "sweetalert2";
+import ChartForm from "../../components/admin/forms/ChartForm";
 
 const COLLECTIONS = {
   company: {
@@ -73,6 +66,11 @@ const COLLECTIONS = {
         id: "cases",
         label: "수행사례",
         collection: "performance",
+      },
+      {
+        id: "chart",
+        label: "국내실적",
+        collection: "chart",
       },
     ],
   },
@@ -228,6 +226,17 @@ const CollectionEditor = () => {
             category: item ? item.category : "",
             title: item ? item.title : "",
             id: item ? item.id : null,
+          },
+        };
+        break;
+      case "chart":
+        editContent = {
+          chart: item || {
+            year: "",
+            revenue: 0,
+            operatingProfit: 0,
+            totalAssets: 0,
+            totalEquity: 0,
           },
         };
         break;
@@ -430,11 +439,24 @@ const CollectionEditor = () => {
             });
           }
           break;
+        case "chart":
+          // chart 배열에서 해당 연도(row)만 수정, 없으면 추가
+          const found = updatedData.chart.some(
+            (row) => row.year === editData.chart.year
+          );
+          if (found) {
+            updatedData.chart = updatedData.chart.map((row) =>
+              row.year === editData.chart.year ? { ...editData.chart } : row
+            );
+          } else {
+            updatedData.chart.push({ ...editData.chart });
+          }
+          break;
         default:
           break;
       }
 
-      console.log("저장할 데이터:", updatedData);
+      // console.log("저장할 데이터:", updatedData);
 
       await dispatch(
         updateCollection({
@@ -540,6 +562,11 @@ const CollectionEditor = () => {
               (cert) => cert.id !== item.id
             );
           break;
+        case "chart":
+          updatedData.chart = updatedData.chart.filter(
+            (row) => row.year !== item.year
+          );
+          break;
         default:
           break;
       }
@@ -601,6 +628,13 @@ const CollectionEditor = () => {
             if (updatedData.company?.certifications?.items) {
               updatedData.company.certifications.items = [];
               setEditData(updatedData.company.certifications);
+              handleSave();
+            }
+            break;
+          case "chart":
+            if (updatedData.chart) {
+              updatedData.chart = [];
+              setEditData(updatedData.chart);
               handleSave();
             }
             break;
@@ -1139,6 +1173,100 @@ const CollectionEditor = () => {
             </div>
           </div>
         );
+      case "chart":
+        return (
+          <div className="view-mode chart-admin chart-table">
+            <div className="section-header">
+              <h3>국내실적</h3>
+              <button
+                className="chart-add-button"
+                onClick={() => handleEdit("chart", null)}
+              >
+                새 실적 추가
+              </button>
+            </div>
+            {status === "loading" ? (
+              <div>로딩 중...</div>
+            ) : error ? (
+              <div style={{ color: "red" }}>{error}</div>
+            ) : (
+              <table
+                style={{
+                  width: "100%",
+                  borderCollapse: "collapse",
+                  background: "#fff",
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th>연도</th>
+                    <th>매출액</th>
+                    <th>영업이익</th>
+                    <th>자산총계</th>
+                    <th>자본총계</th>
+                    <th>관리</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(products[0]?.chart) &&
+                  products[0].chart.length > 0 ? (
+                    products[0].chart
+                      .slice()
+                      .sort((a, b) => a.year - b.year)
+                      .map((row, idx) => (
+                        <tr key={row.year || idx}>
+                          <td className="center">{row.year}</td>
+                          <td className="right">
+                            {row.revenue !== undefined && row.revenue !== null
+                              ? Number(row.revenue).toLocaleString()
+                              : ""}
+                          </td>
+                          <td className="right">
+                            {row.operatingProfit !== undefined &&
+                            row.operatingProfit !== null
+                              ? Number(row.operatingProfit).toLocaleString()
+                              : ""}
+                          </td>
+                          <td className="right">
+                            {row.totalAssets !== undefined &&
+                            row.totalAssets !== null
+                              ? Number(row.totalAssets).toLocaleString()
+                              : ""}
+                          </td>
+                          <td className="right">
+                            {row.totalEquity !== undefined &&
+                            row.totalEquity !== null
+                              ? Number(row.totalEquity).toLocaleString()
+                              : ""}
+                          </td>
+                          <td className="center">
+                            <button
+                              className="chart-edit-button"
+                              onClick={() => handleEdit("chart", row)}
+                            >
+                              수정
+                            </button>
+                            <button
+                              className="chart-delete-button"
+                              onClick={() => handleDelete("chart", row)}
+                            >
+                              삭제
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="empty">
+                        데이터가 없습니다
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            )}
+          </div>
+        );
       default:
         return <div>선택된 섹션의 데이터를 표시할 수 없습니다.</div>;
     }
@@ -1176,6 +1304,8 @@ const CollectionEditor = () => {
         return (
           <PerformanceForm editData={editData} setEditData={setEditData} />
         );
+      case "chart":
+        return <ChartForm editData={editData} setEditData={setEditData} />;
       default:
         return <div>해당 섹션의 수정 폼을 표시할 수 없습니다.</div>;
     }
