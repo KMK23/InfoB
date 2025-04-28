@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchHistory } from "../../store/slices/historySlice";
 import img from "../../resources/images/main/logo_tw.png";
+import Scroll from "../../components/Scroll";
 
 function History() {
   const dispatch = useDispatch();
@@ -95,6 +96,7 @@ function History() {
               })}
         </div>
       </div>
+      <Scroll />
     </div>
   );
 }

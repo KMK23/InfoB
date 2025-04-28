@@ -14,6 +14,7 @@ import {
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import html2canvas from "html2canvas";
+import { HiOutlineDotsVertical, HiOutlineX } from "react-icons/hi";
 
 function DomesticChart() {
   const dispatch = useDispatch();
@@ -29,6 +30,18 @@ function DomesticChart() {
   useEffect(() => {
     dispatch(fetchChartData({ collectionName: "chart", qeuryOptions: {} }));
   }, [dispatch]);
+
+  const formatToEokDetailed = (num) => {
+    if (num === undefined || num === null || isNaN(num)) return "";
+
+    const eok = Math.floor(num / 100000000); // 억 단위
+    const man = Math.floor((num % 100000000) / 10000); // 만 단위
+
+    let result = "";
+    if (eok > 0) result += `${eok}억`;
+    if (man > 0) result += ` ${man}만원`;
+    return result.trim();
+  };
 
   // 드롭다운 외부 클릭 시 닫힘
   useEffect(() => {
@@ -91,7 +104,7 @@ function DomesticChart() {
         <h1 className="text-3xl font-bold">국내실적</h1>
       </div>
       {/* 차트와 표를 가로로 배치 */}
-      <div style={{ display: "flex", gap: 32 }}>
+      <div style={{ display: "flex", gap: 32 }} className="my-20">
         {/* 차트 영역 */}
         <div
           ref={chartRef}
@@ -106,17 +119,21 @@ function DomesticChart() {
             <button
               onClick={() => setDropdownOpen((v) => !v)}
               style={{
-                background: "#fff",
                 border: "1px solid #ccc",
                 borderRadius: 4,
-                padding: "4px 10px",
+                padding: "4px",
                 cursor: "pointer",
                 fontWeight: 500,
                 fontSize: 13,
               }}
             >
-              Export to ▾
+              {dropdownOpen ? (
+                <HiOutlineX size={18} />
+              ) : (
+                <HiOutlineDotsVertical size={18} />
+              )}
             </button>
+
             {dropdownOpen && (
               <div
                 style={{
@@ -153,6 +170,7 @@ function DomesticChart() {
                     style={{ display: "flex", flexDirection: "column", gap: 4 }}
                   >
                     <button
+                      className=" hover:font-bold"
                       onClick={() => handleDownload("xls")}
                       style={{
                         background: "none",
@@ -166,6 +184,7 @@ function DomesticChart() {
                       xls
                     </button>
                     <button
+                      className=" hover:font-bold"
                       onClick={() => handleDownload("png")}
                       style={{
                         background: "none",
@@ -183,6 +202,7 @@ function DomesticChart() {
                     style={{ display: "flex", flexDirection: "column", gap: 4 }}
                   >
                     <button
+                      className=" hover:font-bold"
                       onClick={() => handleDownload("csv")}
                       style={{
                         background: "none",
@@ -196,6 +216,7 @@ function DomesticChart() {
                       csv
                     </button>
                     <button
+                      className=" hover:font-bold"
                       onClick={() => handleDownload("jpeg")}
                       style={{
                         background: "none",
@@ -220,24 +241,31 @@ function DomesticChart() {
           ) : chartData.length > 0 ? (
             <ResponsiveContainer>
               <LineChart
-                data={chartData}
-                margin={{ top: 30, right: 30, left: 50, bottom: 5 }}
+                data={chartData.map((item) => ({
+                  ...item,
+                  revenue: item.revenue / 1000000, // 백만원 단위
+                  operatingProfit: item.operatingProfit / 1000000,
+                  totalAssets: item.totalAssets / 1000000,
+                  totalEquity: item.totalEquity / 1000000,
+                }))}
+                margin={{ top: 30, right: 30, left: 30, bottom: 5 }}
+                // padding={{ top: 40, bottom: 30 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="year" />
+                <XAxis dataKey="year" tick={{ fontSize: 14 }} />
+
                 <YAxis
-                  tickFormatter={(value) =>
-                    `${(value / 1000000).toFixed(0)}백만원`
-                  }
+                  domain={[0, 2200]} // 0 ~ 2,200백만원
+                  tickCount={12}
+                  interval={0}
+                  tickFormatter={(value) => `${value}백만원`} // 그대로 표시
+                  tick={{ fontSize: 14 }}
                 />
                 <Tooltip
-                  formatter={(value) =>
-                    `${(value / 10000000).toFixed(0)}억 ${Math.round(
-                      (value % 10000000) / 10000
-                    )}만원`
-                  }
+                  formatter={(value) => formatToEokDetailed(value)}
                   labelFormatter={(label) => `${label}년`}
                 />
+
                 <Legend />
                 <Line
                   type="monotone"
