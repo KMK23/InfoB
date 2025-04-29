@@ -99,17 +99,17 @@ function DomesticChart() {
   };
 
   return (
-    <div className="mx-20 mt-20">
+    <div className=" lg:mx-20 mt-20 ">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">국내실적</h1>
       </div>
       {/* 차트와 표를 가로로 배치 */}
-      <div style={{ display: "flex", gap: 32 }} className="my-20">
+      <div className="flex flex-col lg:my-20  lg:flex-row gap-8">
         {/* 차트 영역 */}
         <div
           ref={chartRef}
-          style={{ width: "50%", height: 500, position: "relative" }}
-          className="border border-gray-300 rounded-md py-3 px-2"
+          // style={{ width: "50%", height: 500, position: "relative" }}
+          className="border border-gray-300 rounded-md py-3 px-2 w-full lg:w-1/2 h-[500px] relative"
         >
           {/* Export 버튼 - 차트 우측 상단 */}
           <div
@@ -262,7 +262,7 @@ function DomesticChart() {
                   tick={{ fontSize: 14 }}
                 />
                 <Tooltip
-                  formatter={(value) => formatToEokDetailed(value)}
+                  formatter={(value) => formatToEokDetailed(value * 1000000)} // 단위를 원래대로
                   labelFormatter={(label) => `${label}년`}
                 />
 
@@ -305,59 +305,23 @@ function DomesticChart() {
           )}
         </div>
         {/* 표 영역 */}
-        <div style={{ width: "50%", alignSelf: "flex-start" }}>
-          <table
-            style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              background: "#fff",
-            }}
-          >
+        <div className="w-full mb-10 lg:w-1/2 overflow-x-auto">
+          <table className="min-w-[600px] w-full border-collapse bg-white">
             <thead>
-              <tr style={{ background: "#f5f5f5" }}>
-                <th
-                  style={{
-                    padding: "8px",
-                    border: "1px solid #e0e0e0",
-                    fontWeight: 700,
-                  }}
-                >
+              <tr className="bg-[#f5f5f5] cursor-default">
+                <th className="p-2 border border-1 border-[#e0e0e0] font-bold ">
                   년도
                 </th>
-                <th
-                  style={{
-                    padding: "8px",
-                    border: "1px solid #e0e0e0",
-                    fontWeight: 700,
-                  }}
-                >
+                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
                   매출액
                 </th>
-                <th
-                  style={{
-                    padding: "8px",
-                    border: "1px solid #e0e0e0",
-                    fontWeight: 700,
-                  }}
-                >
+                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
                   영업이익
                 </th>
-                <th
-                  style={{
-                    padding: "8px",
-                    border: "1px solid #e0e0e0",
-                    fontWeight: 700,
-                  }}
-                >
+                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
                   자산총계
                 </th>
-                <th
-                  style={{
-                    padding: "8px",
-                    border: "1px solid #e0e0e0",
-                    fontWeight: 700,
-                  }}
-                >
+                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
                   자본총계
                 </th>
               </tr>

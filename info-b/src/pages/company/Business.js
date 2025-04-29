@@ -2,7 +2,7 @@ import { business, partner, privat } from "./bsns";
 import { useEffect, useState } from "react";
 import { fetchImage } from "../API/firebase";
 import { getStorage, ref, listAll } from "firebase/storage";
-
+import ClipLoader from "react-spinners/ClipLoader";
 // Storage의 모든 clients 이미지 파일 리스트 가져오기
 async function getAllClientImageFiles() {
   const storage = getStorage();
@@ -25,58 +25,63 @@ function Business(props) {
   const [imageUrls, setImageUrls] = useState({});
   const [mainImg, setMainImg] = useState("");
   const [userImg, setUserImg] = useState("");
-
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     async function loadImages() {
-      const allImages = [
-        ...business.map((item) => item.img),
-        ...partner.map((item) => item.img),
-        ...privat.map((item) => item.img),
-      ].filter(Boolean);
-      const uniqueImages = Array.from(new Set(allImages));
-      const storageFiles = await getAllClientImageFiles();
+      try {
+        const allImages = [
+          ...business.map((item) => item.img),
+          ...partner.map((item) => item.img),
+          ...privat.map((item) => item.img),
+        ].filter(Boolean);
+        const uniqueImages = Array.from(new Set(allImages));
+        const storageFiles = await getAllClientImageFiles();
 
-      // 매칭: img 값이 포함된 storage 파일명 찾기
-      const imgToStoragePath = {};
-      uniqueImages.forEach((img) => {
-        // 확장자 없는 경우도 대비
-        const base = img.replace(/\.[^/.]+$/, "");
-        const found = storageFiles.find((file) => file.name.includes(base));
-        if (found) imgToStoragePath[img] = found.path;
-      });
+        const imgToStoragePath = {};
+        uniqueImages.forEach((img) => {
+          const base = img.replace(/\.[^/.]+$/, "");
+          const found = storageFiles.find((file) => file.name.includes(base));
+          if (found) imgToStoragePath[img] = found.path;
+        });
 
-      // fetchImage로 URL 받아오기
-      Promise.all(
-        uniqueImages.map(async (img) => {
-          const path = imgToStoragePath[img];
-          if (!path) {
-            // console.log("이미지 매칭 실패:", img);
-            return [img, ""];
-          }
-          try {
-            const url = await fetchImage(path);
-            // console.log("이미지 URL:", img, url);
-            return [img, url];
-          } catch (e) {
-            // console.error("fetchImage 에러:", img, path, e);
-            return [img, ""];
-          }
-        })
-      ).then((entries) => {
+        const entries = await Promise.all(
+          uniqueImages.map(async (img) => {
+            const path = imgToStoragePath[img];
+            if (!path) return [img, ""];
+            try {
+              const url = await fetchImage(path);
+              return [img, url];
+            } catch (e) {
+              return [img, ""];
+            }
+          })
+        );
         setImageUrls(Object.fromEntries(entries));
-      });
 
-      // 상단 아이콘도 동일하게 처리
-      const mainIcon = storageFiles.find((file) =>
-        file.name.includes("partner")
-      );
-      const userIcon = storageFiles.find((file) => file.name.includes("users"));
-      if (mainIcon) fetchImage(mainIcon.path).then(setMainImg);
-      if (userIcon) fetchImage(userIcon.path).then(setUserImg);
+        const mainIcon = storageFiles.find((file) =>
+          file.name.includes("partner")
+        );
+        const userIcon = storageFiles.find((file) =>
+          file.name.includes("users")
+        );
+        if (mainIcon) fetchImage(mainIcon.path).then(setMainImg);
+        if (userIcon) fetchImage(userIcon.path).then(setUserImg);
+
+        setIsLoading(false); // ✅ 이미지 로딩 끝
+      } catch (error) {
+        console.error("이미지 로딩 실패:", error);
+        setIsLoading(false); // 실패해도 로딩 종료
+      }
     }
     loadImages();
   }, []);
-
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[50vh]">
+        <ClipLoader size={50} color="#000" loading={true} />
+      </div>
+    );
+  }
   return (
     <div className="mt-10 mx-52">
       <div className="">

@@ -9,6 +9,7 @@ import icon5 from "../../resources/images/main/monitor.png";
 import icon3 from "../../resources/images/main/smile.png";
 import icon1 from "../../resources/images/main/time.png";
 import icon2 from "../../resources/images/main/growth.png";
+import Scroll from "../../components/Scroll";
 
 const Talent = () => {
   const dispatch = useDispatch();
@@ -71,24 +72,21 @@ const Talent = () => {
       </div>
       <div className="recruitment-benefits">
         <div className="">
-          <h1 className="text-4xl mb-20 font-bold">{benefitsTitle}</h1>
+          <h1 className="text-4xl py-10 font-bold">{benefitsTitle}</h1>
         </div>
-        <div className="grid grid-cols-3 gap-8 text-white place-items-center">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 text-white place-items-center ">
           {benefitsData.map((item, i) => (
-            <div
-              className="flex w-96 gap-6 h-28 justify-center items-center"
-              key={i}
-            >
-              <div key={i}>
+            <div className="flex items-center gap-6 p-4 lg:w-96 h-52 ">
+              <div className="flex-shrink-0">
                 <img
-                  src={iconMap[item.icon] || icon1}
-                  width={85}
-                  className="brightness-150 invert"
+                  src={iconMap[item.icon]}
+                  className="w-20 h-20 object-contain brightness-150 invert"
+                  alt={item.name}
                 />
               </div>
-              <div className="">
-                <h2 className="text-2xl font-bold">{item.name}</h2>
-                <ul className="text-start list-disc text-xl">
+              <div className="flex flex-col">
+                <h2 className="text-xl lg:text-2xl mb-2">{item.name}</h2>
+                <ul className="text-start text-xl space-y-1">
                   {item.details.map((detail, i) => (
                     <li key={i}>{detail}</li>
                   ))}
@@ -98,6 +96,7 @@ const Talent = () => {
           ))}
         </div>
       </div>
+      <Scroll />
     </div>
   );
 };
