@@ -9,8 +9,8 @@ import {
 } from "../../store/slices/noticesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Board from "../../components/Board";
 import NoticeForm from "../../components/NoticeForm";
+import { useCallback } from "react";
 
 const NoticeManagement = () => {
   const [showNoticeForm, setShowNoticeForm] = useState(false);
@@ -20,8 +20,8 @@ const NoticeManagement = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 실시간으로 공지사항 데이터를 가져오는 함수
-  const fetchNoticesData = async () => {
+  // fetchNoticesData 함수를 useCallback으로 메모이제이션
+  const fetchNoticesData = useCallback(async () => {
     try {
       await dispatch(
         fetchNotices({ collectionName: "notices", queryOptions: {} })
@@ -29,11 +29,12 @@ const NoticeManagement = () => {
     } catch (error) {
       console.error("공지사항 로딩 실패:", error);
     }
-  };
+  }, [dispatch]);
 
+  // useEffect에서 사용
   useEffect(() => {
     fetchNoticesData();
-  }, [dispatch]);
+  }, [fetchNoticesData]);
 
   const formatDate = (timestamp) => {
     if (!timestamp) return "-";

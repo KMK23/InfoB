@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 import {
   fetchSignInMethodsForEmail,
   sendPasswordResetEmail,
@@ -28,14 +28,14 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import { useRef } from "react";
+// import { useRef } from "react";
 import {
   getDownloadURL,
   getStorage,
   uploadBytes,
-  uploadBytesResumable,
   ref,
   deleteObject,
+  listAll,
 } from "firebase/storage";
 
 const firebaseConfig = {
@@ -57,10 +57,10 @@ const storage = getStorage(app);
 async function addDatas(collectionName, userObj) {
   try {
     const docRef = await addDoc(collection(db, collectionName), userObj);
-    console.log("Document added with ID:", docRef.id); // 문서 ID 출력
+    // console.log("Document added with ID:", docRef.id); // 문서 ID 출력
     return docRef.id;
   } catch (error) {
-    console.error("Error adding document: ", error); // 오류 메시지
+    // console.error("Error adding document: ", error); // 오류 메시지
     throw new Error(error.message); // 에러 메시지 반환
   }
 }
@@ -116,7 +116,7 @@ async function getDatas(collectionName, queryOptions = {}) {
 
     return resultData;
   } catch (error) {
-    console.error(`Error getting documents from ${collectionName}:`, error);
+    // console.error(`Error getting documents from ${collectionName}:`, error);
     return []; // 실패해도 빈 배열 반환해서 차트가 깨지지 않게
   }
 }
@@ -127,7 +127,7 @@ async function deleteDatas(collectionName, docId) {
     await deleteDoc(docRef);
     return true;
   } catch (error) {
-    console.log("error Delete", error);
+    // console.log("error Delete", error);
   }
 }
 
@@ -159,7 +159,7 @@ export const addComment = async (postId, commentData) => {
       createdAt: new Date(),
     };
   } catch (error) {
-    console.error("댓글 추가 실패:", error);
+    // console.error("댓글 추가 실패:", error);
     throw error;
   }
 };
@@ -176,7 +176,7 @@ export const getComments = async (postId) => {
       })),
     };
   } catch (error) {
-    console.error("댓글 조회 실패:", error);
+    // console.error("댓글 조회 실패:", error);
     throw error;
   }
 };
@@ -200,7 +200,7 @@ async function updateDatas(collectionName, docId, updateObj) {
     const resultData = { ...snapshot.data(), docId: snapshot.id };
     return resultData;
   } catch (error) {
-    console.log("Error Update", error);
+    // console.log("Error Update", error);
     throw error; // 에러를 던져서 호출하는 쪽에서 처리하게 하기
   }
 }
@@ -213,8 +213,10 @@ async function signIn(email, password) {
       email,
       password
     );
+    // console.log("로그인 성공:", userCredential.user);
     return userCredential.user;
   } catch (error) {
+    // console.error("로그인 실패:", error);
     throw error;
   }
 }
@@ -253,7 +255,7 @@ export const getUserRole = async (uid) => {
     }
     return "user"; // 문서가 없으면 기본적으로 "user"
   } catch (error) {
-    console.error("사용자 역할 불러오기 실패:", error);
+    // console.error("사용자 역할 불러오기 실패:", error);
     return "user"; // 에러 시 기본값은 "user"
   }
 };
@@ -293,7 +295,7 @@ async function signUp(email, password, username) {
 
     return user;
   } catch (error) {
-    console.error("회원가입 실패:", error);
+    // console.error("회원가입 실패:", error);
     throw error;
   }
 }
@@ -340,7 +342,7 @@ export const sendResetPasswordEmail = async (email) => {
     await sendPasswordResetEmail(auth, email);
     return true;
   } catch (error) {
-    console.error("비밀번호 재설정 이메일 전송 실패", error);
+    // console.error("비밀번호 재설정 이메일 전송 실패", error);
     return false;
   }
 };
@@ -358,7 +360,7 @@ export const getAnswers = async (postId) => {
       })),
     };
   } catch (error) {
-    console.error("답변 조회 실패:", error);
+    // console.error("답변 조회 실패:", error);
     throw error;
   }
 };
@@ -377,7 +379,7 @@ export const addAnswer = async (postId, answerData) => {
       createdAt: new Date(),
     };
   } catch (error) {
-    console.error("답변 추가 실패:", error);
+    // console.error("답변 추가 실패:", error);
     throw error;
   }
 };
@@ -396,7 +398,7 @@ export const updateAnswer = async (postId, answerId, answerData) => {
       updatedAt: new Date(),
     };
   } catch (error) {
-    console.error("답변 수정 실패:", error);
+    // console.error("답변 수정 실패:", error);
     throw error;
   }
 };
@@ -419,7 +421,7 @@ export const deletePostWithAnswers = async (postId) => {
 
     return { success: true };
   } catch (error) {
-    console.error("게시글 및 답변 삭제 실패:", error);
+    // console.error("게시글 및 답변 삭제 실패:", error);
     throw error;
   }
 };
@@ -428,6 +430,103 @@ async function fetchImage(path, file) {
   const imageRef = ref(storage, path);
   return await getDownloadURL(imageRef);
 }
+
+export const uploadImage = async (file, folder) => {
+  const user = auth.currentUser;
+  // console.log("Current user in uploadImage:", user);
+
+  if (!user || !user.email) {
+    // console.error("권한 없음: 로그인이 필요합니다.");
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  // admin@gmail.com 또는 admin@mail.com 허용
+  if (!user.email.includes("admin@")) {
+    // console.error("권한 없음:", { email: user?.email });
+    throw new Error("관리자만 이미지를 업로드할 수 있습니다.");
+  }
+
+  const storageRef = ref(storage, `${folder}/${file.name}`);
+  try {
+    // console.log("Upload starting...", {
+    //   folder,
+    //   fileName: file.name,
+    //   userEmail: user.email,
+    // });
+    const snapshot = await uploadBytes(storageRef, file);
+    // console.log("Upload successful, getting download URL...");
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    // console.log("Download URL obtained:", downloadURL);
+    return downloadURL;
+  } catch (error) {
+    // console.error("이미지 업로드 실패:", error);
+    throw error;
+  }
+};
+
+export const deleteImage = async (path) => {
+  const user = auth.currentUser;
+  // console.log("Current user in deleteImage:", user);
+
+  if (!user || !user.email) {
+    // console.error("권한 없음: 로그인이 필요합니다.");
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  // admin@gmail.com 또는 admin@mail.com 허용
+  if (!user.email.includes("admin@")) {
+    // console.error("권한 없음:", { email: user?.email });
+    throw new Error("관리자만 이미지를 삭제할 수 있습니다.");
+  }
+
+  const storageRef = ref(storage, path);
+  try {
+    // console.log("Deleting image...", { path, userEmail: user.email });
+    await deleteObject(storageRef);
+    // console.log("Image deleted successfully");
+    return true;
+  } catch (error) {
+    // console.error("이미지 삭제 실패:", error);
+    throw error;
+  }
+};
+
+// 특정 폴더의 모든 이미지 파일 리스트 가져오기
+export const getAllImageFiles = async (folder) => {
+  const storage = getStorage();
+  const listRef = ref(storage, folder);
+  try {
+    const res = await listAll(listRef);
+    return res.items.map((item) => ({
+      path: item.fullPath,
+      name: item.name,
+    }));
+  } catch (error) {
+    // console.error(`${folder} 폴더 이미지 목록 가져오기 실패:`, error);
+    return [];
+  }
+};
+
+// 여러 이미지 URL 한번에 가져오기
+export const fetchMultipleImages = async (paths) => {
+  try {
+    const urls = await Promise.all(
+      paths.map(async (path) => {
+        try {
+          const url = await fetchImage(path);
+          return [path, url];
+        } catch (error) {
+          // console.error(`이미지 로드 실패: ${path}`, error);
+          return [path, null];
+        }
+      })
+    );
+    return Object.fromEntries(urls.filter(([_, url]) => url !== null));
+  } catch (error) {
+    // console.error("이미지 일괄 로드 실패:", error);
+    return {};
+  }
+};
 
 export {
   getDatas,

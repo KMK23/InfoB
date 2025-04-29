@@ -1,14 +1,4 @@
 import React from "react";
-import {
-  TextField,
-  Grid,
-  Paper,
-  Typography,
-  IconButton,
-  Button,
-} from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import "../../../styles/components/admin/forms/_historyForm.scss";
 
 const HistoryForm = ({ editData, setEditData }) => {

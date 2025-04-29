@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getDatas, updateDatas } from "../pages/API/firebase";
+import { getDatas, updateDatas } from "../pages/API/firebase";
 import { useNavigate } from "react-router-dom";
-import { FaLock, FaUnlock } from "react-icons/fa"; // 자물쇠 아이콘 추가
 import Pagination from "./Pagination";
 
 function Community({ search }) {

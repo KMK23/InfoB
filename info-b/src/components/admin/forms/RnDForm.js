@@ -1,7 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../../../styles/components/admin/forms/_rndForm.scss";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  uploadImageFile,
+  deleteImageFile,
+  fetchFolderImages,
+} from "../../../store/slices/imagesSlice";
+import Swal from "sweetalert2";
 
 const RnDForm = ({ editData, setEditData }) => {
+  const dispatch = useDispatch();
+  const { urls: imageUrls } = useSelector((state) => state.images);
   const [showNewForm, setShowNewForm] = useState(false);
   const [newProduct, setNewProduct] = useState({
     type: "leakDetection",
@@ -11,7 +20,31 @@ const RnDForm = ({ editData, setEditData }) => {
     features: {
       description: "",
     },
+    images: [],
   });
+
+  useEffect(() => {
+    dispatch(fetchFolderImages("rnd"));
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (editData && editData.boardProducts) {
+      const fixed = editData.boardProducts.map((item) => ({
+        ...item,
+        images: Array.isArray(item.images)
+          ? item.images
+          : item.image
+          ? [item.image]
+          : [],
+      }));
+      if (JSON.stringify(fixed) !== JSON.stringify(editData.boardProducts)) {
+        setEditData({
+          ...editData,
+          boardProducts: fixed,
+        });
+      }
+    }
+  }, [editData, setEditData]);
 
   const handleUpdateLeakDetection = (index, field, value) => {
     const newLeakDetection = [...editData.leakDetection];
@@ -69,6 +102,7 @@ const RnDForm = ({ editData, setEditData }) => {
             features: {
               description: newProduct.features.description.split("\n"),
             },
+            images: newProduct.images || [],
           },
           ...editData.leakDetection,
         ],
@@ -84,6 +118,7 @@ const RnDForm = ({ editData, setEditData }) => {
             features: {
               description: newProduct.features.description,
             },
+            image: "",
           },
           ...editData.boardProducts,
         ],
@@ -98,6 +133,7 @@ const RnDForm = ({ editData, setEditData }) => {
       features: {
         description: "",
       },
+      images: [],
     });
   };
 
@@ -134,6 +170,180 @@ const RnDForm = ({ editData, setEditData }) => {
       setNewProduct({
         ...newProduct,
         [field]: value,
+      });
+    }
+  };
+
+  // 여러 이미지 업로드 지원
+  const handleImageUpload = async (event, productType, index = null) => {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+
+    let uploadedFileNames = [];
+    for (const file of files) {
+      try {
+        const result = await dispatch(
+          uploadImageFile({
+            file,
+            folder: "rnd",
+          })
+        ).unwrap();
+        uploadedFileNames.push(result.fileName);
+      } catch (error) {
+        await Swal.fire({
+          title: "오류",
+          text: `이미지 업로드에 실패했습니다: ${error.message}`,
+          icon: "error",
+        });
+      }
+    }
+
+    if (index !== null) {
+      // 기존 제품 이미지 배열에 추가
+      if (productType === "leakDetection") {
+        const newLeakDetection = [...editData.leakDetection];
+        newLeakDetection[index] = {
+          ...newLeakDetection[index],
+          images: [
+            ...(newLeakDetection[index].images || []),
+            ...uploadedFileNames,
+          ],
+        };
+        setEditData({
+          ...editData,
+          leakDetection: newLeakDetection,
+        });
+        // 누출탐지센서 업로드 후 콘솔
+        // console.log(
+        //   "[누출탐지센서] 업로드 후 images:",
+        //   newLeakDetection[index].images
+        // );
+      } else {
+        const newBoardProducts = [...editData.boardProducts];
+        newBoardProducts[index] = {
+          ...newBoardProducts[index],
+          images: [
+            ...(newBoardProducts[index].images || []),
+            ...uploadedFileNames,
+          ],
+        };
+        setEditData({
+          ...editData,
+          boardProducts: newBoardProducts,
+        });
+        // 보드제품 업로드 후 콘솔
+        // console.log(
+        //   "[보드제품] 업로드 후 images:",
+        //   newBoardProducts[index].images
+        // );
+      }
+    } else {
+      // 새 제품 이미지 배열에 추가
+      setNewProduct({
+        ...newProduct,
+        images: [...(newProduct.images || []), ...uploadedFileNames],
+      });
+    }
+
+    // imageUrls.rnd의 키 전체 출력
+    const state = window.store?.getState ? window.store.getState() : null;
+    if (state && state.images && state.images.urls && state.images.urls.rnd) {
+      // console.log(
+      //   "[imageUrls.rnd의 모든 키]",
+      //   Object.keys(state.images.urls.rnd)
+      // );
+    }
+    // 전체 editData.boardProducts, editData.leakDetection의 images 배열 출력
+    // console.log(
+    //   "[전체 boardProducts images]",
+    //   editData.boardProducts.map((b) => b.images)
+    // );
+    // console.log(
+    //   "[전체 leakDetection images]",
+    //   editData.leakDetection.map((l) => l.images)
+    // );
+
+    await Swal.fire({
+      title: "성공",
+      text: "이미지가 업로드되었습니다.",
+      icon: "success",
+    });
+  };
+
+  // 이미지 배열에서 개별 삭제
+  const handleImageDelete = async (
+    productType,
+    index,
+    fileName,
+    imageIdx = null
+  ) => {
+    if (!fileName) return;
+
+    try {
+      const result = await Swal.fire({
+        title: "이미지 삭제",
+        text: "이미지를 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+      });
+
+      if (result.isConfirmed) {
+        await dispatch(
+          deleteImageFile({
+            folder: "rnd",
+            fileName: fileName,
+          })
+        ).unwrap();
+
+        if (index !== null) {
+          if (productType === "leakDetection") {
+            const newLeakDetection = [...editData.leakDetection];
+            const newImages = [...(newLeakDetection[index].images || [])];
+            if (imageIdx !== null) newImages.splice(imageIdx, 1);
+            newLeakDetection[index] = {
+              ...newLeakDetection[index],
+              images: newImages,
+            };
+            setEditData({
+              ...editData,
+              leakDetection: newLeakDetection,
+            });
+          } else {
+            const newBoardProducts = [...editData.boardProducts];
+            const newImages = [...(newBoardProducts[index].images || [])];
+            if (imageIdx !== null) newImages.splice(imageIdx, 1);
+            newBoardProducts[index] = {
+              ...newBoardProducts[index],
+              images: newImages,
+            };
+            setEditData({
+              ...editData,
+              boardProducts: newBoardProducts,
+            });
+          }
+        } else {
+          // 새 제품 폼에서 삭제 (leakDetection만 해당)
+          const newImages = [...(newProduct.images || [])];
+          if (imageIdx !== null) newImages.splice(imageIdx, 1);
+          setNewProduct({
+            ...newProduct,
+            images: newImages,
+          });
+        }
+
+        await Swal.fire({
+          title: "성공",
+          text: "이미지가 삭제되었습니다.",
+          icon: "success",
+        });
+      }
+    } catch (error) {
+      await Swal.fire({
+        title: "오류",
+        text: "이미지 삭제에 실패했습니다: " + error.message,
+        icon: "error",
       });
     }
   };
@@ -199,6 +409,36 @@ const RnDForm = ({ editData, setEditData }) => {
                 handleUpdateNewProduct("description", e.target.value)
               }
             />
+          </div>
+          <div className="input-group">
+            <label>제품 이미지</label>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => handleImageUpload(e, newProduct.type)}
+            />
+            {Array.isArray(newProduct.images) &&
+              newProduct.images.length > 0 && (
+                <div className="image-preview-multi">
+                  {newProduct.images.map((img, idx) => (
+                    <div key={idx} className="image-preview-item">
+                      <img
+                        src={imageUrls?.rnd?.[`rnd/${img}`]}
+                        alt="제품 이미지"
+                      />
+                      <button
+                        className="delete-button"
+                        onClick={() =>
+                          handleImageDelete(newProduct.type, null, img, idx)
+                        }
+                      >
+                        이미지 삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
           </div>
           <button className="submit-button" onClick={handleAddProduct}>
             추가하기
@@ -266,6 +506,35 @@ const RnDForm = ({ editData, setEditData }) => {
                 }
               />
             </div>
+            <div className="input-group">
+              <label>제품 이미지</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleImageUpload(e, "leakDetection", index)}
+              />
+              {Array.isArray(item.images) && item.images.length > 0 && (
+                <div className="image-preview-multi">
+                  {item.images.map((img, imgIdx) => (
+                    <div key={imgIdx} className="image-preview-item">
+                      <img
+                        src={imageUrls?.rnd?.[`rnd/${img}`]}
+                        alt="제품 이미지"
+                      />
+                      <button
+                        className="delete-button"
+                        onClick={() =>
+                          handleImageDelete("leakDetection", index, img, imgIdx)
+                        }
+                      >
+                        이미지 삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -321,6 +590,35 @@ const RnDForm = ({ editData, setEditData }) => {
                   handleUpdateBoardProduct(index, "description", e.target.value)
                 }
               />
+            </div>
+            <div className="input-group">
+              <label>제품 이미지</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleImageUpload(e, "boardProduct", index)}
+              />
+              {Array.isArray(item.images) && item.images.length > 0 && (
+                <div className="image-preview-multi">
+                  {item.images.map((img, imgIdx) => (
+                    <div key={imgIdx} className="image-preview-item">
+                      <img
+                        src={imageUrls?.rnd?.[`rnd/${img}`]}
+                        alt="제품 이미지"
+                      />
+                      <button
+                        className="delete-button"
+                        onClick={() =>
+                          handleImageDelete("boardProduct", index, img, imgIdx)
+                        }
+                      >
+                        이미지 삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         ))}

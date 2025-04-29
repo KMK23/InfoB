@@ -9,7 +9,6 @@ import {
   updateAnswerThunk,
 } from "../../store/slices/postsSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import MyEditor from "../community/MyEditor";
 import Pagination from "../../components/Pagination";
@@ -18,7 +17,6 @@ const PostManagement = () => {
   const posts = useSelector((state) => state.posts.posts);
   const answers = useSelector((state) => state.posts.answers);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0); // 현재 페이지
   const [selectedPost, setSelectedPost] = useState(null);
   const [replyContent, setReplyContent] = useState("");

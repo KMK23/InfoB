@@ -12,7 +12,7 @@ export const fetchCollectionData = createAsyncThunk(
   async (collectionName) => {
     try {
       const response = await getDatas(collectionName);
-      console.log("Fetched data:", response);
+      // console.log("Fetched data:", response);
       return { collectionName, data: response };
     } catch (error) {
       throw error;

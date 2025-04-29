@@ -1,0 +1,44 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /certificate/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /patent/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /clients/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /main/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /rnd/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /sub/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+    
+    match /documents/{fileName} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == "admin@gmail.com";
+    }
+  }
+} 

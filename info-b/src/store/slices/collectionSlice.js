@@ -10,9 +10,9 @@ import {
 export const fetchCollection = createAsyncThunk(
   "collection/fetchCollection",
   async ({ collectionName }) => {
-    console.log("Fetching collection:", collectionName);
+    // console.log("Fetching collection:", collectionName);
     const response = await getDatas(collectionName);
-    console.log("Fetched data:", response);
+    // console.log("Fetched data:", response);
     return { collectionName, data: response };
   }
 );
@@ -28,7 +28,7 @@ export const addCollection = createAsyncThunk(
 export const updateCollection = createAsyncThunk(
   "collection/updateCollection",
   async ({ collectionName, docId, data }) => {
-    console.log("Updating collection:", { collectionName, docId, data });
+    // console.log("Updating collection:", { collectionName, docId, data });
     const response = await updateDatas(collectionName, docId, data);
     return { collectionName, data: response };
   }

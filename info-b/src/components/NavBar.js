@@ -6,7 +6,6 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../pages/API/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import brochurePdf from "../resources/documents/infob_brochure.pdf";
-// import { MdLogin } from "react-icons/md";
 
 function NavBar() {
   const [activeMenu, setActiveMenu] = useState(null);
@@ -15,7 +14,7 @@ function NavBar() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // 🔸 로그인 상태 체크
+  // 로그인 상태 체크
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
@@ -26,10 +25,10 @@ function NavBar() {
           const userData = userDoc.data();
           setUser({
             ...currentUser,
-            name: userData.name, // 🔸 Firestore에 저장된 이름 사용
+            name: userData.name,
           });
         } else {
-          setUser(currentUser); // 문서가 없으면 기본 정보만 사용
+          setUser(currentUser);
         }
       } else {
         setUser(null);
@@ -39,7 +38,7 @@ function NavBar() {
     return () => unsubscribe();
   }, []);
 
-  // 🔸 로그아웃
+  // 로그아웃
   const handleLogout = () => {
     signOut(auth).then(() => {
       setUser(null);
@@ -78,18 +77,13 @@ function NavBar() {
     {
       title: "채용",
       path: "/recruitment/talent",
-      submenu: [
-        { title: "인재상", path: "/recruitment/talent" },
-        // { title: "복리후생", path: "/recruitment/benefits" },
-      ],
+      submenu: [{ title: "인재상", path: "/recruitment/talent" }],
     },
     {
       title: "커뮤니티",
       path: "/community/announcement",
       submenu: [
         { title: "공지사항", path: "/community/announcement" },
-        // { title: "FAQ", path: "/community/faq" },
-        // { title: "1:1문의", path: "/community/inquiry" },
         { title: "게시판", path: "/community/post" },
       ],
     },
@@ -160,9 +154,6 @@ function NavBar() {
                 className="navbar__menu-link"
                 onClick={(e) => handleMenuClick(index, e, item.path)}
               >
-                {/* {item.icon && (
-                  <span className="navbar__menu-icon">{item.icon}</span>
-                )} */}
                 {item.title}
               </a>
               {/* Submenu 표시 */}

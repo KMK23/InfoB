@@ -5,16 +5,12 @@ import { PiListDashesBold } from "react-icons/pi";
 import Swal from "sweetalert2"; // Import SweetAlert2
 import {
   addComment,
-  addDatas,
   deleteDatas,
-  getAdminAnswer,
   getComments,
   getCurrentUser,
   getDatas,
   updateDatas,
 } from "../pages/API/firebase";
-import { FaStar } from "react-icons/fa";
-import Captcha from "../pages/community/Captcha";
 
 function Board() {
   const location = useLocation();

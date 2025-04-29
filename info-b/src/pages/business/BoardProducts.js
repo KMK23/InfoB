@@ -24,7 +24,13 @@ function BoardProducts() {
   useEffect(() => {
     if (!products || !products[0]?.boardProducts) return;
     const allImages = products[0].boardProducts
-      .map((product) => product.image)
+      .flatMap((product) =>
+        Array.isArray(product.images)
+          ? product.images
+          : product.image
+          ? [product.image]
+          : []
+      )
       .filter(Boolean);
     const uniqueImages = Array.from(new Set(allImages));
     Promise.all(
@@ -48,10 +54,10 @@ function BoardProducts() {
   }
 
   const productsData = products[0];
-  console.log(
-    "Products data structure:",
-    JSON.stringify(productsData, null, 2)
-  );
+  // console.log(
+  //   "Products data structure:",
+  //   JSON.stringify(productsData, null, 2)
+  // );
 
   if (!productsData?.boardProducts) {
     return <div>보드 제품 정보가 올바르지 않습니다.</div>;
@@ -61,7 +67,7 @@ function BoardProducts() {
   // console.log("Board products:", boardProducts);
 
   if (!Array.isArray(boardProducts)) {
-    console.error("boardProducts is not an array:", boardProducts);
+    // console.error("boardProducts is not an array:", boardProducts);
     return <div>보드 제품 데이터 형식이 올바르지 않습니다.</div>;
   }
 
@@ -108,17 +114,35 @@ function BoardProducts() {
                 <FadeInSection>
                   <div className="image-grid">
                     <div className="image-container">
-                      <img
-                        src={imageUrls[product.image] || ""}
-                        alt={`${product.name} 이미지`}
-                        onClick={() =>
-                          setSelectedImage({
-                            src: imageUrls[product.image] || "",
-                            alt: `${product.name} 이미지`,
-                          })
-                        }
-                        style={{ cursor: "pointer" }}
-                      />
+                      {Array.isArray(product.images) &&
+                      product.images.length > 0
+                        ? product.images.map((img, idx) => (
+                            <img
+                              key={idx}
+                              src={imageUrls[img] || ""}
+                              alt={`${product.name} 이미지`}
+                              onClick={() =>
+                                setSelectedImage({
+                                  src: imageUrls[img] || "",
+                                  alt: `${product.name} 이미지`,
+                                })
+                              }
+                              style={{ cursor: "pointer", marginRight: 8 }}
+                            />
+                          ))
+                        : product.image && (
+                            <img
+                              src={imageUrls[product.image] || ""}
+                              alt={`${product.name} 이미지`}
+                              onClick={() =>
+                                setSelectedImage({
+                                  src: imageUrls[product.image] || "",
+                                  alt: `${product.name} 이미지`,
+                                })
+                              }
+                              style={{ cursor: "pointer" }}
+                            />
+                          )}
                     </div>
                   </div>
                 </FadeInSection>
@@ -219,27 +243,6 @@ function getSpecTitle(key) {
     사용온도: "사용온도",
   };
   return titles[key] || key;
-}
-
-function renderSpecifications(spec) {
-  if (typeof spec === "string") {
-    return <p className="spec-value">{spec}</p>;
-  }
-
-  if (typeof spec === "object" && spec !== null) {
-    return (
-      <div className="spec-details">
-        {Object.entries(spec).map(([key, value]) => (
-          <div key={key} className="spec-item">
-            <h6 className="spec-subtitle">{getSpecTitle(key)}</h6>
-            {renderSpecifications(value)}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
-  return null;
 }
 
 export default BoardProducts;

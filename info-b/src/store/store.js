@@ -14,6 +14,7 @@ import { talentReducer } from "./slices/talentSlice";
 import adminReducer from "./slices/adminSlice";
 import collectionReducer from "./slices/collectionSlice";
 import chartReducer from "./slices/chartSlice";
+import imagesReducer from "./slices/imagesSlice";
 
 export const store = configureStore({
   reducer: {
@@ -32,6 +33,7 @@ export const store = configureStore({
     admin: adminReducer,
     collection: collectionReducer,
     chart: chartReducer,
+    images: imagesReducer,
   },
 });
 

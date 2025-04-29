@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateCollection } from "../../store/slices/collectionSlice";
 import { fetchProducts } from "../../store/slices/productsSlice";
+import { fetchFolderImages } from "../../store/slices/imagesSlice";
 import "../../styles/pages/admin/_collectionEditor.scss";
 import KakaoMap from "../../components/KaKaoMap";
 import CeoForm from "../../components/admin/forms/CeoForm";
@@ -96,6 +97,7 @@ const CollectionEditor = () => {
   const [activeTab, setActiveTab] = useState("si");
 
   const { products, status, error } = useSelector((state) => state.products);
+  const { urls: imageUrls } = useSelector((state) => state.images);
 
   useEffect(() => {
     const currentSection = COLLECTIONS[selectedCollection].sections.find(
@@ -108,6 +110,14 @@ const CollectionEditor = () => {
           queryOptions: {},
         })
       );
+      // 이미지 폴더 미리 불러오기
+      if (currentSection.id === "certification") {
+        dispatch(fetchFolderImages("certificate"));
+        dispatch(fetchFolderImages("patent"));
+      }
+      if (currentSection.id === "RnD") {
+        dispatch(fetchFolderImages("rnd"));
+      }
     }
   }, [dispatch, selectedCollection, selectedSection]);
 
@@ -602,77 +612,77 @@ const CollectionEditor = () => {
     }
   };
 
-  const handleDeleteAll = async (section) => {
-    const result = await Swal.fire({
-      title: "전체 삭제하시겠습니까?",
-      text: "삭제된 데이터는 복구할 수 없습니다.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
-    });
+  // const handleDeleteAll = async (section) => {
+  //   const result = await Swal.fire({
+  //     title: "전체 삭제하시겠습니까?",
+  //     text: "삭제된 데이터는 복구할 수 없습니다.",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonColor: "#d33",
+  //     cancelButtonColor: "#3085d6",
+  //     confirmButtonText: "삭제",
+  //     cancelButtonText: "취소",
+  //   });
 
-    if (result.isConfirmed) {
-      try {
-        if (!products || !products[0]) return;
+  //   if (result.isConfirmed) {
+  //     try {
+  //       if (!products || !products[0]) return;
 
-        const updatedData = JSON.parse(JSON.stringify(products[0]));
-        const currentSection = COLLECTIONS[selectedCollection].sections.find(
-          (section) => section.id === selectedSection
-        );
+  //       const updatedData = JSON.parse(JSON.stringify(products[0]));
+  //       const currentSection = COLLECTIONS[selectedCollection].sections.find(
+  //         (section) => section.id === selectedSection
+  //       );
 
-        switch (section) {
-          case "certification":
-            if (updatedData.company?.certifications?.items) {
-              updatedData.company.certifications.items = [];
-              setEditData(updatedData.company.certifications);
-              handleSave();
-            }
-            break;
-          case "chart":
-            if (updatedData.chart) {
-              updatedData.chart = [];
-              setEditData(updatedData.chart);
-              handleSave();
-            }
-            break;
-          default:
-            break;
-        }
+  //       switch (section) {
+  //         case "certification":
+  //           if (updatedData.company?.certifications?.items) {
+  //             updatedData.company.certifications.items = [];
+  //             setEditData(updatedData.company.certifications);
+  //             handleSave();
+  //           }
+  //           break;
+  //         case "chart":
+  //           if (updatedData.chart) {
+  //             updatedData.chart = [];
+  //             setEditData(updatedData.chart);
+  //             handleSave();
+  //           }
+  //           break;
+  //         default:
+  //           break;
+  //       }
 
-        await dispatch(
-          updateCollection({
-            collectionName: currentSection.collection,
-            docId: products[0].docId,
-            data: updatedData,
-          })
-        ).unwrap();
+  //       await dispatch(
+  //         updateCollection({
+  //           collectionName: currentSection.collection,
+  //           docId: products[0].docId,
+  //           data: updatedData,
+  //         })
+  //       ).unwrap();
 
-        dispatch(
-          fetchProducts({
-            collectionName: currentSection.collection,
-            queryOptions: {},
-          })
-        );
+  //       dispatch(
+  //         fetchProducts({
+  //           collectionName: currentSection.collection,
+  //           queryOptions: {},
+  //         })
+  //       );
 
-        await Swal.fire(
-          "삭제 완료",
-          "모든 데이터가 삭제되었습니다.",
-          "success"
-        );
-      } catch (error) {
-        console.error("전체 삭제 중 오류:", error);
-        await Swal.fire({
-          title: "삭제 실패",
-          text: "삭제 중 오류가 발생했습니다: " + error.message,
-          icon: "error",
-          confirmButtonText: "확인",
-        });
-      }
-    }
-  };
+  //       await Swal.fire(
+  //         "삭제 완료",
+  //         "모든 데이터가 삭제되었습니다.",
+  //         "success"
+  //       );
+  //     } catch (error) {
+  //       console.error("전체 삭제 중 오류:", error);
+  //       await Swal.fire({
+  //         title: "삭제 실패",
+  //         text: "삭제 중 오류가 발생했습니다: " + error.message,
+  //         icon: "error",
+  //         confirmButtonText: "확인",
+  //       });
+  //     }
+  //   }
+  // };
 
   const renderContent = () => {
     if (!products || !products[0]) {
@@ -744,7 +754,22 @@ const CollectionEditor = () => {
                   <div key={cert.id} className="certification__card">
                     {cert.image && (
                       <div className="certification__image">
-                        <img src={cert.image} alt={cert.title} />
+                        <img
+                          src={
+                            imageUrls?.[
+                              cert.type === "certification"
+                                ? "certificate"
+                                : "patent"
+                            ]?.[
+                              `${
+                                cert.type === "certification"
+                                  ? "certificate"
+                                  : "patent"
+                              }/${cert.image}`
+                            ] || ""
+                          }
+                          alt={cert.title}
+                        />
                       </div>
                     )}
                     <div className="certification__content">
@@ -783,7 +808,6 @@ const CollectionEditor = () => {
               <p>
                 <strong>주소:</strong> {data.company?.address?.main}
                 <br />
-                {data.company?.address?.old}
               </p>
               <div className="contact-info">
                 <p>
@@ -1041,62 +1065,109 @@ const CollectionEditor = () => {
           <div className="view-mode rnd-admin rn-business">
             <div className="product-section">
               <div className="section-header">
-                <h2>누출탐지센서</h2>
+                <div className="rnd-tabs">
+                  <button
+                    className={`tab-button ${
+                      activeRnDTab === "sensor" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveRnDTab("sensor")}
+                  >
+                    누출탐지센서
+                  </button>
+                  <button
+                    className={`tab-button ${
+                      activeRnDTab === "board" ? "active" : ""
+                    }`}
+                    onClick={() => setActiveRnDTab("board")}
+                  >
+                    보드제품
+                  </button>
+                </div>
               </div>
-              <div className="product-list">
-                {data?.leakDetection?.map((item, index) => (
-                  <div key={index} className="product-item">
-                    <div className="product-header">
-                      <h3>{item.name}</h3>
-                      <span className="product-badge">ID: {item.id}</span>
-                      <span className="product-badge">
-                        출시예정: {item.releaseDate}
-                      </span>
-                    </div>
-                    <div className="product-content">
-                      <div className="features">
-                        <ul className="feature-list">
-                          {item.features?.description?.map((desc, i) => (
-                            <li key={i} className="feature-item">
-                              <span className="feature-icon">•</span>
-                              <span className="feature-text">{desc}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="section-header">
-                <h2>보드제품</h2>
-              </div>
-              <div className="product-list">
-                {data?.boardProducts?.map((item, index) => (
-                  <div key={index} className="product-item">
-                    <div className="product-header">
-                      <h3>{item.name}</h3>
-                      <span className="product-badge">ID: {item.id}</span>
-                      <span className="product-badge">
-                        출시예정: {item.releaseDate}
-                      </span>
-                    </div>
-                    <div className="product-content">
-                      <div className="features">
-                        <div className="feature-list">
-                          <div className="feature-item">
-                            <span className="feature-icon">•</span>
-                            <span className="feature-text">
-                              {item.features?.description}
-                            </span>
+              {activeRnDTab === "sensor" && (
+                <>
+                  <div className="product-list">
+                    {data?.leakDetection?.map((item, index) => (
+                      <div key={index} className="product-item">
+                        <div className="product-header">
+                          <h3>{item.name}</h3>
+                          <span className="product-badge">ID: {item.id}</span>
+                          <span className="product-badge">
+                            출시예정: {item.releaseDate}
+                          </span>
+                        </div>
+                        <div className="product-content">
+                          <div className="features">
+                            <ul className="feature-list">
+                              {item.features?.description?.map((desc, i) => (
+                                <li key={i} className="feature-item">
+                                  <span className="feature-icon">•</span>
+                                  <span className="feature-text">{desc}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            {Array.isArray(item.images) &&
+                              item.images.length > 0 && (
+                                <div className="image-preview-multi">
+                                  {item.images.map((img, imgIdx) => (
+                                    <img
+                                      key={imgIdx}
+                                      src={imageUrls?.rnd?.[`rnd/${img}`]}
+                                      alt={item.name}
+                                      style={{ width: 100, marginRight: 8 }}
+                                    />
+                                  ))}
+                                </div>
+                              )}
                           </div>
                         </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
+              {activeRnDTab === "board" && (
+                <>
+                  <div className="product-list">
+                    {data?.boardProducts?.map((item, index) => (
+                      <div key={index} className="product-item">
+                        <div className="product-header">
+                          <h3>{item.name}</h3>
+                          <span className="product-badge">ID: {item.id}</span>
+                          <span className="product-badge">
+                            출시예정: {item.releaseDate}
+                          </span>
+                        </div>
+                        <div className="product-content">
+                          <div className="features">
+                            <div className="feature-list">
+                              <div className="feature-item">
+                                <span className="feature-icon">•</span>
+                                <span className="feature-text">
+                                  {item.features?.description}
+                                </span>
+                              </div>
+                            </div>
+                            {Array.isArray(item.images) &&
+                              item.images.length > 0 && (
+                                <div className="image-preview-multi">
+                                  {item.images.map((img, imgIdx) => (
+                                    <img
+                                      key={imgIdx}
+                                      src={imageUrls?.rnd?.[`rnd/${img}`]}
+                                      alt={item.name}
+                                      style={{ width: 100, marginRight: 8 }}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         );

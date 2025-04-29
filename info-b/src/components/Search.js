@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import "../styles/components/_search.scss";
-// import { selectIdValue } from "./../../node_modules/@reduxjs/toolkit/src/entities/utils";
 
 function Search({ onClick }) {
   const [searchTerm, setSearchTerm] = useState("");
   const handleChange = (e) => {
     setSearchTerm(e.target.value);
-    // console.log(e.target.value);
   };
   const handleSearchClick = () => {
     if (onClick) {
-      // onClick이 유효한지 확인
       onClick(searchTerm); // 전달받은 onClick 함수 호출
     }
   };

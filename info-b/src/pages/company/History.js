@@ -44,7 +44,7 @@ function History() {
       </h1>
       <div className="py-5 md:py-6 px-4 md:px-8 md:mx-36 my-10 bg-[#222222] text-white">
         <div className="flex justify-center">
-          <img src={img} className="w-80 " />
+          <img src={img} className="w-80 " alt="logo" />
         </div>
         <p className="text-center text-base text-white mt-8 mb-16 relative pt-8">
           {historyData.subtitle || ""}
