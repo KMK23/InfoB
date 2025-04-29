@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBasicInfo } from "../../store/slices/basicInfoSlice";
 import "../../styles/pages/_ceoMessage.scss";
-import ceoImage from "../../resources/images/main/CEO.webp";
+import ceoImage from "../../resources/images/main/CEO-removebg-preview.png";
 
 const CeoMessage = () => {
   const dispatch = useDispatch();
