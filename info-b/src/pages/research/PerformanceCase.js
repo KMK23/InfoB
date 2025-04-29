@@ -106,7 +106,11 @@ function PerformanceCase() {
                 <div className="performance-case__item-header">
                   <div className="logo">
                     <img
-                      src={imageUrls[project.category] || noImage}
+                      src={
+                        project.logo
+                          ? project.logo // 직접 업로드한 로고(downloadURL)
+                          : imageUrls[project.category] || noImage // 기존 방식
+                      }
                       alt={`${project.category} 로고`}
                     />
                   </div>

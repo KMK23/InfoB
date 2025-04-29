@@ -1180,3 +1180,17 @@
     }
   }
 }
+
+.rnd-tabs {
+  display: flex;
+  gap: 1rem;
+  button {
+    padding: 0.5rem 1rem;
+    &.active {
+      border-bottom: 1px solid $primary-navy;
+    }
+    &:hover {
+      border-bottom: 1px solid $primary-navy;
+    }
+  }
+}

@@ -356,6 +356,9 @@ const CollectionEditor = () => {
                   id: editData.performanceCases.id,
                   category: editData.performanceCases.category,
                   title: editData.performanceCases.title,
+                  ...(editData.performanceCases.logo && {
+                    logo: editData.performanceCases.logo,
+                  }),
                 };
               }
             } else {
@@ -366,6 +369,9 @@ const CollectionEditor = () => {
                 id: `${editData.performanceCases.year}-${Date.now()}`,
                 category: editData.performanceCases.category,
                 title: editData.performanceCases.title,
+                ...(editData.performanceCases.logo && {
+                  logo: editData.performanceCases.logo,
+                }),
               });
             }
           } else {
@@ -377,6 +383,9 @@ const CollectionEditor = () => {
                   id: `${editData.performanceCases.year}-${Date.now()}`,
                   category: editData.performanceCases.category,
                   title: editData.performanceCases.title,
+                  ...(editData.performanceCases.logo && {
+                    logo: editData.performanceCases.logo,
+                  }),
                 },
               ],
             });
@@ -425,6 +434,9 @@ const CollectionEditor = () => {
                   id: editData.performanceCases.id,
                   category: editData.performanceCases.category,
                   title: editData.performanceCases.title,
+                  ...(editData.performanceCases.logo && {
+                    logo: editData.performanceCases.logo,
+                  }),
                 };
               }
             } else {
@@ -433,6 +445,9 @@ const CollectionEditor = () => {
                 id: `${editData.performanceCases.year}-${Date.now()}`,
                 category: editData.performanceCases.category,
                 title: editData.performanceCases.title,
+                ...(editData.performanceCases.logo && {
+                  logo: editData.performanceCases.logo,
+                }),
               });
             }
           } else {
@@ -444,6 +459,9 @@ const CollectionEditor = () => {
                   id: `${editData.performanceCases.year}-${Date.now()}`,
                   category: editData.performanceCases.category,
                   title: editData.performanceCases.title,
+                  ...(editData.performanceCases.logo && {
+                    logo: editData.performanceCases.logo,
+                  }),
                 },
               ],
             });
@@ -1362,7 +1380,9 @@ const CollectionEditor = () => {
       case "service":
         return <ServiceForm editData={editData} setEditData={setEditData} />;
       case "cases":
-        return <CasesForm editData={editData} setEditData={setEditData} />;
+        return (
+          <PerformanceForm editData={editData} setEditData={setEditData} />
+        );
       case "recruitment":
         return (
           <RecruitmentForm editData={editData} setEditData={setEditData} />
@@ -1371,10 +1391,10 @@ const CollectionEditor = () => {
         return <BenefitsForm editData={editData} setEditData={setEditData} />;
       case "RnD":
         return <RnDForm editData={editData} setEditData={setEditData} />;
-      case "performance":
-        return (
-          <PerformanceForm editData={editData} setEditData={setEditData} />
-        );
+      // case "performance":
+      //   return (
+      //     <PerformanceForm editData={editData} setEditData={setEditData} />
+      //   );
       case "chart":
         return <ChartForm editData={editData} setEditData={setEditData} />;
       default:
