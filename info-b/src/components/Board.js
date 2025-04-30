@@ -10,6 +10,7 @@ import {
   getCurrentUser,
   getDatas,
   updateDatas,
+  uploadPostImage,
 } from "../pages/API/firebase";
 
 function Board() {
@@ -29,7 +30,8 @@ function Board() {
     title: "",
     content: "",
     phoneNumber: "",
-    replyContent: "", //댓글내용상태추가
+    replyContent: "",
+    images: [],
   });
   const [isEditing, setIsEditing] = useState(false); //수정상태관리
 
@@ -110,14 +112,14 @@ function Board() {
 
   const handleUpdate = async () => {
     try {
-      // 공지사항인지 일반 게시글인지 확인
       const isNotice = location.pathname.includes("/admin");
 
       const updatedPost = {
-        ...(isNotice ? {} : { companyName: formData.companyName }), // 공지사항이 아닐 때만 companyName 포함
+        ...(isNotice ? {} : { companyName: formData.companyName }),
         authorName: formData.authorName || "관리자",
         title: formData.title || "",
         content: formData.content || "",
+        images: formData.images || [],
         updatedAt: new Date(),
         ...(isNotice
           ? {}
@@ -128,9 +130,7 @@ function Board() {
             }),
       };
 
-      // 공지사항인 경우 notices 컬렉션을, 아닌 경우 posts 컬렉션을 사용
       const collection = isNotice ? "notices" : "posts";
-
       await updateDatas(collection, id, updatedPost);
       Swal.fire({
         title: "Success!",
@@ -309,6 +309,28 @@ function Board() {
     navigate(isNotice ? `/admin/contents` : `/community/post`);
   };
 
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      // 게시글 ID가 없으면 임시 ID 생성
+      const uploadId = id || "temp_" + Date.now();
+
+      // Firebase Storage에 이미지 업로드
+      const downloadURL = await uploadPostImage(file, uploadId);
+
+      // 이미지 URL을 배열에 추가
+      setFormData((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), downloadURL],
+      }));
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      alert("이미지 업로드에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="mx-4 my-20 md:mx-12 lg:mx-48">
       <div className="mb-14">
@@ -439,19 +461,53 @@ function Board() {
           </div>
           <div className="w-full md:w-11/12 border-gray-300 border p-2 h-[480px]">
             {isEditing ? (
-              <MyEditor
-                content={formData.content}
-                isEditing={isEditing}
-                setContent={(value) =>
-                  setFormData((prev) => ({ ...prev, content: value }))
-                }
-              />
+              <>
+                <MyEditor
+                  content={formData.content}
+                  isEditing={isEditing}
+                  setContent={(value) =>
+                    setFormData((prev) => ({ ...prev, content: value }))
+                  }
+                />
+                {/* 업로드된 이미지 미리보기 */}
+                {formData.images && formData.images.length > 0 && (
+                  <div className="mt-4 border-t pt-4">
+                    <h3 className="text-sm font-semibold mb-2">
+                      업로드된 이미지
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.images.map((url, index) => (
+                        <div key={index} className="relative">
+                          <img
+                            src={url}
+                            alt={`첨부 이미지 ${index + 1}`}
+                            className="w-24 h-24 object-cover rounded"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
             ) : (
-              <div
-                className="w-full h-full text-start overflow-y-auto leading-relaxed"
-                style={{ whiteSpace: "pre-wrap" }}
-                dangerouslySetInnerHTML={{ __html: formData.content }}
-              />
+              <div className="w-full h-full text-start overflow-y-auto leading-relaxed">
+                <div dangerouslySetInnerHTML={{ __html: formData.content }} />
+                {/* 이미지 표시 */}
+                {formData.images && formData.images.length > 0 && (
+                  <div className="mt-4 border-t pt-4">
+                    <div className="flex flex-wrap gap-2">
+                      {formData.images.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`첨부 이미지 ${index + 1}`}
+                          className="max-w-full h-auto rounded"
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -460,7 +516,9 @@ function Board() {
           <div className="py-2 flex justify-start pl-2 text-xs md:text-[14px] font-semibold md:w-1/12 bg-[#f6f6f6] border-gray-300 border md:py-3 pr-2  md:justify-end items-center">
             첨부파일
           </div>
-          <div className="w-full md:w-11/12 py-4 border-gray-300 border"></div>
+          <div className="w-full md:w-11/12 py-4 border-gray-300 border">
+            <input type="file" accept="image/*" onChange={handleImageUpload} />
+          </div>
         </div>
         <div className="flex justify-end mt-6">
           <div>

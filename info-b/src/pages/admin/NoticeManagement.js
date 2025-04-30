@@ -64,7 +64,7 @@ const NoticeManagement = () => {
   };
 
   const handleEdit = (notice) => {
-    navigate(`/admin/edit-notice/${notice.docId}`);
+    navigate(`/admin/editNotice/${notice.docId}`);
   };
 
   const handleDelete = async (docId) => {

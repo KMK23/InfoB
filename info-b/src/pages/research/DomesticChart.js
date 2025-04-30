@@ -306,78 +306,50 @@ function DomesticChart() {
         </div>
         {/* 표 영역 */}
         <div className="w-full mb-10 lg:w-1/2 overflow-x-auto">
-          <table className="min-w-[600px] w-full border-collapse bg-white">
-            <thead>
-              <tr className="bg-[#f5f5f5] cursor-default">
-                <th className="p-2 border border-1 border-[#e0e0e0] font-bold ">
-                  년도
-                </th>
-                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
-                  매출액
-                </th>
-                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
-                  영업이익
-                </th>
-                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
-                  자산총계
-                </th>
-                <th className="p-2 border border-1 border-[#e0e0e0] font-bold">
-                  자본총계
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {chartData.map((row) => (
-                <tr key={row.year}>
-                  <td
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #e0e0e0",
-                      textAlign: "center",
-                    }}
-                  >
-                    {row.year}
-                  </td>
-                  <td
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #e0e0e0",
-                      textAlign: "right",
-                    }}
-                  >
-                    {formatNumber(row.revenue)}
-                  </td>
-                  <td
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #e0e0e0",
-                      textAlign: "right",
-                    }}
-                  >
-                    {formatNumber(row.operatingProfit)}
-                  </td>
-                  <td
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #e0e0e0",
-                      textAlign: "right",
-                    }}
-                  >
-                    {formatNumber(row.totalAssets)}
-                  </td>
-                  <td
-                    style={{
-                      padding: "8px",
-                      border: "1px solid #e0e0e0",
-                      textAlign: "right",
-                    }}
-                  >
-                    {formatNumber(row.totalEquity)}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white">
+              <thead>
+                <tr className="bg-[#f5f5f5] cursor-default">
+                  <th className="p-2 border border-1 border-[#e0e0e0] font-bold text-sm md:text-base">
+                    년도
+                  </th>
+                  <th className="p-2 border border-1 border-[#e0e0e0] font-bold text-sm md:text-base">
+                    매출액
+                  </th>
+                  <th className="p-2 border border-1 border-[#e0e0e0] font-bold text-sm md:text-base">
+                    영업이익
+                  </th>
+                  <th className="p-2 border border-1 border-[#e0e0e0] font-bold text-sm md:text-base">
+                    자산총계
+                  </th>
+                  <th className="p-2 border border-1 border-[#e0e0e0] font-bold text-sm md:text-base">
+                    자본총계
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {chartData.map((row) => (
+                  <tr key={row.year}>
+                    <td className="p-2 border border-1 border-[#e0e0e0] text-center text-sm md:text-base">
+                      {row.year}
+                    </td>
+                    <td className="p-2 border border-1 border-[#e0e0e0] text-right text-sm md:text-base">
+                      {formatNumber(row.revenue)}
+                    </td>
+                    <td className="p-2 border border-1 border-[#e0e0e0] text-right text-sm md:text-base">
+                      {formatNumber(row.operatingProfit)}
+                    </td>
+                    <td className="p-2 border border-1 border-[#e0e0e0] text-right text-sm md:text-base">
+                      {formatNumber(row.totalAssets)}
+                    </td>
+                    <td className="p-2 border border-1 border-[#e0e0e0] text-right text-sm md:text-base">
+                      {formatNumber(row.totalEquity)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

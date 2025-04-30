@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchNotices, updateNotice } from "../../store/slices/noticesSlice";
 import Board from "../../components/Board";
 import "../../styles/pages/_contentManagement.scss";
+import NoticeForm from "../../components/NoticeForm";
 
 const EditNotice = () => {
   const { id } = useParams();
@@ -66,7 +67,7 @@ const EditNotice = () => {
   return (
     <div className="edit-notice">
       <h2>공지사항 수정</h2>
-      <Board
+      <NoticeForm
         mode="edit"
         initialData={notice}
         onSave={handleSave}

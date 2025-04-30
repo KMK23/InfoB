@@ -109,21 +109,21 @@ function Business(props) {
   const businessData = business[0];
   console.log(businessData);
   return (
-    <div className="mt-10 mx-52">
-      <div className="">
+    <div className="mt-10 mx-4 md:mx-8 lg:mx-52">
+      <div>
         <h1 className="page-title text-start flex gap-2 items-center">
           고객사
         </h1>
         <div className="flex flex-col mt-10">
           <h1 className="sub-title text-start">공공분야 주요고객</h1>
           <div className="mt-2">
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-4 justify-center md:justify-start">
               {businessData.business.map((item, index) => (
-                <li key={index}>
+                <li key={index} className="w-36 md:w-48">
                   <a href={item.href} target="_blank" rel="noopener noreferrer">
                     <img
                       src={imageUrls[item.img] || ""}
-                      className="border border-gray-300 w-48 h-16 rounded-md"
+                      className="border border-gray-300 w-full h-12 md:h-16 rounded-md object-contain p-2"
                       alt={item.name || "고객사"}
                     />
                   </a>
@@ -133,15 +133,15 @@ function Business(props) {
           </div>
         </div>
         <div>
-          <h1 className="sub-title text-start mt-5">민간분야 주요고객</h1>
+          <h1 className="sub-title text-start mt-8">민간분야 주요고객</h1>
           <div className="mt-2">
-            <ul className="flex flex-wrap gap-2">
+            <ul className="flex flex-wrap gap-4 justify-center md:justify-start">
               {businessData.private.map((item) => (
-                <li key={item.id}>
+                <li key={item.id} className="w-36 md:w-48">
                   <a href={item.href} target="_blank" rel="noopener noreferrer">
                     <img
                       src={imageUrls[item.img] || ""}
-                      className="border border-gray-300 w-48 h-16 rounded-md"
+                      className="border border-gray-300 w-full h-12 md:h-16 rounded-md object-contain p-2"
                       alt={item.name || "고객사"}
                     />
                   </a>
@@ -151,18 +151,18 @@ function Business(props) {
           </div>
         </div>
       </div>
-      <div className="mt-12 mb-40">
+      <div className="mt-12 mb-20 md:mb-40">
         <h1 className="page-title text-start flex gap-2 items-center">
           파트너
         </h1>
         <div className="mt-2">
-          <ul className="flex flex-wrap gap-2">
+          <ul className="flex flex-wrap gap-4 justify-center md:justify-start">
             {businessData.partner.map((item) => (
-              <li key={item.id}>
+              <li key={item.id} className="w-36 md:w-48">
                 <a href={item.href} target="_blank" rel="noopener noreferrer">
                   <img
                     src={imageUrls[item.img] || ""}
-                    className="border border-gray-300 w-48 h-16 rounded-md"
+                    className="border border-gray-300 w-full h-12 md:h-16 rounded-md object-contain p-2"
                     alt={item.name || "파트너"}
                   />
                 </a>

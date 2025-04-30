@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../resources/images/main/logo_t.png";
+import logo from "../resources/images/main/logo_tw.png";
 import "../styles/components/_navbar.scss";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth, db } from "../pages/API/firebase";
@@ -12,13 +12,24 @@ function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [fontSize, setFontSize] = useState("normal");
   const [user, setUser] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const navigate = useNavigate();
+
+  // 반응형 체크
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // 로그인 상태 체크
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const userDocRef = doc(db, "users", currentUser.uid); // users 컬렉션에서 UID로 문서 참조
+        const userDocRef = doc(db, "users", currentUser.uid);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists()) {
@@ -90,9 +101,23 @@ function NavBar() {
   ];
 
   const handleMenuClick = (index, e, path) => {
-    e.preventDefault();
-    setActiveMenu(activeMenu === index ? null : index);
-    navigate(path); // 메인 메뉴 클릭 시 해당 경로로 이동
+    if (isMobile) {
+      e.preventDefault();
+      setActiveMenu(activeMenu === index ? null : index);
+    }
+    navigate(path);
+  };
+
+  const handleMenuHover = (index) => {
+    if (!isMobile) {
+      setActiveMenu(index);
+    }
+  };
+
+  const handleMenuLeave = () => {
+    if (!isMobile) {
+      setActiveMenu(null);
+    }
   };
 
   const toggleMobileMenu = () => {
@@ -100,9 +125,9 @@ function NavBar() {
   };
 
   const handleSubmenuClick = (path) => {
-    setActiveMenu(null); // 서브메뉴 닫기
-    setIsMobileMenuOpen(false); // 모바일 메뉴 닫기
-    navigate(path); // 해당 경로로 이동
+    setActiveMenu(null);
+    setIsMobileMenuOpen(false);
+    navigate(path);
   };
 
   const handleFontSize = () => {
@@ -128,7 +153,6 @@ function NavBar() {
           </button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className={`navbar__mobile-toggle ${
             isMobileMenuOpen ? "active" : ""
@@ -140,7 +164,6 @@ function NavBar() {
           <span></span>
         </button>
 
-        {/* Desktop & Mobile Menu */}
         <div className={`navbar__menu ${isMobileMenuOpen ? "active" : ""}`}>
           {menuItems.map((item, index) => (
             <div
@@ -148,6 +171,8 @@ function NavBar() {
               className={`navbar__menu-item ${
                 activeMenu === index ? "active" : ""
               }`}
+              onMouseEnter={() => handleMenuHover(index)}
+              onMouseLeave={handleMenuLeave}
             >
               <a
                 href={item.path}
@@ -156,7 +181,6 @@ function NavBar() {
               >
                 {item.title}
               </a>
-              {/* Submenu 표시 */}
               {item.submenu && (
                 <div
                   className={`navbar__submenu ${

@@ -25,6 +25,7 @@ import Board from "./components/Board";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostManagement from "./pages/admin/PostManagement";
 import NoticeManagement from "./pages/admin/NoticeManagement";
+import EditNotice from "./pages/admin/EditNotice";
 import LogIn from "./pages/recruitment/login/LogIn";
 import Find from "./pages/recruitment/login/Find";
 import Accession from "./pages/recruitment/login/Accession";
@@ -104,6 +105,7 @@ function App() {
                       <Route path="dashboard" element={<AdminDashboard />} />
                       <Route path="posts" element={<PostManagement />} />
                       <Route path="notices" element={<NoticeManagement />} />
+                      <Route path="editNotice/:id" element={<EditNotice />} />
                       <Route path="collection" element={<CollectionEditor />} />
                     </Routes>
                   </AdminLayout>

@@ -528,6 +528,28 @@ export const fetchMultipleImages = async (paths) => {
   }
 };
 
+// 일반 사용자용 게시글 이미지 업로드 함수
+export const uploadPostImage = async (file, postId) => {
+  const user = auth.currentUser;
+
+  if (!user) {
+    throw new Error("로그인이 필요합니다.");
+  }
+
+  // 파일 이름에 타임스탬프 추가하여 중복 방지
+  const timestamp = Date.now();
+  const fileName = `${timestamp}_${file.name}`;
+  const storageRef = ref(storage, `posts/${postId}/${fileName}`);
+
+  try {
+    const snapshot = await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(snapshot.ref);
+    return downloadURL;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export {
   getDatas,
   addDatas,
