@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCertifications } from "../../store/slices/certificationsSlice";
 import "../../styles/pages/_certification.scss";
+import "../../styles/_typography.scss";
 import icon_search from "../../resources/images/main/icon_search.png";
 import { fetchImage } from "../API/firebase";
 
@@ -144,17 +145,21 @@ const Certification = () => {
     <div className="certification">
       <div className="certification__container">
         <div className="certification__header">
-          <h1 className="title">
+          <h1 className="page-title">
             {certificationData?.company?.certifications?.title ||
               "인증 및 특허"}
           </h1>
-          <p className="subtitle">
+          <p className="sub-title">
             {certificationData?.company?.certifications?.subtitle ||
               "INFOB의 기술력과 신뢰성을 인정받은 다양한 인증서와 특허입니다"}
           </p>
           <div className="intro">
             {certificationData?.company?.certifications?.intro?.map(
-              (item, index) => <p key={index}>{item}</p>
+              (item, index) => (
+                <p key={index} className="content-text">
+                  {item}
+                </p>
+              )
             ) || []}
           </div>
         </div>
@@ -199,10 +204,12 @@ const Certification = () => {
                     </div>
                   </div>
                   <div className="certification__content">
-                    <h3 className="certification__title">{cert.title}</h3>
+                    <h3 className="sub-title">{cert.title}</h3>
                     <ul className="certification__description">
                       {cert.description?.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <li key={index} className="content-text">
+                          {item}
+                        </li>
                       )) || []}
                     </ul>
                   </div>
@@ -236,10 +243,12 @@ const Certification = () => {
                     </div>
                   </div>
                   <div className="certification__content">
-                    <h3 className="certification__title">{patent.title}</h3>
+                    <h3 className="sub-title">{patent.title}</h3>
                     <ul className="certification__description">
                       {patent.description?.map((item, index) => (
-                        <li key={index}>{item}</li>
+                        <li key={index} className="content-text">
+                          {item}
+                        </li>
                       )) || []}
                     </ul>
                   </div>

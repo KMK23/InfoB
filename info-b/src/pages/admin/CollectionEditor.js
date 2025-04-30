@@ -11,13 +11,13 @@ import CertificationForm from "../../components/admin/forms/CertificationForm";
 import LocationForm from "../../components/admin/forms/LocationForm";
 import SolutionForm from "../../components/admin/forms/SolutionForm";
 import ServiceForm from "../../components/admin/forms/ServiceForm";
-import CasesForm from "../../components/admin/forms/CasesForm";
 import RecruitmentForm from "../../components/admin/forms/RecruitmentForm";
 import BenefitsForm from "../../components/admin/forms/BenefitsForm";
 import RnDForm from "../../components/admin/forms/RnDForm";
 import PerformanceForm from "../../components/admin/forms/PerformanceForm";
 import Swal from "sweetalert2";
 import ChartForm from "../../components/admin/forms/ChartForm";
+import ClientsForm from "../../components/admin/forms/ClientsForm";
 
 const COLLECTIONS = {
   company: {
@@ -42,6 +42,11 @@ const COLLECTIONS = {
         id: "location",
         label: "오시는 길",
         collection: "basicInfo",
+      },
+      {
+        id: "clients",
+        label: "고객사 및 파트너",
+        collection: "clients",
       },
     ],
   },
@@ -95,6 +100,7 @@ const CollectionEditor = () => {
   const [editData, setEditData] = useState(null);
   const [activeRnDTab, setActiveRnDTab] = useState("sensor");
   const [activeTab, setActiveTab] = useState("si");
+  const [viewTab, setViewTab] = useState("business");
 
   const { products, status, error } = useSelector((state) => state.products);
   const { urls: imageUrls } = useSelector((state) => state.images);
@@ -117,6 +123,9 @@ const CollectionEditor = () => {
       }
       if (currentSection.id === "RnD") {
         dispatch(fetchFolderImages("rnd"));
+      }
+      if (currentSection.id === "clients") {
+        dispatch(fetchFolderImages("clients"));
       }
     }
   }, [dispatch, selectedCollection, selectedSection]);
@@ -145,11 +154,9 @@ const CollectionEditor = () => {
         break;
       case "certification":
         editContent = {
-          title: data.company?.certifications?.title,
-          subtitle: data.company?.certifications?.subtitle,
-          items: data.company?.certifications?.items
-            ? JSON.parse(JSON.stringify(data.company.certifications.items))
-            : [],
+          title: data.company?.certifications?.title || "",
+          subtitle: data.company?.certifications?.subtitle || "",
+          items: data.company?.certifications?.items || [],
         };
         break;
       case "location":
@@ -221,12 +228,9 @@ const CollectionEditor = () => {
         break;
       case "RnD":
         editContent = {
-          leakDetection: data.leakDetection
-            ? JSON.parse(JSON.stringify(data.leakDetection))
-            : [],
-          boardProducts: data.boardProducts
-            ? JSON.parse(JSON.stringify(data.boardProducts))
-            : [],
+          rnd: data.rnd ? [...data.rnd] : [],
+          leakDetection: data.leakDetection ? [...data.leakDetection] : [],
+          boardProducts: data.boardProducts ? [...data.boardProducts] : [],
         };
         break;
       case "performance":
@@ -250,8 +254,15 @@ const CollectionEditor = () => {
           },
         };
         break;
-      default:
+      case "clients":
+        editContent = {
+          business: data.business || [],
+          private: data.private || [],
+          partner: data.partner || [],
+        };
         break;
+      default:
+        editContent = item;
     }
 
     setEditData(editContent);
@@ -259,126 +270,124 @@ const CollectionEditor = () => {
   };
 
   const handleSave = async () => {
-    try {
-      if (!products || !products[0]) return;
+    if (!editData || !products || !products[0]) return;
 
-      const updatedData = JSON.parse(JSON.stringify(products[0]));
-      const currentSection = COLLECTIONS[selectedCollection].sections.find(
-        (section) => section.id === selectedSection
-      );
+    let updatedData = { ...products[0] };
+    const currentSection = COLLECTIONS[selectedCollection].sections.find(
+      (section) => section.id === selectedSection
+    );
 
-      switch (selectedSection) {
-        case "ceo":
-          if (!updatedData.company) updatedData.company = {};
-          if (!updatedData.company.ceo) updatedData.company.ceo = {};
-          updatedData.company.ceo = {
-            ...updatedData.company.ceo,
+    switch (selectedSection) {
+      case "ceo":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company = {
+          ...updatedData.company,
+          ceo: {
+            ...(updatedData.company.ceo || {}),
             name: editData.name,
             position: editData.position,
             message: {
               title: editData.title,
-              content: editData.content,
+              content: [...(editData.content || [])],
             },
-          };
-          break;
-        case "history":
-          if (!updatedData.company) updatedData.company = {};
-          updatedData.company = {
-            ...updatedData.company,
-            history: {
-              title: "회사연혁",
-              subtitle: "현재 디지털화의 혁신을 완벽하게 실현합니다.",
-              timeline: editData.timeline,
-            },
-          };
-          break;
-        case "certification":
-          if (!updatedData.company) updatedData.company = {};
-          updatedData.company.certifications = {
+          },
+        };
+        break;
+      case "history":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company = {
+          ...updatedData.company,
+          history: {
+            title: "회사연혁",
+            subtitle: "현재 디지털화의 혁신을 완벽하게 실현합니다.",
+            timeline: editData.timeline,
+          },
+        };
+        break;
+      case "certification":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company = {
+          ...updatedData.company,
+          certifications: {
             title: editData.title,
             subtitle: editData.subtitle,
             items: editData.items,
-          };
-          break;
-        case "location":
-          if (!updatedData.company) updatedData.company = {};
-          updatedData.company = {
-            ...updatedData.company,
-            address: editData.address,
-            contact: editData.contact,
-          };
-          break;
-        case "solution":
-          if (!updatedData.company) updatedData.company = {};
-          if (!updatedData.company.business) updatedData.company.business = {};
-          updatedData.company.business = {
+          },
+        };
+        break;
+      case "location":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company = {
+          ...updatedData.company,
+          address: editData.address,
+          contact: editData.contact,
+        };
+        break;
+      case "solution":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company = {
+          ...updatedData.company,
+          business: {
             si: {
-              areas: editData.company.business.si.areas,
+              areas: [...(editData.company.business.si.areas || [])],
             },
             consulting: {
-              areas: editData.company.business.consulting.areas,
+              areas: [...(editData.company.business.consulting.areas || [])],
             },
+          },
+        };
+        break;
+      case "service":
+        updatedData.services = editData.services;
+        break;
+      case "cases":
+        if (!updatedData.company) updatedData.company = {};
+        if (!updatedData.company.performanceCases) {
+          updatedData.company.performanceCases = {
+            title: "구축 사례",
+            description:
+              "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
+            timeline: [],
           };
-          break;
-        case "service":
-          updatedData.services = editData.services;
-          break;
-        case "cases":
-          if (!updatedData.company) updatedData.company = {};
-          if (!updatedData.company.performanceCases) {
-            updatedData.company.performanceCases = {
-              title: "구축 사례",
-              description:
-                "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
-              timeline: [],
-            };
-          }
+        }
 
-          const yearIndex =
-            updatedData.company.performanceCases.timeline.findIndex(
-              (t) => t.year === editData.performanceCases.year
+        const yearIndex =
+          updatedData.company.performanceCases.timeline.findIndex(
+            (t) => t.year === editData.performanceCases.year
+          );
+
+        const newTimeline = [...updatedData.company.performanceCases.timeline];
+
+        if (yearIndex !== -1) {
+          // 기존 연도가 있는 경우
+          if (editData.performanceCases.id) {
+            // 기존 프로젝트 수정
+            const projectIndex = newTimeline[yearIndex].projects.findIndex(
+              (p) => p.id === editData.performanceCases.id
             );
-
-          if (yearIndex !== -1) {
-            // 기존 연도가 있는 경우
-            if (editData.performanceCases.id) {
-              // 기존 프로젝트 수정
-              const projectIndex =
-                updatedData.company.performanceCases.timeline[
-                  yearIndex
-                ].projects.findIndex(
-                  (p) => p.id === editData.performanceCases.id
-                );
-              if (projectIndex !== -1) {
-                updatedData.company.performanceCases.timeline[
-                  yearIndex
-                ].projects[projectIndex] = {
-                  id: editData.performanceCases.id,
-                  category: editData.performanceCases.category,
-                  title: editData.performanceCases.title,
-                  ...(editData.performanceCases.logo && {
-                    logo: editData.performanceCases.logo,
-                  }),
-                };
-              }
-            } else {
-              // 새 프로젝트 추가
-              updatedData.company.performanceCases.timeline[
-                yearIndex
-              ].projects.push({
-                id: `${editData.performanceCases.year}-${Date.now()}`,
-                category: editData.performanceCases.category,
-                title: editData.performanceCases.title,
-                ...(editData.performanceCases.logo && {
-                  logo: editData.performanceCases.logo,
-                }),
-              });
+            if (projectIndex !== -1) {
+              newTimeline[yearIndex] = {
+                ...newTimeline[yearIndex],
+                projects: [
+                  ...newTimeline[yearIndex].projects.slice(0, projectIndex),
+                  {
+                    id: editData.performanceCases.id,
+                    category: editData.performanceCases.category,
+                    title: editData.performanceCases.title,
+                    ...(editData.performanceCases.logo && {
+                      logo: editData.performanceCases.logo,
+                    }),
+                  },
+                  ...newTimeline[yearIndex].projects.slice(projectIndex + 1),
+                ],
+              };
             }
           } else {
-            // 새로운 연도 추가
-            updatedData.company.performanceCases.timeline.push({
-              year: editData.performanceCases.year,
+            // 새 프로젝트 추가
+            newTimeline[yearIndex] = {
+              ...newTimeline[yearIndex],
               projects: [
+                ...newTimeline[yearIndex].projects,
                 {
                   id: `${editData.performanceCases.year}-${Date.now()}`,
                   category: editData.performanceCases.category,
@@ -388,104 +397,139 @@ const CollectionEditor = () => {
                   }),
                 },
               ],
-            });
-          }
-
-          // timeline을 연도순으로 정렬
-          updatedData.company.performanceCases.timeline.sort(
-            (a, b) => b.year - a.year
-          );
-          break;
-        case "recruitment":
-          if (!updatedData.company) updatedData.company = {};
-          updatedData.company.talent = editData.company.talent;
-          break;
-        case "benefits":
-          updatedData.benefits = editData.benefits;
-          break;
-        case "RnD":
-          updatedData.leakDetection = editData.leakDetection;
-          updatedData.boardProducts = editData.boardProducts;
-          break;
-        case "performance":
-          if (!updatedData.company) updatedData.company = {};
-          if (!updatedData.company.performanceCases) {
-            updatedData.company.performanceCases = {
-              title: "구축 사례",
-              description:
-                "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
-              timeline: [],
             };
           }
-
-          const performanceExistingYear =
-            updatedData.company.performanceCases.timeline.find(
-              (t) => t.year === editData.performanceCases.year
-            );
-
-          if (performanceExistingYear) {
-            if (editData.performanceCases.id) {
-              // 기존 프로젝트 수정
-              const projectIndex = performanceExistingYear.projects.findIndex(
-                (p) => p.id === editData.performanceCases.id
-              );
-              if (projectIndex !== -1) {
-                performanceExistingYear.projects[projectIndex] = {
-                  id: editData.performanceCases.id,
-                  category: editData.performanceCases.category,
-                  title: editData.performanceCases.title,
-                  ...(editData.performanceCases.logo && {
-                    logo: editData.performanceCases.logo,
-                  }),
-                };
-              }
-            } else {
-              // 새 프로젝트 추가
-              performanceExistingYear.projects.push({
+        } else {
+          // 새로운 연도 추가
+          newTimeline.push({
+            year: editData.performanceCases.year,
+            projects: [
+              {
                 id: `${editData.performanceCases.year}-${Date.now()}`,
                 category: editData.performanceCases.category,
                 title: editData.performanceCases.title,
                 ...(editData.performanceCases.logo && {
                   logo: editData.performanceCases.logo,
                 }),
-              });
+              },
+            ],
+          });
+        }
+
+        updatedData.company = {
+          ...updatedData.company,
+          performanceCases: {
+            ...updatedData.company.performanceCases,
+            timeline: newTimeline,
+          },
+        };
+        break;
+      case "recruitment":
+        if (!updatedData.company) updatedData.company = {};
+        updatedData.company.talent = editData.company.talent;
+        break;
+      case "benefits":
+        updatedData.benefits = editData.benefits;
+        break;
+      case "RnD":
+        updatedData = {
+          ...updatedData,
+          rnd: [...(editData.rnd || [])],
+          leakDetection: [...(editData.leakDetection || [])],
+          boardProducts: [...(editData.boardProducts || [])],
+        };
+        break;
+      case "performance":
+        if (!updatedData.company) updatedData.company = {};
+        if (!updatedData.company.performanceCases) {
+          updatedData.company.performanceCases = {
+            title: "구축 사례",
+            description:
+              "다양한 분야의 프로젝트 수행 경험을 통해 축적된 기술력으로 최상의 서비스를 제공합니다.",
+            timeline: [],
+          };
+        }
+
+        const performanceExistingYear =
+          updatedData.company.performanceCases.timeline.find(
+            (t) => t.year === editData.performanceCases.year
+          );
+
+        if (performanceExistingYear) {
+          if (editData.performanceCases.id) {
+            // 기존 프로젝트 수정
+            const projectIndex = performanceExistingYear.projects.findIndex(
+              (p) => p.id === editData.performanceCases.id
+            );
+            if (projectIndex !== -1) {
+              performanceExistingYear.projects[projectIndex] = {
+                id: editData.performanceCases.id,
+                category: editData.performanceCases.category,
+                title: editData.performanceCases.title,
+                ...(editData.performanceCases.logo && {
+                  logo: editData.performanceCases.logo,
+                }),
+              };
             }
           } else {
-            // 새로운 연도 추가
-            updatedData.company.performanceCases.timeline.push({
-              year: editData.performanceCases.year,
-              projects: [
-                {
-                  id: `${editData.performanceCases.year}-${Date.now()}`,
-                  category: editData.performanceCases.category,
-                  title: editData.performanceCases.title,
-                  ...(editData.performanceCases.logo && {
-                    logo: editData.performanceCases.logo,
-                  }),
-                },
-              ],
+            // 새 프로젝트 추가
+            performanceExistingYear.projects.push({
+              id: `${editData.performanceCases.year}-${Date.now()}`,
+              category: editData.performanceCases.category,
+              title: editData.performanceCases.title,
+              ...(editData.performanceCases.logo && {
+                logo: editData.performanceCases.logo,
+              }),
             });
           }
-          break;
-        case "chart":
-          // chart 배열에서 해당 연도(row)만 수정, 없으면 추가
-          const found = updatedData.chart.some(
-            (row) => row.year === editData.chart.year
+        } else {
+          // 새로운 연도 추가
+          updatedData.company.performanceCases.timeline.push({
+            year: editData.performanceCases.year,
+            projects: [
+              {
+                id: `${editData.performanceCases.year}-${Date.now()}`,
+                category: editData.performanceCases.category,
+                title: editData.performanceCases.title,
+                ...(editData.performanceCases.logo && {
+                  logo: editData.performanceCases.logo,
+                }),
+              },
+            ],
+          });
+        }
+        break;
+      case "chart":
+        // chart 배열이 없으면 새로 생성
+        if (!updatedData.chart) {
+          updatedData.chart = [];
+        }
+
+        const newChartData = [...updatedData.chart];
+        const found = newChartData.some(
+          (row) => row.year === editData.chart.year
+        );
+
+        if (found) {
+          // 기존 연도 데이터 수정
+          updatedData.chart = newChartData.map((row) =>
+            row.year === editData.chart.year ? { ...editData.chart } : row
           );
-          if (found) {
-            updatedData.chart = updatedData.chart.map((row) =>
-              row.year === editData.chart.year ? { ...editData.chart } : row
-            );
-          } else {
-            updatedData.chart.push({ ...editData.chart });
-          }
-          break;
-        default:
-          break;
-      }
+        } else {
+          // 새로운 연도 데이터 추가
+          updatedData.chart = [...newChartData, { ...editData.chart }];
+        }
+        break;
+      case "clients":
+        updatedData.business = editData.business;
+        updatedData.private = editData.private;
+        updatedData.partner = editData.partner;
+        break;
+      default:
+        return;
+    }
 
-      // console.log("저장할 데이터:", updatedData);
-
+    try {
       await dispatch(
         updateCollection({
           collectionName: currentSection.collection,
@@ -495,6 +539,7 @@ const CollectionEditor = () => {
       ).unwrap();
 
       setIsEditing(false);
+      setEditData(null);
       dispatch(
         fetchProducts({
           collectionName: currentSection.collection,
@@ -630,78 +675,6 @@ const CollectionEditor = () => {
     }
   };
 
-  // const handleDeleteAll = async (section) => {
-  //   const result = await Swal.fire({
-  //     title: "전체 삭제하시겠습니까?",
-  //     text: "삭제된 데이터는 복구할 수 없습니다.",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#d33",
-  //     cancelButtonColor: "#3085d6",
-  //     confirmButtonText: "삭제",
-  //     cancelButtonText: "취소",
-  //   });
-
-  //   if (result.isConfirmed) {
-  //     try {
-  //       if (!products || !products[0]) return;
-
-  //       const updatedData = JSON.parse(JSON.stringify(products[0]));
-  //       const currentSection = COLLECTIONS[selectedCollection].sections.find(
-  //         (section) => section.id === selectedSection
-  //       );
-
-  //       switch (section) {
-  //         case "certification":
-  //           if (updatedData.company?.certifications?.items) {
-  //             updatedData.company.certifications.items = [];
-  //             setEditData(updatedData.company.certifications);
-  //             handleSave();
-  //           }
-  //           break;
-  //         case "chart":
-  //           if (updatedData.chart) {
-  //             updatedData.chart = [];
-  //             setEditData(updatedData.chart);
-  //             handleSave();
-  //           }
-  //           break;
-  //         default:
-  //           break;
-  //       }
-
-  //       await dispatch(
-  //         updateCollection({
-  //           collectionName: currentSection.collection,
-  //           docId: products[0].docId,
-  //           data: updatedData,
-  //         })
-  //       ).unwrap();
-
-  //       dispatch(
-  //         fetchProducts({
-  //           collectionName: currentSection.collection,
-  //           queryOptions: {},
-  //         })
-  //       );
-
-  //       await Swal.fire(
-  //         "삭제 완료",
-  //         "모든 데이터가 삭제되었습니다.",
-  //         "success"
-  //       );
-  //     } catch (error) {
-  //       console.error("전체 삭제 중 오류:", error);
-  //       await Swal.fire({
-  //         title: "삭제 실패",
-  //         text: "삭제 중 오류가 발생했습니다: " + error.message,
-  //         icon: "error",
-  //         confirmButtonText: "확인",
-  //       });
-  //     }
-  //   }
-  // };
-
   const renderContent = () => {
     if (!products || !products[0]) {
       return <div className="loading">데이터를 불러오는 중...</div>;
@@ -797,10 +770,10 @@ const CollectionEditor = () => {
                           <p key={index}>{desc}</p>
                         ))}
                       </div>
-                      <div className="certification__actions">
-                        {/* <button
+                      {/* <div className="certification__actions">
+                        <button
                           className="edit-button"
-                          onClick={() => handleEdit("certification", cert)}
+                          onClick={() => handleEdit(selectedSection, cert)}
                         >
                           수정
                         </button>
@@ -809,8 +782,8 @@ const CollectionEditor = () => {
                           onClick={() => handleDelete("certification", cert)}
                         >
                           삭제
-                        </button> */}
-                      </div>
+                        </button>
+                      </div> */}
                     </div>
                   </div>
                 ))}
@@ -1356,6 +1329,65 @@ const CollectionEditor = () => {
             )}
           </div>
         );
+      case "clients":
+        return isEditing ? (
+          <ClientsForm editData={editData} setEditData={setEditData} />
+        ) : (
+          <div className="clients-view">
+            <div className="form-tabs">
+              <button
+                className={`tab-button ${
+                  viewTab === "business" ? "active" : ""
+                }`}
+                onClick={() => setViewTab("business")}
+              >
+                공공분야 고객사
+              </button>
+              <button
+                className={`tab-button ${
+                  viewTab === "private" ? "active" : ""
+                }`}
+                onClick={() => setViewTab("private")}
+              >
+                민간분야 고객사
+              </button>
+              <button
+                className={`tab-button ${
+                  viewTab === "partner" ? "active" : ""
+                }`}
+                onClick={() => setViewTab("partner")}
+              >
+                파트너
+              </button>
+            </div>
+            <div className="form-content">
+              <div className="clients-section">
+                <div className="items-grid">
+                  {(data[viewTab] || []).map((item) => (
+                    <div key={item.id} className="item-card">
+                      <div className="item-content">
+                        <div className="image-container">
+                          {item.img ? (
+                            <img
+                              src={imageUrls?.clients?.[`clients/${item.img}`]}
+                              alt={item.name}
+                            />
+                          ) : (
+                            <div className="no-image">이미지 없음</div>
+                          )}
+                        </div>
+                        <div className="item-fields">
+                          <p>{item.name}</p>
+                          <p>{item.href}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
       default:
         return <div>선택된 섹션의 데이터를 표시할 수 없습니다.</div>;
     }
@@ -1391,10 +1423,8 @@ const CollectionEditor = () => {
         return <BenefitsForm editData={editData} setEditData={setEditData} />;
       case "RnD":
         return <RnDForm editData={editData} setEditData={setEditData} />;
-      // case "performance":
-      //   return (
-      //     <PerformanceForm editData={editData} setEditData={setEditData} />
-      //   );
+      case "clients":
+        return <ClientsForm editData={editData} setEditData={setEditData} />;
       case "chart":
         return <ChartForm editData={editData} setEditData={setEditData} />;
       default:

@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
+import "../../styles/_typography.scss";
 import FadeInSection from "../../components/FadeInSection";
 import ImageModal from "../../components/ImageModal";
 import { fetchImage } from "../API/firebase";
@@ -40,11 +41,11 @@ function LeakDetection() {
   // console.log("Products data:", products);
 
   if (status === "loading") {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <div className="content-text">데이터를 불러오는 중입니다...</div>;
   }
 
   if (!products || !Array.isArray(products) || products.length === 0) {
-    return <div>제품 정보를 찾을 수 없습니다.</div>;
+    return <div className="content-text">제품 정보를 찾을 수 없습니다.</div>;
   }
 
   const productsData = products[0];
@@ -54,7 +55,11 @@ function LeakDetection() {
   );
 
   if (!productsData?.leakDetection) {
-    return <div>누출탐지 제품 정보가 올바르지 않습니다.</div>;
+    return (
+      <div className="content-text">
+        누출탐지 제품 정보가 올바르지 않습니다.
+      </div>
+    );
   }
 
   const leakDetection = productsData.leakDetection;
@@ -62,7 +67,11 @@ function LeakDetection() {
 
   if (!Array.isArray(leakDetection)) {
     console.error("leakDetection is not an array:", leakDetection);
-    return <div>누출탐지 제품 데이터 형식이 올바르지 않습니다.</div>;
+    return (
+      <div className="content-text">
+        누출탐지 제품 데이터 형식이 올바르지 않습니다.
+      </div>
+    );
   }
 
   return (
@@ -100,7 +109,7 @@ function LeakDetection() {
             {leakDetection.map((product) => (
               <div key={product.id} className="product-item">
                 <div className="product-header">
-                  <h3>{product.name}</h3>
+                  <h3 className="sub-title">{product.name}</h3>
                   {product.releaseDate && (
                     <div className="product-badge">{product.releaseDate}</div>
                   )}
@@ -172,14 +181,16 @@ function LeakDetection() {
                           : "leak-features"
                       }`}
                     >
-                      <h4>제품 특징</h4>
+                      <h4 className="sub-title">제품 특징</h4>
                       <ul>
                         {product.features.description.map((desc, index) => (
                           <li key={index}>
                             <span className="feature-icon">
                               {getFeatureIcon(index)}
                             </span>
-                            <span className="feature-text">{desc}</span>
+                            <span className="feature-text content-text">
+                              {desc}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -191,7 +202,7 @@ function LeakDetection() {
                             {/* 입력 사양 */}
                             <tr>
                               <td
-                                className="section-header"
+                                className="section-header table-header"
                                 rowSpan={
                                   product.specifications.input?.length || 1
                                 }
@@ -203,13 +214,21 @@ function LeakDetection() {
                                   <React.Fragment key={index}>
                                     {index === 0 ? (
                                       <>
-                                        <td>{spec.name}</td>
-                                        <td>{spec.value}</td>
+                                        <td className="table-header">
+                                          {spec.name}
+                                        </td>
+                                        <td className="table-cell">
+                                          {spec.value}
+                                        </td>
                                       </>
                                     ) : (
                                       <tr>
-                                        <td>{spec.name}</td>
-                                        <td>{spec.value}</td>
+                                        <td className="table-header">
+                                          {spec.name}
+                                        </td>
+                                        <td className="table-cell">
+                                          {spec.value}
+                                        </td>
                                       </tr>
                                     )}
                                   </React.Fragment>
@@ -219,67 +238,99 @@ function LeakDetection() {
 
                             {/* 전원 사양 */}
                             <tr>
-                              <td className="section-header" rowSpan={3}>
+                              <td
+                                className="section-header table-header"
+                                rowSpan={3}
+                              >
                                 전원
                               </td>
-                              <td>출력1</td>
-                              <td>
+                              <td className="table-header">출력1</td>
+                              <td className="table-cell">
                                 <ul>
-                                  <li>전압: DC24V</li>
-                                  <li>Ripple & Noise: 80mVp-p</li>
-                                  <li>Line Regulation: ±0.5%</li>
-                                  <li>Load Regulation: ±0.5%</li>
+                                  <li className="content-text">전압: DC24V</li>
+                                  <li className="content-text">
+                                    Ripple & Noise: 80mVp-p
+                                  </li>
+                                  <li className="content-text">
+                                    Line Regulation: ±0.5%
+                                  </li>
+                                  <li className="content-text">
+                                    Load Regulation: ±0.5%
+                                  </li>
                                 </ul>
                               </td>
                             </tr>
                             <tr>
-                              <td>출력2</td>
-                              <td>
+                              <td className="table-header">출력2</td>
+                              <td className="table-cell">
                                 <ul>
-                                  <li>전압: DC24V</li>
-                                  <li>Ripple & Noise: 120mVp-p</li>
-                                  <li>Line Regulation: ±1%</li>
-                                  <li>Load Regulation: ±2%</li>
+                                  <li className="content-text">전압: DC24V</li>
+                                  <li className="content-text">
+                                    Ripple & Noise: 120mVp-p
+                                  </li>
+                                  <li className="content-text">
+                                    Line Regulation: ±1%
+                                  </li>
+                                  <li className="content-text">
+                                    Load Regulation: ±2%
+                                  </li>
                                 </ul>
                               </td>
                             </tr>
 
                             {/* 무선 사양 */}
                             <tr>
-                              <td className="section-header" rowSpan={3}>
+                              <td
+                                className="section-header table-header"
+                                rowSpan={3}
+                              >
                                 무선
                               </td>
-                              <td>주파수</td>
-                              <td>
+                              <td className="table-header">주파수</td>
+                              <td className="table-cell">
                                 <ul>
-                                  <li>송신: 920.9MHz ~ 922.9MHz</li>
-                                  <li>주파수 범위: 47~63Hz</li>
+                                  <li className="content-text">
+                                    송신: 920.9MHz ~ 922.9MHz
+                                  </li>
+                                  <li className="content-text">
+                                    주파수 범위: 47~63Hz
+                                  </li>
                                 </ul>
                               </td>
                             </tr>
                             <tr>
-                              <td>안테나</td>
-                              <td>
+                              <td className="table-header">안테나</td>
+                              <td className="table-cell">
                                 <ul>
-                                  <li>type: 유효방사, Dipole Antenna</li>
-                                  <li>gain: 안테나 이득: 3.83 dBi(925MHz)</li>
-                                  <li>
+                                  <li className="content-text">
+                                    type: 유효방사, Dipole Antenna
+                                  </li>
+                                  <li className="content-text">
+                                    gain: 안테나 이득: 3.83 dBi(925MHz)
+                                  </li>
+                                  <li className="content-text">
                                     polarization: 공중선의 편파성: 수직, 수평
                                     편파
                                   </li>
-                                  <li>size: 크기: 102.2 x 108.1 mm</li>
+                                  <li className="content-text">
+                                    size: 크기: 102.2 x 108.1 mm
+                                  </li>
                                 </ul>
                               </td>
                             </tr>
                             <tr>
-                              <td>출력</td>
-                              <td>10mW이하</td>
+                              <td className="table-header">출력</td>
+                              <td className="table-cell">10mW이하</td>
                             </tr>
 
                             {/* 사용온도 */}
                             <tr>
-                              <td className="section-header">사용온도</td>
-                              <td colSpan={2}>-20℃ ~ +50℃</td>
+                              <td className="section-header table-header">
+                                사용온도
+                              </td>
+                              <td className="table-cell" colSpan={2}>
+                                -20℃ ~ +50℃
+                              </td>
                             </tr>
                           </tbody>
                         </table>

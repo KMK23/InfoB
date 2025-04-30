@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNotices } from "../../store/slices/noticesSlice";
-import "../../styles/components/_noticeDetail.scss";
+import "../../styles/_typography.scss";
 
 const NoticeDetail = () => {
   const { id } = useParams();
@@ -47,25 +47,25 @@ const NoticeDetail = () => {
   };
 
   if (!notice) {
-    return <div>로딩 중...</div>;
+    return <div className="description-text text-center py-8">로딩 중...</div>;
   }
 
   return (
     <div className="notice-detail">
       <div className="detail-header">
-        <h2>{notice.title}</h2>
-        <div className="info">
+        <h2 className="page-title">{notice.title}</h2>
+        <div className="info meta-text flex gap-4">
           <span>작성자: {notice.authorName || "관리자"}</span>
           <span>등록일: {formatDate(notice.createdAt)}</span>
           <span>수정일: {formatDate(notice.updatedAt)}</span>
           <span>조회수: {notice.views || 0}</span>
         </div>
       </div>
-      <div className="detail-content">
+      <div className="detail-content content-text">
         <div dangerouslySetInnerHTML={{ __html: notice.content }} />
       </div>
       <div className="detail-footer">
-        <button onClick={handleGoBack} className="back-button">
+        <button onClick={handleGoBack} className="button-text back-button">
           목록으로
         </button>
       </div>

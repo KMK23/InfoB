@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_performanceCase.scss";
+import "../../styles/_typography.scss";
 import FadeInSection from "../../components/FadeInSection";
 import noImage from "../../resources/images/clients/no_img2.png";
 import { fetchImage } from "../API/firebase";
@@ -48,17 +49,21 @@ function PerformanceCase() {
   }, [products]);
 
   if (status === "loading") {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <div className="content-text">데이터를 불러오는 중입니다...</div>;
   }
 
   if (!products || !Array.isArray(products) || products.length === 0) {
-    return <div>구축 사례 정보를 찾을 수 없습니다.</div>;
+    return (
+      <div className="content-text">구축 사례 정보를 찾을 수 없습니다.</div>
+    );
   }
 
   const performanceData = products[0]?.company?.performanceCases;
 
   if (!performanceData) {
-    return <div>구축 사례 정보가 올바르지 않습니다.</div>;
+    return (
+      <div className="content-text">구축 사례 정보가 올바르지 않습니다.</div>
+    );
   }
 
   // timeline 데이터 정렬
@@ -70,7 +75,9 @@ function PerformanceCase() {
   );
 
   if (!selectedYearData) {
-    return <div>해당 연도의 데이터를 찾을 수 없습니다.</div>;
+    return (
+      <div className="content-text">해당 연도의 데이터를 찾을 수 없습니다.</div>
+    );
   }
 
   // getImageFileName, getImageSource 등 하드코딩 함수 주석처리
@@ -80,15 +87,15 @@ function PerformanceCase() {
   return (
     <div className="performance-case">
       <div className="performance-case__header">
-        <h2>{performanceData.title || "구축 사례"}</h2>
-        <p>{performanceData.description}</p>
+        <h2 className="page-title">{performanceData.title || "구축 사례"}</h2>
+        <p className="content-text">{performanceData.description}</p>
       </div>
 
       <div className="performance-case__years">
         {sortedTimeline.map((item) => (
           <button
             key={item.year}
-            className={`performance-case__year-btn ${
+            className={`performance-case__year-btn button-text ${
               selectedYear === String(item.year) ? "active" : ""
             }`}
             onClick={() => setSelectedYear(String(item.year))}
@@ -108,19 +115,21 @@ function PerformanceCase() {
                     <img
                       src={
                         project.logo
-                          ? project.logo // 직접 업로드한 로고(downloadURL)
-                          : imageUrls[project.category] || noImage // 기존 방식
+                          ? project.logo
+                          : imageUrls[project.category] || noImage
                       }
                       alt={`${project.category} 로고`}
                     />
                   </div>
                 </div>
                 <div className="performance-case__item-content">
-                  <div className="organization">{project.category}</div>
-                  <div className="category">{project.title}</div>
+                  <div className="organization sub-title">
+                    {project.category}
+                  </div>
+                  <div className="category content-text">{project.title}</div>
                   <div className="details">
-                    <span className="year">{selectedYear}</span>
-                    <span className="status">완료</span>
+                    <span className="year meta-text">{selectedYear}</span>
+                    <span className="status meta-text">완료</span>
                   </div>
                 </div>
               </div>

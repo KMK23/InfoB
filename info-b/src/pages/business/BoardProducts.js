@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../store/slices/productsSlice";
 import "../../styles/pages/_rndBusiness.scss";
+import "../../styles/_typography.scss";
 import FadeInSection from "../../components/FadeInSection";
 import ImageModal from "../../components/ImageModal";
 import { fetchImage } from "../API/firebase";
@@ -46,11 +47,11 @@ function BoardProducts() {
   // console.log("Products data:", products);
 
   if (status === "loading") {
-    return <div>데이터를 불러오는 중입니다...</div>;
+    return <div className="content-text">데이터를 불러오는 중입니다...</div>;
   }
 
   if (!products || !Array.isArray(products) || products.length === 0) {
-    return <div>제품 정보를 찾을 수 없습니다.</div>;
+    return <div className="content-text">제품 정보를 찾을 수 없습니다.</div>;
   }
 
   const productsData = products[0];
@@ -60,7 +61,9 @@ function BoardProducts() {
   // );
 
   if (!productsData?.boardProducts) {
-    return <div>보드 제품 정보가 올바르지 않습니다.</div>;
+    return (
+      <div className="content-text">보드 제품 정보가 올바르지 않습니다.</div>
+    );
   }
 
   const boardProducts = productsData.boardProducts;
@@ -68,7 +71,11 @@ function BoardProducts() {
 
   if (!Array.isArray(boardProducts)) {
     // console.error("boardProducts is not an array:", boardProducts);
-    return <div>보드 제품 데이터 형식이 올바르지 않습니다.</div>;
+    return (
+      <div className="content-text">
+        보드 제품 데이터 형식이 올바르지 않습니다.
+      </div>
+    );
   }
 
   return (
@@ -106,7 +113,7 @@ function BoardProducts() {
             {boardProducts.map((product) => (
               <div key={product.id} className="product-item">
                 <div className="product-header">
-                  <h3>{product.name}</h3>
+                  <h3 className="sub-title">{product.name}</h3>
                   {product.releaseDate && (
                     <div className="product-badge">{product.releaseDate}</div>
                   )}
@@ -149,7 +156,7 @@ function BoardProducts() {
                 <FadeInSection>
                   <div className="product-content">
                     <div className="features">
-                      <h4 className="content-title">제품 특징</h4>
+                      <h4 className="sub-title">제품 특징</h4>
                       {Array.isArray(product.features.description) ? (
                         <ul className="feature-list">
                           {product.features.description.map((desc, index) => (
@@ -157,19 +164,21 @@ function BoardProducts() {
                               <span className="feature-icon">
                                 {getFeatureIcon(index)}
                               </span>
-                              <span className="feature-text">{desc}</span>
+                              <span className="feature-text content-text">
+                                {desc}
+                              </span>
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="feature-description">
+                        <p className="feature-description content-text">
                           {product.features.description}
                         </p>
                       )}
                     </div>
                     {product.features.specifications && (
                       <div className="specifications">
-                        <h4 className="content-title">규격</h4>
+                        <h4 className="sub-title">규격</h4>
                         <table className="spec-table">
                           <tbody>
                             {Object.entries(
@@ -180,16 +189,24 @@ function BoardProducts() {
                                   ([subKey, subValue], subIndex) => (
                                     <tr key={`${key}-${subKey}`}>
                                       {subIndex === 0 && (
-                                        <th rowSpan={Object.keys(value).length}>
+                                        <th
+                                          className="table-header"
+                                          rowSpan={Object.keys(value).length}
+                                        >
                                           {getSpecTitle(key)}
                                         </th>
                                       )}
-                                      <td>{getSpecTitle(subKey)}</td>
-                                      <td>
+                                      <td className="table-header">
+                                        {getSpecTitle(subKey)}
+                                      </td>
+                                      <td className="table-cell">
                                         {typeof subValue === "object"
                                           ? Object.entries(subValue).map(
                                               ([k, v]) => (
-                                                <div key={k}>
+                                                <div
+                                                  key={k}
+                                                  className="content-text"
+                                                >
                                                   {getSpecTitle(k)}: {v}
                                                 </div>
                                               )
@@ -202,8 +219,12 @@ function BoardProducts() {
                               }
                               return (
                                 <tr key={key}>
-                                  <th>{getSpecTitle(key)}</th>
-                                  <td colSpan="2">{value}</td>
+                                  <th className="table-header">
+                                    {getSpecTitle(key)}
+                                  </th>
+                                  <td className="table-cell" colSpan="2">
+                                    {value}
+                                  </td>
                                 </tr>
                               );
                             })}

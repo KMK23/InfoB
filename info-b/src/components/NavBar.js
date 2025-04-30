@@ -124,7 +124,7 @@ function NavBar() {
 
         <div className="navbar__font-size">
           <button className="navbar__font-size-btn" onClick={handleFontSize}>
-            가<sub>{fontSize === "small" ? "대" : "소"}</sub>
+            가<sub>{fontSize === "small" ? "소" : "대"}</sub>
           </button>
         </div>
 

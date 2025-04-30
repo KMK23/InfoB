@@ -52,9 +52,9 @@ $background-color: #ffffff;
 
 // Fonts
 $base-font: "paybooc Medium", sans-serif;
-$font-family-base: "paybooc Medium", sans-serif;
-$font-family-heading: "paybooc Medium", sans-serif;
-$font-family-accent: "paybooc Medium", sans-serif;
+$font-family-base: "Noto Sans CJK KR", sans-serif;
+$font-family-heading: "Nanum Square", sans-serif;
+$font-family-accent: "Paybooc", sans-serif;
 
 // Font Sizes
 $font-size-small: calc(14px * var(--font-size-multiplier));
@@ -110,7 +110,8 @@ $primary-dark: #333; // 기존 다크 그레이
 $primary-teal: #2a9d8f; // 새로운 청록색
 $primary-coral: #e76f51; // 새로운 코랄
 $primary-purple: #7209b7; // 새로운 퍼플
-
+$primary-red: #ff0000;
+// 새로운 오렌지
 $bg-light: #ffffff;
 $bg-gray: #f5f5f5;
 $text-dark: #333333;
@@ -189,3 +190,23 @@ $primary-color: #2c7d76;
 $text-primary: #333333;
 $text-secondary: #666666;
 $background-light: #f8f9fa;
+
+// Font weights
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+
+// Font sizes
+$font-size-xs: 0.75rem; // 12px
+$font-size-sm: 0.875rem; // 14px
+$font-size-lg: 1.125rem; // 18px
+$font-size-xl: 1.25rem; // 20px
+$font-size-2xl: 1.5rem; // 24px
+$font-size-3xl: 1.875rem; // 30px
+$font-size-4xl: 2.25rem; // 36px
+
+// Line heights
+$line-height-tight: 1.25;
+$line-height-base: 1.5;
+$line-height-loose: 1.75;

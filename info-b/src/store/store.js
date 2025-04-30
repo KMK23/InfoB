@@ -15,6 +15,8 @@ import adminReducer from "./slices/adminSlice";
 import collectionReducer from "./slices/collectionSlice";
 import chartReducer from "./slices/chartSlice";
 import imagesReducer from "./slices/imagesSlice";
+import clientsReducer from "./slices/clientsSlice";
+import crudReducer from "./slices/crudSlice";
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +36,8 @@ export const store = configureStore({
     collection: collectionReducer,
     chart: chartReducer,
     images: imagesReducer,
+    clients: clientsReducer,
+    crud: crudReducer,
   },
 });
 

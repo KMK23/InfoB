@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../../styles/components/admin/forms/_historyForm.scss";
 
 const HistoryForm = ({ editData, setEditData }) => {
+  const [newYear, setNewYear] = useState("");
+  const [newContent, setNewContent] = useState("");
+
   if (!editData?.timeline) {
     setEditData({
       ...editData,
@@ -13,17 +16,18 @@ const HistoryForm = ({ editData, setEditData }) => {
   const years = Object.keys(editData.timeline).sort((a, b) => b - a);
 
   const handleAddYear = () => {
-    const newYear = prompt("추가할 연도를 입력하세요 (예: 2024)");
     if (newYear && /^\d{4}$/.test(newYear)) {
       setEditData({
         ...editData,
         timeline: {
-          ...editData.timeline,
           [newYear]: {
-            events: [{ content: "" }],
+            events: [{ content: newContent }],
           },
+          ...editData.timeline,
         },
       });
+      setNewYear("");
+      setNewContent("");
     } else if (newYear) {
       alert("올바른 연도 형식을 입력해주세요 (예: 2024)");
     }
@@ -34,7 +38,7 @@ const HistoryForm = ({ editData, setEditData }) => {
     if (!newTimeline[year].events) {
       newTimeline[year].events = [];
     }
-    newTimeline[year].events.push({ content: "" });
+    newTimeline[year].events.unshift({ content: "" });
     setEditData({
       ...editData,
       timeline: newTimeline,
@@ -64,6 +68,12 @@ const HistoryForm = ({ editData, setEditData }) => {
     });
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleAddYear();
+    }
+  };
+
   return (
     <div className="history-form">
       <div className="form-group">
@@ -76,6 +86,26 @@ const HistoryForm = ({ editData, setEditData }) => {
           >
             연도 추가
           </button>
+        </div>
+        <div className="input-group">
+          <div className="year-input-group">
+            <div className="input-label">연도</div>
+            <input
+              type="text"
+              value={newYear}
+              onChange={(e) => setNewYear(e.target.value)}
+              placeholder="연도 입력 (예: 2024)"
+              className="year-input"
+            />
+            <div className="input-label">내용</div>
+            <input
+              type="text"
+              value={newContent}
+              onChange={(e) => setNewContent(e.target.value)}
+              placeholder="내용을 입력하세요"
+              className="content-input"
+            />
+          </div>
         </div>
         {years.map((year) => (
           <div key={year} className="year-section">
